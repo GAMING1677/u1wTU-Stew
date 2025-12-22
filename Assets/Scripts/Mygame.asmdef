@@ -2,7 +2,12 @@
     "name": "Mygame",
     "rootNamespace": "",
     "references": [
-        "GUID:744cc80d35949704b87f6925fb01925c"
+        "NaughtyAttributes.Core",
+        "Unity.TextMeshPro",
+        "ThirdParty",
+        "MoreMountains.Tools",
+        "Utage",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
