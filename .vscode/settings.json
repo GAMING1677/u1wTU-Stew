@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "20251205_Template(Unity6000.2.6f2_2D_WebGL).sln"
+    "dotnet.defaultSolution": "20251221_u1wTU-Stew_Project.sln"
 }
