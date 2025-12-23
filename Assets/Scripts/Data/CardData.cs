@@ -35,6 +35,9 @@ namespace ApprovalMonster.Data
         public CardType cardType;
         
         [BoxGroup("Type & Risk")]
+        public CardRarity rarity = CardRarity.Common;
+        
+        [BoxGroup("Type & Risk")]
         public RiskType riskType;
 
         [BoxGroup("Type & Risk")]
@@ -55,6 +58,13 @@ namespace ApprovalMonster.Data
         Monster,
         Special,
         Passive
+    }
+    
+    public enum CardRarity
+    {
+        Common,   // 基本カード
+        Rare,     // レアカード
+        Epic      // 超レアカード（将来的に拡張可能）
     }
 
     public enum RiskType

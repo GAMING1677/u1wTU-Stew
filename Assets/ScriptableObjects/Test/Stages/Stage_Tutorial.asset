@@ -25,12 +25,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 27364525ce4652745ab8f1bbeea68c0a, type: 2}
   - {fileID: 11400000, guid: c952dd88aedceb9498a7fae1dd6bf7e1, type: 2}
   - {fileID: 11400000, guid: 15111fd9894216d4da3a73b81fd17e35, type: 2}
+  draftPool:
   - {fileID: 11400000, guid: 8c640cdb1c55e96448a2d403a5acab11, type: 2}
   - {fileID: 11400000, guid: cde3300d14e62fe42b25ef023a6e3f8b, type: 2}
   - {fileID: 11400000, guid: 3090c3b716b5b674ea48d7e11cc1b2bb, type: 2}
   - {fileID: 11400000, guid: 8e3165c54e4de2945a1d0c284079d83f, type: 2}
   - {fileID: 11400000, guid: 24ba14e3ccd809b42ba72ff0c3aeb08f, type: 2}
-  draftPool: []
   monsterDeck: []
   background: {fileID: 0}
   themeColor: {r: 1, g: 1, b: 1, a: 1}

@@ -76,6 +76,7 @@ namespace ApprovalMonster.UI
         }
 
         public string CardName => nameText.text;
+        public CardData CardData => _data;
 
         public void OnPointerClick(PointerEventData eventData)
         {
