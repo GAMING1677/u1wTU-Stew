@@ -36,12 +36,24 @@ namespace ApprovalMonster.UI
         /// <summary>
         /// ドラフト候補カードを表示
         /// </summary>
-        public void ShowDraftOptions(List<CardData> options)
+        public void ShowDraftOptions(List<CardData> options, bool isMonsterDraft = false)
         {
             if (options == null || options.Count == 0)
             {
                 Debug.LogWarning("[DraftUI] No draft options provided!");
                 return;
+            }
+
+            // モンスタードラフトならタイトル変更
+            if (isMonsterDraft)
+            {
+                titleText.text = "モンスターの力を選べ";
+                titleText.color = Color.red;
+            }
+            else
+            {
+                titleText.text = "カードを選択してください";
+                titleText.color = Color.white;
             }
             
             if (cardViewPrefab == null)
@@ -119,8 +131,16 @@ namespace ApprovalMonster.UI
             DOVirtual.DelayedCall(0.5f, () =>
             {
                 HideDraftUI();
-                // GameManagerに選択を通知
-                Core.GameManager.Instance.OnDraftComplete(selectedCard);
+                
+                // モンスタードラフトか通常ドラフトかで分岐
+                if (titleText.text.Contains("モンスター"))
+                {
+                    Core.GameManager.Instance.OnMonsterDraftComplete(selectedCard);
+                }
+                else
+                {
+                    Core.GameManager.Instance.OnDraftComplete(selectedCard);
+                }
             });
         }
 

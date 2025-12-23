@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: Assembly-CSharp::ApprovalMonster.Data.GameSettings
   initialFollowers: 100
-  maxMental: 10
+  maxMental: 5
   maxMotivation: 3
   initialHandSize: 3
   monsterThreshold: 3

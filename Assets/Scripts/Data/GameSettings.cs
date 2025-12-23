@@ -15,6 +15,10 @@ namespace ApprovalMonster.Data
         [Header("Game Rules")]
         [Tooltip("Mental threshold to trigger Monster Mode")]
         public int monsterThreshold = 3;
+
+        [Tooltip("Number of cards to show in monster draft")]
+        [Range(2, 3)]
+        public int monsterDraftCardCount = 3;
         
         [Tooltip("Multiplier applied when in Monster Mode")]
         public float monsterModeMultiplier = 3.0f;
