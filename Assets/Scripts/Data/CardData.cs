@@ -70,7 +70,7 @@ namespace ApprovalMonster.Data
     public enum RiskType
     {
         None,
-        Flame,      // 炎上 (Decrease Mental or Follower)
+        Flaming,      // 炎上 (Decrease Mental or Follower)
         Freeze,     // 凍結 (Skip Turn)
         Ban,        // BAN (Game Over)
         LoseFollower // フォロワー減少
