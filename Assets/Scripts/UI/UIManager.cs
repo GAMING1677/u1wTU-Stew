@@ -24,6 +24,9 @@ namespace ApprovalMonster.UI
         
         [Header("Buttons")]
         [SerializeField] private Button endTurnButton;
+        
+        [Header("Draft")]
+        [SerializeField] private DraftUI draftUI;
 
         private List<CardView> activeCards = new List<CardView>();
 
@@ -61,6 +64,10 @@ namespace ApprovalMonster.UI
                 // Subscribe to turn events
                 gm.turnManager.OnTurnChanged.RemoveListener(UpdateTurnDisplay);
                 gm.turnManager.OnTurnChanged.AddListener(UpdateTurnDisplay);
+                
+                // Subscribe to draft events
+                gm.turnManager.OnDraftStart.RemoveListener(OnDraftStart);
+                gm.turnManager.OnDraftStart.AddListener(OnDraftStart);
             }
             else
             {
@@ -146,6 +153,28 @@ namespace ApprovalMonster.UI
             if (gm != null && gm.turnManager != null)
             {
                 gm.turnManager.EndPlayerAction();
+            }
+        }
+        
+        private void OnDraftStart()
+        {
+            Debug.Log("[UIManager] OnDraftStart received. Showing draft UI.");
+            var gm = GameManager.Instance;
+            if (gm != null && gm.draftManager != null && gm.currentStage != null)
+            {
+                var options = gm.draftManager.GenerateDraftOptions(
+                    gm.currentStage.draftPool,
+                    gm.resourceManager.totalImpressions
+                );
+                
+                if (draftUI != null)
+                {
+                    draftUI.ShowDraftOptions(options);
+                }
+                else
+                {
+                    Debug.LogError("[UIManager] DraftUI is not assigned!");
+                }
             }
         }
 

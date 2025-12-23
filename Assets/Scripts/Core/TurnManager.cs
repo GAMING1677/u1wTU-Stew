@@ -8,6 +8,7 @@ namespace ApprovalMonster.Core
         public enum TurnPhase
         {
             StartStep,
+            DraftPhase,
             PlayerAction,
             EndStep,
             Result,
@@ -18,6 +19,7 @@ namespace ApprovalMonster.Core
         public TurnPhase CurrentPhase => currentPhase;
 
         public UnityEvent OnTurnStart;
+        public UnityEvent OnDraftStart;
         public UnityEvent OnTurnEnd;
         public UnityEvent<int> OnTurnChanged;
 
@@ -41,6 +43,14 @@ namespace ApprovalMonster.Core
                 SetPhase(TurnPhase.EndStep);
             }
         }
+        
+        public void CompleteDraft()
+        {
+            if (currentPhase == TurnPhase.DraftPhase)
+            {
+                SetPhase(TurnPhase.PlayerAction);
+            }
+        }
 
         private void SetPhase(TurnPhase nextPhase)
         {
@@ -51,8 +61,12 @@ namespace ApprovalMonster.Core
                 case TurnPhase.StartStep:
                     OnTurnStart?.Invoke();
                     OnTurnChanged?.Invoke(turnCount);
-                    // Proceed to action automatically or after animation
-                    SetPhase(TurnPhase.PlayerAction);
+                    // Proceed to draft phase
+                    SetPhase(TurnPhase.DraftPhase);
+                    break;
+                case TurnPhase.DraftPhase:
+                    OnDraftStart?.Invoke();
+                    // Wait for player to select a card (CompleteDraft will be called)
                     break;
                 case TurnPhase.PlayerAction:
                     // Enable Input

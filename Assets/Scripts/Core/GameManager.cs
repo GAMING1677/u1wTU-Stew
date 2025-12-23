@@ -12,6 +12,7 @@ namespace ApprovalMonster.Core
         public ResourceManager resourceManager;
         public DeckManager deckManager;
         public TurnManager turnManager;
+        public DraftManager draftManager;
 
         [Header("Data")]
         [Expandable]
@@ -53,10 +54,12 @@ namespace ApprovalMonster.Core
             // Prevent duplicate listeners
             turnManager.OnTurnStart.RemoveListener(OnTurnStart);
             turnManager.OnTurnEnd.RemoveListener(OnTurnEnd);
+            turnManager.OnDraftStart.RemoveListener(OnDraftStart);
 
             // Hook up events
             turnManager.OnTurnStart.AddListener(OnTurnStart);
             turnManager.OnTurnEnd.AddListener(OnTurnEnd);
+            turnManager.OnDraftStart.AddListener(OnDraftStart);
 
             turnManager.StartGame();
         }
@@ -74,6 +77,12 @@ namespace ApprovalMonster.Core
             {
                 deckManager.InitializeDeck(currentStage.initialDeck, gameSettings);
             }
+            
+            // 3. Reset Draft Manager
+            if (draftManager != null)
+            {
+                draftManager.ResetSelectedCards();
+            }
         }
 
         private void OnTurnStart()
@@ -87,6 +96,19 @@ namespace ApprovalMonster.Core
         {
             deckManager.DiscardHand();
             // Check Quota or Monster Mode consistency here
+        }
+        
+        private void OnDraftStart()
+        {
+            Debug.Log("[GameManager] OnDraftStart received. Generating draft options.");
+            // Draft options will be generated and shown by UIManager
+        }
+        
+        public void OnDraftComplete(CardData selectedCard)
+        {
+            Debug.Log($"[GameManager] Draft complete. Selected: {selectedCard.cardName}");
+            draftManager.SelectCard(selectedCard);
+            turnManager.CompleteDraft();
         }
 
         public void TryPlayCard(CardData card)
