@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: Monster_2
   cardImage: {fileID: 0}
-  flavorText: 
+  flavorText: "\u30D5\u30A9\u30ED\u30EF\u30FC5\u4E07\u4EBA"
   motivationCost: 0
   mentalCost: 0
   followerGain: 50000
+  drawCount: 0
+  motivationRecovery: 0
   impressionRate: 0
   cardType: 2
   rarity: 0

@@ -62,24 +62,15 @@ namespace ApprovalMonster.UI
                 return;
             }
 
+
+
+
             // 既存のカードビューをクリア
             ClearCardViews();
 
             // UIを表示
             gameObject.SetActive(true);
             canvasGroup.DOFade(1f, fadeInDuration);
-
-            // モンスタードラフト用UI変更
-            if (isMonsterDraft)
-            {
-                titleText.text = "モンスターの力を選べ";
-                titleText.color = Color.red; 
-            }
-            else
-            {
-                titleText.text = "カードを選択してください";
-                titleText.color = Color.white;
-            }
 
             // カードビューを生成
             foreach (var cardData in options)
@@ -155,6 +146,7 @@ namespace ApprovalMonster.UI
                 }
             });
         }
+
 
         /// <summary>
         /// ドラフトUIを非表示

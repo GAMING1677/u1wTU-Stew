@@ -18,6 +18,10 @@ namespace ApprovalMonster.Core
         [ReadOnly] public long totalImpressions;
         [ReadOnly] public bool isMonsterMode = false;
         
+        // Persistent modifiers
+        private int bonusMaxMotivation = 0;
+        public int MaxMotivation => settings != null ? settings.maxMotivation + bonusMaxMotivation : 3;
+
         private bool hasTriggeredMonsterMode = false;
 
         [Header("Events")]
@@ -40,7 +44,10 @@ namespace ApprovalMonster.Core
             settings = gameSettings;
             currentFollowers = settings.initialFollowers;
             currentMental = settings.maxMental;
-            currentMotivation = settings.maxMotivation;
+            
+            bonusMaxMotivation = 0; // Reset bonus
+            currentMotivation = MaxMotivation;
+            
             totalImpressions = 0;
             
             // Re-initialize flags
@@ -54,7 +61,7 @@ namespace ApprovalMonster.Core
         {
             onFollowersChanged?.Invoke(currentFollowers);
             onMentalChanged?.Invoke(currentMental, settings.maxMental);
-            onMotivationChanged?.Invoke(currentMotivation, settings.maxMotivation);
+            onMotivationChanged?.Invoke(currentMotivation, MaxMotivation);
             onImpressionsChanged?.Invoke(totalImpressions);
         }
 
@@ -109,16 +116,31 @@ namespace ApprovalMonster.Core
             if (currentMotivation >= amount)
             {
                 currentMotivation -= amount;
-                onMotivationChanged?.Invoke(currentMotivation, settings.maxMotivation);
+                onMotivationChanged?.Invoke(currentMotivation, MaxMotivation);
                 return true;
             }
             return false;
         }
 
+        public void AddMotivation(int amount)
+        {
+            currentMotivation += amount;
+            if (currentMotivation < 0) currentMotivation = 0;
+            if (currentMotivation > MaxMotivation) currentMotivation = MaxMotivation;
+            onMotivationChanged?.Invoke(currentMotivation, MaxMotivation);
+        }
+
+        public void IncreaseMaxMotivation(int amount)
+        {
+            bonusMaxMotivation += amount;
+            // Update UI with new max
+            onMotivationChanged?.Invoke(currentMotivation, MaxMotivation);
+        }
+
         public void ResetMotivation()
         {
-            currentMotivation = settings.maxMotivation;
-            onMotivationChanged?.Invoke(currentMotivation, settings.maxMotivation);
+            currentMotivation = MaxMotivation;
+            onMotivationChanged?.Invoke(currentMotivation, MaxMotivation);
         }
     }
 }
