@@ -31,6 +31,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3090c3b716b5b674ea48d7e11cc1b2bb, type: 2}
   - {fileID: 11400000, guid: 8e3165c54e4de2945a1d0c284079d83f, type: 2}
   - {fileID: 11400000, guid: 24ba14e3ccd809b42ba72ff0c3aeb08f, type: 2}
-  monsterDeck: []
+  monsterDeck:
+  - {fileID: 11400000, guid: 7bef9d85a345a3f45b2e0b07b6dd63c5, type: 2}
+  - {fileID: 11400000, guid: 5416c880fb708ef48b154dc2a4d788f1, type: 2}
+  - {fileID: 11400000, guid: 8176644e3c26f064289e5f96fd0e8876, type: 2}
   background: {fileID: 0}
   themeColor: {r: 1, g: 1, b: 1, a: 1}

@@ -43,7 +43,7 @@ namespace ApprovalMonster.Core
             currentMotivation = settings.maxMotivation;
             totalImpressions = 0;
             
-            // モンスターモードリセット
+            // Re-initialize flags
             isMonsterMode = false;
             hasTriggeredMonsterMode = false;
 
@@ -67,8 +67,8 @@ namespace ApprovalMonster.Core
 
         public void AddImpression(float rate)
         {
-            // Monster Mode Multiplier check could be here or in GameManager
-            bool isMonster = currentMental <= settings.monsterThreshold;
+            // Monster Mode Multiplier check
+            bool isMonster = currentMental <= settings.monsterThreshold; // OR use isMonsterMode
             float finalRate = rate * (isMonster ? settings.monsterModeMultiplier : 1.0f);
             
             long gained = (long)(currentFollowers * finalRate);
@@ -87,7 +87,7 @@ namespace ApprovalMonster.Core
             }
             else if (!hasTriggeredMonsterMode && currentMental <= settings.monsterThreshold)
             {
-                // モンスター化トリガー（一度のみ）
+                // Trigger Monster Mode (Once per game session/stage)
                 isMonsterMode = true;
                 hasTriggeredMonsterMode = true;
                 onMonsterModeTriggered?.Invoke();

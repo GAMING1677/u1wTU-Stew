@@ -43,6 +43,18 @@ namespace ApprovalMonster.UI
                 Debug.LogWarning("[DraftUI] No draft options provided!");
                 return;
             }
+
+            // モンスタードラフトならタイトル変更
+            if (isMonsterDraft)
+            {
+                titleText.text = "モンスターの力を選べ";
+                titleText.color = Color.red;
+            }
+            else
+            {
+                titleText.text = "カードを選択してください";
+                titleText.color = Color.white;
+            }
             
             if (cardViewPrefab == null)
             {

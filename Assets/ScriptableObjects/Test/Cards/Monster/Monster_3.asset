@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Monster_3
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u30E2\u30F3\u30B9\u30BF\u30FC\uFF13"
+  cardName: Monster_3
   cardImage: {fileID: 0}
   flavorText: 
   motivationCost: 0
-  mentalCost: 2
-  followerGain: 0
-  impressionRate: 10
+  mentalCost: 1
+  followerGain: 10000
+  impressionRate: 2
   cardType: 2
   rarity: 0
   riskType: 0

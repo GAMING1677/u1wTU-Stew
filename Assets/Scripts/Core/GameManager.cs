@@ -50,7 +50,7 @@ namespace ApprovalMonster.Core
         {
             Debug.Log("[GameManager] StartGame called.");
             isGameActive = true;
-            hasPerformedMonsterDraft = false; // Reset flag on start
+            hasPerformedMonsterDraft = false;
             
             // Initial setup if not already done via Reset
             if (resourceManager.currentMental <= 0 && gameSettings != null)
@@ -67,8 +67,20 @@ namespace ApprovalMonster.Core
             turnManager.OnTurnStart.AddListener(OnTurnStart);
             turnManager.OnTurnEnd.AddListener(OnTurnEnd);
             turnManager.OnDraftStart.AddListener(OnDraftStart);
+            
+            // Resource listeners
+            resourceManager.onMentalChanged.RemoveListener(OnMentalChanged);
+            resourceManager.onMentalChanged.AddListener(OnMentalChanged);
 
             turnManager.StartGame();
+        }
+        
+        private void OnMentalChanged(int current, int max)
+        {
+            if (isGameActive && current <= 0)
+            {
+                GameOver();
+            }
         }
 
         public void ResetGame()
@@ -168,6 +180,43 @@ namespace ApprovalMonster.Core
             {
                 turnManager.EndPlayerAction();
             }
+
+            // Monster Mode Trigger Check
+            // Triggered if we are in monster mode, haven't drafted yet, and aren't waiting
+            if (resourceManager.isMonsterMode && !hasPerformedMonsterDraft && !isWaitingForMonsterDraft)
+            {
+                StartMonsterDraft();
+            }
+        }
+
+        private void StartMonsterDraft()
+        {
+            Debug.Log("[GameManager] Starting Monster Draft");
+            isWaitingForMonsterDraft = true;
+            
+            var options = draftManager.GenerateMonsterDraftOptions(
+                currentStage.monsterDeck,
+                gameSettings.monsterDraftCardCount
+            );
+            
+            FindObjectOfType<UI.UIManager>()?.ShowMonsterDraft(options);
+        }
+        
+        public void OnMonsterDraftComplete(CardData selectedCard)
+        {
+            Debug.Log($"[GameManager] Monster Draft complete. Selected: {selectedCard.cardName}");
+            
+            deckManager.hand.Add(selectedCard);
+            FindObjectOfType<UI.UIManager>()?.OnCardDrawn(selectedCard);
+            
+            isWaitingForMonsterDraft = false;
+            hasPerformedMonsterDraft = true;
+            
+            // Check turn end again as drafting might have happened at 0 motivation
+            if (resourceManager.currentMotivation <= 0)
+            {
+                turnManager.EndPlayerAction();
+            }
         }
         
         private void StartMonsterDraft()
@@ -207,10 +256,21 @@ namespace ApprovalMonster.Core
 
         public void CheckGameEndCondition()
         {
-             // Simple rule: If we run out of mental, Game Over immediately?
-             // Or if we finish specific turns?
-             // For this prototype, let's say after 5 turns, we finish.
-             // Or better: Let's make a "FinishStage" method called by TurnManager.
+             // ターン数制限などをここでチェック
+             // 例: 5ターン終了でクリア
+             // if (turnManager.CurrentTurn > 5) FinishStage();
+        }
+
+        private void GameOver()
+        {
+            Debug.Log("[GameManager] Game Over! Mental depleted.");
+            isGameActive = false;
+            
+            // ゲームオーバー時の処理
+            // 現状はスコアを保存してリザルトへ
+            // TODO: ゲームオーバー演出（「活動停止...」など）を追加
+            
+            FinishStage();
         }
 
         public void FinishStage()
