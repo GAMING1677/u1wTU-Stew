@@ -29,6 +29,18 @@ namespace ApprovalMonster.Data
         public int followerGain;
         
         [BoxGroup("Effects")]
+        public int drawCount = 0; // Number of cards to draw immediately
+        
+        [BoxGroup("Effects")]
+        public int motivationRecovery = 0; // AP to recover (can be negative to drain)
+
+        [BoxGroup("Effects")]
+        public int turnDrawBonus = 0; // Increase cards drawn per turn (Persistent)
+        
+        [BoxGroup("Effects")]
+        public int maxMotivationBonus = 0; // Increase Max AP (Persistent)
+        
+        [BoxGroup("Effects")]
         public float impressionRate = 1.0f;
 
         [BoxGroup("Type & Risk")]

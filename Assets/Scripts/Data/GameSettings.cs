@@ -20,9 +20,7 @@ namespace ApprovalMonster.Data
         [Range(2, 3)]
         public int monsterDraftCardCount = 3;
         
-        [Tooltip("Number of cards to show in monster draft")]
-        [Range(2, 3)]
-        public int monsterDraftCardCount = 3;
+
 
         [Header("Monster Mode Effects (Future)")]
         [Tooltip("Impression multiplier when in Monster Mode (1.0 = disabled)")]

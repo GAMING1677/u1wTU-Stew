@@ -24,6 +24,9 @@ namespace ApprovalMonster.Core
         [SerializeField] private bool isGameActive = false;
         [SerializeField] private bool isWaitingForMonsterDraft = false;
         [SerializeField] private bool hasPerformedMonsterDraft = false;
+        
+        // Persistent modifiers
+        private int extraTurnDraws = 0;
 
         private void Awake()
         {
@@ -51,6 +54,7 @@ namespace ApprovalMonster.Core
             Debug.Log("[GameManager] StartGame called.");
             isGameActive = true;
             hasPerformedMonsterDraft = false;
+            extraTurnDraws = 0;
             
             // Initial setup if not already done via Reset
             if (resourceManager.currentMental <= 0 && gameSettings != null)
@@ -63,6 +67,7 @@ namespace ApprovalMonster.Core
             turnManager.OnTurnEnd.RemoveListener(OnTurnEnd);
             turnManager.OnDraftStart.RemoveListener(OnDraftStart);
 
+            // Hook up events
             // Hook up events
             turnManager.OnTurnStart.AddListener(OnTurnStart);
             turnManager.OnTurnEnd.AddListener(OnTurnEnd);
@@ -90,6 +95,7 @@ namespace ApprovalMonster.Core
 
             // 1. Reset Resources
             resourceManager.Initialize(gameSettings);
+            extraTurnDraws = 0;
             
             // 2. Reset Deck
             if (currentStage != null)
@@ -108,7 +114,10 @@ namespace ApprovalMonster.Core
         {
             Debug.Log("[GameManager] OnTurnStart received. Drawing cards.");
             resourceManager.ResetMotivation();
-            deckManager.DrawCards(gameSettings.initialHandSize);
+            
+            // Apply persistent draw bonus
+            int drawCount = gameSettings.initialHandSize + extraTurnDraws;
+            deckManager.DrawCards(drawCount);
         }
 
         private void OnTurnEnd()
@@ -143,9 +152,46 @@ namespace ApprovalMonster.Core
                 return;
             }
 
-            Debug.Log($"Playing Card: {card.cardName}");
-            // Execute Card Effect
-            resourceManager.AddImpression(card.impressionRate);
+            // Pay costs
+            resourceManager.UseMotivation(card.motivationCost);
+            // Mental cost (positive = hurt)
+            if (card.mentalCost > 0)
+                resourceManager.DamageMental(card.mentalCost);
+            else if (card.mentalCost < 0)
+                resourceManager.HealMental(-card.mentalCost);
+
+            // Execute Effects
+            resourceManager.AddFollowers(card.followerGain);
+            if (card.impressionRate > 0)
+            {
+                resourceManager.AddImpression(card.impressionRate);
+            }
+
+            // New Effects: Draw & AP Logic
+            if (card.drawCount > 0)
+            {
+                deckManager.DrawCards(card.drawCount);
+            }
+
+            if (card.motivationRecovery != 0)
+            {
+                resourceManager.AddMotivation(card.motivationRecovery);
+            }
+
+            // New Effects: Persistent
+            if (card.turnDrawBonus > 0)
+            {
+                extraTurnDraws += card.turnDrawBonus;
+                Debug.Log($"[GameManager] Extra turn draws increased by {card.turnDrawBonus}. Total extra: {extraTurnDraws}");
+            }
+            
+            if (card.maxMotivationBonus != 0)
+            {
+                resourceManager.IncreaseMaxMotivation(card.maxMotivationBonus);
+                Debug.Log($"[GameManager] Max Motivation increased by {card.maxMotivationBonus}.");
+            }
+
+            // Risk Logic
             if (card.HasRisk())
             {
                // Implement risk logic e.g. probability check
@@ -160,9 +206,7 @@ namespace ApprovalMonster.Core
                }
             }
             
-            // Mental cost (can be positive for damage or negative for heal)
-            if (card.mentalCost > 0) resourceManager.DamageMental(card.mentalCost);
-            else if (card.mentalCost < 0) resourceManager.HealMental(-card.mentalCost);
+
 
             // Move card
             deckManager.PlayCard(card);
@@ -181,12 +225,7 @@ namespace ApprovalMonster.Core
                 turnManager.EndPlayerAction();
             }
 
-            // Monster Mode Trigger Check
-            // Triggered if we are in monster mode, haven't drafted yet, and aren't waiting
-            if (resourceManager.isMonsterMode && !hasPerformedMonsterDraft && !isWaitingForMonsterDraft)
-            {
-                StartMonsterDraft();
-            }
+
         }
 
         private void StartMonsterDraft()
@@ -219,57 +258,12 @@ namespace ApprovalMonster.Core
             }
         }
         
-        private void StartMonsterDraft()
-        {
-            Debug.Log("[GameManager] Starting Monster Draft");
-            isWaitingForMonsterDraft = true;
-            
-            // UIManagerにモンスタードラフト開始を通知
-            var options = draftManager.GenerateMonsterDraftOptions(
-                currentStage.monsterDeck,
-                gameSettings.monsterDraftCardCount
-            );
-            
-            // UIManagerのメソッドを呼び出し
-            FindObjectOfType<UI.UIManager>()?.ShowMonsterDraft(options);
-        }
-        
-        public void OnMonsterDraftComplete(CardData selectedCard)
-        {
-            Debug.Log($"[GameManager] Monster Draft complete. Selected: {selectedCard.cardName}");
-            
-            // 選択したカードを手札に直接追加
-            deckManager.hand.Add(selectedCard);
-            
-            // UIManagerに手札更新を通知
-            FindObjectOfType<UI.UIManager>()?.OnCardDrawn(selectedCard);
-            
-            isWaitingForMonsterDraft = false;
-            hasPerformedMonsterDraft = true; // Mark as completed
-            
-            // ターン終了チェックをここでも行う
-            if (resourceManager.currentMotivation <= 0)
-            {
-                turnManager.EndPlayerAction();
-            }
-        }
 
-        public void CheckGameEndCondition()
-        {
-             // ターン数制限などをここでチェック
-             // 例: 5ターン終了でクリア
-             // if (turnManager.CurrentTurn > 5) FinishStage();
-        }
 
         private void GameOver()
         {
             Debug.Log("[GameManager] Game Over! Mental depleted.");
             isGameActive = false;
-            
-            // ゲームオーバー時の処理
-            // 現状はスコアを保存してリザルトへ
-            // TODO: ゲームオーバー演出（「活動停止...」など）を追加
-            
             FinishStage();
         }
 
