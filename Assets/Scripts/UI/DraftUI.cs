@@ -69,6 +69,18 @@ namespace ApprovalMonster.UI
             gameObject.SetActive(true);
             canvasGroup.DOFade(1f, fadeInDuration);
 
+            // モンスタードラフト用UI変更
+            if (isMonsterDraft)
+            {
+                titleText.text = "モンスターの力を選べ";
+                titleText.color = Color.red; 
+            }
+            else
+            {
+                titleText.text = "カードを選択してください";
+                titleText.color = Color.white;
+            }
+
             // カードビューを生成
             foreach (var cardData in options)
             {

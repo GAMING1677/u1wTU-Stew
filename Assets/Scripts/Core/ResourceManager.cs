@@ -79,6 +79,7 @@ namespace ApprovalMonster.Core
         public void DamageMental(int amount)
         {
             currentMental -= amount;
+            
             if (currentMental <= 0)
             {
                 currentMental = 0;
@@ -92,6 +93,7 @@ namespace ApprovalMonster.Core
                 onMonsterModeTriggered?.Invoke();
                 Debug.Log("[ResourceManager] Monster Mode Triggered!");
             }
+            
             onMentalChanged?.Invoke(currentMental, settings.maxMental);
         }
 

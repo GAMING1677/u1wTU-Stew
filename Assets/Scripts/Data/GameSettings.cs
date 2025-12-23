@@ -12,7 +12,7 @@ namespace ApprovalMonster.Data
         public int maxMotivation = 3;
         public int initialHandSize = 3;
 
-        [Header("Game Rules")]
+        [Header("Monster Mode")]
         [Tooltip("Mental threshold to trigger Monster Mode")]
         public int monsterThreshold = 3;
 
@@ -20,8 +20,16 @@ namespace ApprovalMonster.Data
         [Range(2, 3)]
         public int monsterDraftCardCount = 3;
         
-        [Tooltip("Multiplier applied when in Monster Mode")]
-        public float monsterModeMultiplier = 3.0f;
+        [Tooltip("Number of cards to show in monster draft")]
+        [Range(2, 3)]
+        public int monsterDraftCardCount = 3;
+
+        [Header("Monster Mode Effects (Future)")]
+        [Tooltip("Impression multiplier when in Monster Mode (1.0 = disabled)")]
+        public float monsterModeMultiplier = 1.0f;
+        
+        [Tooltip("Follower penalty per turn in Monster Mode (0 = disabled)")]
+        public int monsterFollowerPenalty = 0;
 
         [Header("Score Attack")]
         public long scoreCap = 9999999999;

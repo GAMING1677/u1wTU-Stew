@@ -132,40 +132,48 @@ namespace ApprovalMonster.Core
 
         public void TryPlayCard(CardData card)
         {
-            // Check costs
-            if (resourceManager.currentMotivation < card.motivationCost)
+            if (!isGameActive || deckManager.isDrawing || isWaitingForMonsterDraft) return;
+            if (turnManager.CurrentPhase != TurnManager.TurnPhase.PlayerAction) return;
+
+            // Check motivation
+            if (!resourceManager.UseMotivation(card.motivationCost))
             {
                 Debug.Log("Not enough motivation!");
+                // Show UI feedback
                 return;
             }
 
-            // Pay costs
-            resourceManager.UseMotivation(card.motivationCost);
-            // Mental cost (positive = hurt)
-            if (card.mentalCost > 0)
-                resourceManager.DamageMental(card.mentalCost);
-            else if (card.mentalCost < 0)
-                resourceManager.HealMental(-card.mentalCost);
-
-            // Execute Effects
-            resourceManager.AddFollowers(card.followerGain);
-            if (card.impressionRate > 0)
-            {
-                resourceManager.AddImpression(card.impressionRate);
-            }
-
-            // Risk Logic
+            Debug.Log($"Playing Card: {card.cardName}");
+            // Execute Card Effect
+            resourceManager.AddImpression(card.impressionRate);
             if (card.HasRisk())
             {
                // Implement risk logic e.g. probability check
                if (Random.value < card.riskProbability)
                {
-                   ApplyRisk(card.riskType, card.riskValue);
+                   // ApplyRisk(card.riskType, card.riskValue); 
+                   // Simplified risk for now
+                   if (card.riskType == RiskType.Flaming)
+                   {
+                        resourceManager.DamageMental(card.mentalCost);
+                   }
                }
             }
+            
+            // Mental cost (can be positive for damage or negative for heal)
+            if (card.mentalCost > 0) resourceManager.DamageMental(card.mentalCost);
+            else if (card.mentalCost < 0) resourceManager.HealMental(-card.mentalCost);
 
             // Move card
             deckManager.PlayCard(card);
+            
+            // カードプレイ完了後、モンスタードラフトチェック
+            // まだドラフトを行っておらず、かつモンスターモードになった場合のみ実行
+            if (resourceManager.isMonsterMode && !hasPerformedMonsterDraft && !isWaitingForMonsterDraft)
+            {
+                StartMonsterDraft();
+                return; // ドラフト待機へ
+            }
             
             // Check turn end condition
             if (resourceManager.currentMotivation <= 0)
@@ -205,6 +213,41 @@ namespace ApprovalMonster.Core
             hasPerformedMonsterDraft = true;
             
             // Check turn end again as drafting might have happened at 0 motivation
+            if (resourceManager.currentMotivation <= 0)
+            {
+                turnManager.EndPlayerAction();
+            }
+        }
+        
+        private void StartMonsterDraft()
+        {
+            Debug.Log("[GameManager] Starting Monster Draft");
+            isWaitingForMonsterDraft = true;
+            
+            // UIManagerにモンスタードラフト開始を通知
+            var options = draftManager.GenerateMonsterDraftOptions(
+                currentStage.monsterDeck,
+                gameSettings.monsterDraftCardCount
+            );
+            
+            // UIManagerのメソッドを呼び出し
+            FindObjectOfType<UI.UIManager>()?.ShowMonsterDraft(options);
+        }
+        
+        public void OnMonsterDraftComplete(CardData selectedCard)
+        {
+            Debug.Log($"[GameManager] Monster Draft complete. Selected: {selectedCard.cardName}");
+            
+            // 選択したカードを手札に直接追加
+            deckManager.hand.Add(selectedCard);
+            
+            // UIManagerに手札更新を通知
+            FindObjectOfType<UI.UIManager>()?.OnCardDrawn(selectedCard);
+            
+            isWaitingForMonsterDraft = false;
+            hasPerformedMonsterDraft = true; // Mark as completed
+            
+            // ターン終了チェックをここでも行う
             if (resourceManager.currentMotivation <= 0)
             {
                 turnManager.EndPlayerAction();
@@ -250,7 +293,7 @@ namespace ApprovalMonster.Core
         {
             switch (risk)
             {
-                case RiskType.Flame:
+                case RiskType.Flaming:
                     resourceManager.DamageMental(value);
                     break;
                 case RiskType.LoseFollower:
