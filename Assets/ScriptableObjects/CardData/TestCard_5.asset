@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
+  m_Name: TestCard_5
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
+  cardName: test_1
+  cardImage: {fileID: 0}
+  flavorText: 
+  motivationCost: 1
+  mentalCost: 0
+  followerGain: 10
+  impressionRate: 1
+  cardType: 0
+  riskType: 0
+  riskProbability: 1
+  riskValue: 0

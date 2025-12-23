@@ -59,9 +59,19 @@ namespace ApprovalMonster.Core
                     break;
                 case TurnPhase.EndStep:
                     OnTurnEnd?.Invoke();
+                    OnTurnEnd?.Invoke();
                     turnCount++;
-                    // Go to next turn start (or Draft phase if implemented later)
-                    StartTurn(); 
+                    
+                    // PROTOTYPE: End game after 5 turns
+                    if (turnCount > 5)
+                    {
+                        SetPhase(TurnPhase.Result);
+                        GameManager.Instance.FinishStage();
+                    }
+                    else
+                    {
+                        StartTurn(); 
+                    }
                     break;
                 case TurnPhase.Result:
                 case TurnPhase.GameOver:

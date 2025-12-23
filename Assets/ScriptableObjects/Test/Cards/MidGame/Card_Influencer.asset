@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
+  m_Name: Card_Influencer
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
+  cardName: "\u30A4\u30F3\u30D5\u30EB\u30A8\u30F3\u30B5\u30FC\u306B\u5ABF\u3073\u308B"
+  cardImage: {fileID: 0}
+  flavorText: "\u30D7\u30E9\u30A4\u30C9\u3092\u6368\u3066\u3066\u6570\u5B57\u3092\u53D6\u308A\u306B\u884C\u304F\u3002\u30D0\u30E9\u30F3\u30B9\u578B\u3002"
+  motivationCost: 2
+  mentalCost: 1
+  followerGain: 200
+  impressionRate: 3
+  cardType: 0
+  riskType: 0
+  riskProbability: 1
+  riskValue: 0

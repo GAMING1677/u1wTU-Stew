@@ -19,14 +19,31 @@ namespace ApprovalMonster.Core
         public System.Action<CardData> OnCardDrawn;
         public System.Action<CardData> OnCardDiscarded;
         public System.Action OnDeckShuffled;
+        public System.Action OnReset; // New event
 
         public void InitializeDeck(List<CardData> initialDeck, GameSettings gameSettings)
         {
+            Debug.Log($"[DeckManager] InitializeDeck called. Incoming deck count: {initialDeck?.Count ?? 0}");
             settings = gameSettings;
-            drawPile = new List<CardData>(initialDeck);
+            if (initialDeck == null)
+            {
+                Debug.LogError("[DeckManager] InitialDeck is NULL!");
+                drawPile = new List<CardData>();
+            }
+            else
+            {
+                drawPile = new List<CardData>(initialDeck);
+                Debug.Log($"[DeckManager] DrawPile initialized with {drawPile.Count} cards.");
+            }
+            ShuffleDrawPile();
+        }
+        
+        public void ClearAll()
+        {
             hand.Clear();
             discardPile.Clear();
-            ShuffleDrawPile();
+            drawPile.Clear();
+            OnReset?.Invoke();
         }
 
         public void ShuffleDrawPile()
@@ -44,6 +61,7 @@ namespace ApprovalMonster.Core
 
         public void DrawCards(int count)
         {
+            Debug.Log($"[DeckManager] DrawCards called. Requesting {count} cards. DrawPile: {drawPile.Count}, DiscardPile: {discardPile.Count}");
             for (int i = 0; i < count; i++)
             {
                 if (drawPile.Count == 0)
@@ -62,6 +80,7 @@ namespace ApprovalMonster.Core
                 CardData card = drawPile[0];
                 drawPile.RemoveAt(0);
                 hand.Add(card);
+                Debug.Log($"[DeckManager] Drawing card: {card.cardName}. Invoking OnCardDrawn.");
                 OnCardDrawn?.Invoke(card);
             }
         }

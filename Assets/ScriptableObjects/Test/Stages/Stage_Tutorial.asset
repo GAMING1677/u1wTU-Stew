@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32c8f3617824a64bb41f5a00b165acf, type: 3}
+  m_Name: Stage_Tutorial
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.StageData
+  stageName: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB"
+  quotaScore: 50000
+  initialDeck:
+  - {fileID: 11400000, guid: b4433471beaa4994d8a23481cdf5c3bb, type: 2}
+  - {fileID: 11400000, guid: c19d64be0eb162347a83b98bbc24a44f, type: 2}
+  - {fileID: 11400000, guid: fa8c020e2bf990140847b105498ee560, type: 2}
+  - {fileID: 11400000, guid: 25efe1f2c1f3ea04c9bdef192f71d6ab, type: 2}
+  - {fileID: 11400000, guid: d52ac6abc3bd65e40858f85affd3661a, type: 2}
+  - {fileID: 11400000, guid: 9ed448e4d80c1a44e948bf3026cddbc2, type: 2}
+  - {fileID: 11400000, guid: f4190d3ea69edc34683fb45195e0ffbf, type: 2}
+  - {fileID: 11400000, guid: 27364525ce4652745ab8f1bbeea68c0a, type: 2}
+  - {fileID: 11400000, guid: c952dd88aedceb9498a7fae1dd6bf7e1, type: 2}
+  - {fileID: 11400000, guid: 15111fd9894216d4da3a73b81fd17e35, type: 2}
+  - {fileID: 11400000, guid: 8c640cdb1c55e96448a2d403a5acab11, type: 2}
+  - {fileID: 11400000, guid: cde3300d14e62fe42b25ef023a6e3f8b, type: 2}
+  - {fileID: 11400000, guid: 3090c3b716b5b674ea48d7e11cc1b2bb, type: 2}
+  - {fileID: 11400000, guid: 8e3165c54e4de2945a1d0c284079d83f, type: 2}
+  - {fileID: 11400000, guid: 24ba14e3ccd809b42ba72ff0c3aeb08f, type: 2}
+  draftPool: []
+  monsterDeck: []
+  background: {fileID: 0}
+  themeColor: {r: 1, g: 1, b: 1, a: 1}

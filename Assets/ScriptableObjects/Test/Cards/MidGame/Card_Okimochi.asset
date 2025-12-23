@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
+  m_Name: Card_Okimochi
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
+  cardName: "\u304A\u6C17\u6301\u3061\u8868\u660E"
+  cardImage: {fileID: 0}
+  flavorText: "0\u30DE\u30CA\u9AD8\u706B\u529B\u3002\u30E1\u30F3\u30BF\u30EB\u3092\u5927\u5E45\u306B\u652F\u6255\u3046\u5207\u308A\u672D\u3002"
+  motivationCost: 0
+  mentalCost: 3
+  followerGain: 0
+  impressionRate: 10
+  cardType: 4
+  riskType: 0
+  riskProbability: 1
+  riskValue: 0

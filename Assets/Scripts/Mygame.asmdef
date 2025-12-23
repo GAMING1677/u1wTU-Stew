@@ -3,10 +3,11 @@
     "rootNamespace": "",
     "references": [
         "NaughtyAttributes.Core",
-        "Utage",
         "Unity.TextMeshPro",
         "ThirdParty",
-        "MoreMountains.Tools"
+        "MoreMountains.Tools",
+        "Utage",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -38,6 +38,7 @@ MonoBehaviour:
     - Lofelt.NiceVibrations
     - Lofelt.NiceVibrations.Demo
     - MoreMountains.Tools
+    - Mygame
     - NaughtyAttributes.Core
     - NaughtyAttributes.Test
     - SingularityGroup.HotReload.Runtime

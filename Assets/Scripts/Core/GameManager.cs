@@ -42,13 +42,17 @@ namespace ApprovalMonster.Core
 
         public void StartGame()
         {
-            resourceManager.Initialize(gameSettings);
+            Debug.Log("[GameManager] StartGame called.");
             
-            // Should pass currentStage.initialDeck
-            if (currentStage != null)
+            // Initial setup if not already done via Reset
+            if (resourceManager.currentMental <= 0 && gameSettings != null)
             {
-                deckManager.InitializeDeck(currentStage.initialDeck, gameSettings);
+                 resourceManager.Initialize(gameSettings);
             }
+            
+            // Prevent duplicate listeners
+            turnManager.OnTurnStart.RemoveListener(OnTurnStart);
+            turnManager.OnTurnEnd.RemoveListener(OnTurnEnd);
 
             // Hook up events
             turnManager.OnTurnStart.AddListener(OnTurnStart);
@@ -57,8 +61,24 @@ namespace ApprovalMonster.Core
             turnManager.StartGame();
         }
 
+        public void ResetGame()
+        {
+            // 0. Explicitly clear everything first
+            deckManager.ClearAll();
+
+            // 1. Reset Resources
+            resourceManager.Initialize(gameSettings);
+            
+            // 2. Reset Deck
+            if (currentStage != null)
+            {
+                deckManager.InitializeDeck(currentStage.initialDeck, gameSettings);
+            }
+        }
+
         private void OnTurnStart()
         {
+            Debug.Log("[GameManager] OnTurnStart received. Drawing cards.");
             resourceManager.ResetMotivation();
             deckManager.DrawCards(gameSettings.initialHandSize);
         }
@@ -110,6 +130,30 @@ namespace ApprovalMonster.Core
             if (resourceManager.currentMotivation <= 0)
             {
                 turnManager.EndPlayerAction();
+            }
+        }
+
+        public void CheckGameEndCondition()
+        {
+             // Simple rule: If we run out of mental, Game Over immediately?
+             // Or if we finish specific turns?
+             // For this prototype, let's say after 5 turns, we finish.
+             // Or better: Let's make a "FinishStage" method called by TurnManager.
+        }
+
+        public void FinishStage()
+        {
+            // Save Score
+            long score = resourceManager.totalImpressions;
+            if (SceneNavigator.Instance != null)
+            {
+                SceneNavigator.Instance.LastGameScore = score;
+                SaveDataManager.Instance.SaveHighScore(score); // Auto save high score
+                SceneNavigator.Instance.GoToResult();
+            }
+            else
+            {
+                Debug.LogWarning("SceneNavigator not found, cannot go to Result.");
             }
         }
         
