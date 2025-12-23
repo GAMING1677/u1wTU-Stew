@@ -79,6 +79,32 @@ namespace ApprovalMonster.Core
         }
 
         /// <summary>
+        /// モンスタードラフト用の候補カードを生成
+        /// </summary>
+        public List<CardData> GenerateMonsterDraftOptions(List<CardData> monsterDeck, int count)
+        {
+            if (monsterDeck == null || monsterDeck.Count == 0)
+            {
+                Debug.LogWarning("[DraftManager] Monster deck is empty!");
+                return new List<CardData>();
+            }
+            
+            var options = new List<CardData>();
+            var availableCards = new List<CardData>(monsterDeck);
+            
+            // ランダムに指定枚数選択
+            for (int i = 0; i < count && availableCards.Count > 0; i++)
+            {
+                int randomIndex = Random.Range(0, availableCards.Count);
+                options.Add(availableCards[randomIndex]);
+                availableCards.RemoveAt(randomIndex); // 重複を避ける
+            }
+            
+            Debug.Log($"[DraftManager] Generated {options.Count} monster draft options");
+            return options;
+        }
+
+        /// <summary>
         /// プレイヤーが選択したカードを山札の一番上に追加
         /// </summary>
         /// <param name="selectedCard">選択されたカード</param>

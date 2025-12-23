@@ -21,6 +21,8 @@ namespace ApprovalMonster.Core
         public System.Action OnDeckShuffled;
         public System.Action OnReset; // New event
 
+        public bool isDrawing { get; set; } = false;
+
         public void InitializeDeck(List<CardData> initialDeck, GameSettings gameSettings)
         {
             Debug.Log($"[DeckManager] InitializeDeck called. Incoming deck count: {initialDeck?.Count ?? 0}");

@@ -16,6 +16,9 @@ namespace ApprovalMonster.Core
         [ReadOnly] public int currentMental;
         [ReadOnly] public int currentMotivation;
         [ReadOnly] public long totalImpressions;
+        [ReadOnly] public bool isMonsterMode = false;
+        
+        private bool hasTriggeredMonsterMode = false;
 
         [Header("Events")]
         public UnityEvent<int> onFollowersChanged;
@@ -39,6 +42,10 @@ namespace ApprovalMonster.Core
             currentMental = settings.maxMental;
             currentMotivation = settings.maxMotivation;
             totalImpressions = 0;
+            
+            // モンスターモードリセット
+            isMonsterMode = false;
+            hasTriggeredMonsterMode = false;
 
             BroadcastAll();
         }
@@ -72,15 +79,21 @@ namespace ApprovalMonster.Core
         public void DamageMental(int amount)
         {
             currentMental -= amount;
+            
             if (currentMental <= 0)
             {
                 currentMental = 0;
                 // Trigger Game Over logic handled by GameManager usually
             }
-            else if (currentMental <= settings.monsterThreshold)
+            else if (!hasTriggeredMonsterMode && currentMental <= settings.monsterThreshold)
             {
+                // モンスター化トリガー（一度のみ）
+                isMonsterMode = true;
+                hasTriggeredMonsterMode = true;
                 onMonsterModeTriggered?.Invoke();
+                Debug.Log("[ResourceManager] Monster Mode Triggered!");
             }
+            
             onMentalChanged?.Invoke(currentMental, settings.maxMental);
         }
 

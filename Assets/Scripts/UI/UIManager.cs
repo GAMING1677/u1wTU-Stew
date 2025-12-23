@@ -177,8 +177,25 @@ namespace ApprovalMonster.UI
                 }
             }
         }
+        
+        public void ShowMonsterDraft(List<CardData> options)
+        {
+            Debug.Log("[UIManager] Showing Monster Draft");
+            
+            if (draftUI != null)
+            {
+                // 既存のDraftUIを再利用
+                // タイトルを変更して表示
+                draftUI.ShowDraftOptions(options, isMonsterDraft: true);
+            }
+            else
+            {
+                Debug.LogError("[UIManager] DraftUI is not assigned!");
+            }
+        }
 
-        private void OnCardDrawn(CardData data)
+
+        public void OnCardDrawn(CardData data)
         {
             Debug.Log($"[UIManager] OnCardDrawn called for {data.cardName}");
             var card = Instantiate(cardPrefab, handContainer);
