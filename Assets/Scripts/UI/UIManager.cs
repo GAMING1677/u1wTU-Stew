@@ -19,7 +19,11 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI mentalText;
         [SerializeField] private TextMeshProUGUI motivationText;
         [SerializeField] private TextMeshProUGUI impressionText;
+        [SerializeField] private TextMeshProUGUI turnText;
         [SerializeField] private Slider mentalSlider;
+        
+        [Header("Buttons")]
+        [SerializeField] private Button endTurnButton;
 
         private List<CardView> activeCards = new List<CardView>();
 
@@ -53,6 +57,10 @@ namespace ApprovalMonster.UI
                 gm.deckManager.OnCardDrawn += OnCardDrawn;
                 gm.deckManager.OnCardDiscarded += OnCardDiscarded;
                 gm.deckManager.OnReset += OnReset;
+                
+                // Subscribe to turn events
+                gm.turnManager.OnTurnChanged.RemoveListener(UpdateTurnDisplay);
+                gm.turnManager.OnTurnChanged.AddListener(UpdateTurnDisplay);
             }
             else
             {
@@ -63,6 +71,12 @@ namespace ApprovalMonster.UI
         private void Start()
         {
              Debug.Log("[UIManager] Start called.");
+             
+             // Setup button listener
+             if (endTurnButton != null)
+             {
+                 endTurnButton.onClick.AddListener(OnEndTurnButtonClicked);
+             }
         }
 
         private void OnDisable()
@@ -79,6 +93,7 @@ namespace ApprovalMonster.UI
                  gm.deckManager.OnCardDrawn -= OnCardDrawn;
                  gm.deckManager.OnCardDiscarded -= OnCardDiscarded;
                  gm.deckManager.OnReset -= OnReset;
+                 gm.turnManager.OnTurnChanged.RemoveListener(UpdateTurnDisplay);
              }
         }
         
@@ -113,6 +128,25 @@ namespace ApprovalMonster.UI
         {
             impressionText.text = $"{val:N0} Impressions";
             impressionText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
+        }
+        
+        private void UpdateTurnDisplay(int turn)
+        {
+            if (turnText != null)
+            {
+                turnText.text = $"Turn {turn}/5";
+                turnText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
+            }
+        }
+        
+        private void OnEndTurnButtonClicked()
+        {
+            Debug.Log("[UIManager] End Turn button clicked.");
+            var gm = GameManager.Instance;
+            if (gm != null && gm.turnManager != null)
+            {
+                gm.turnManager.EndPlayerAction();
+            }
         }
 
         private void OnCardDrawn(CardData data)
