@@ -30,6 +30,14 @@ namespace ApprovalMonster.UI
         
         [Header("Draft")]
         [SerializeField] private DraftUI draftUI;
+        
+        [Header("Card Layout")]
+        [SerializeField] private float defaultCardSpacing = 20f;
+        [SerializeField] private float minCardSpacing = -100f; // Negative for overlap
+        
+        [Header("Fan Layout")]
+        [SerializeField] private float maxRotationAngle = 10f; // Max rotation at edges (degrees)
+        [SerializeField] private float arcHeight = 50f; // How much lower the edges are
 
         private List<CardView> activeCards = new List<CardView>();
 
@@ -114,6 +122,74 @@ namespace ApprovalMonster.UI
                 if(card != null) Destroy(card.gameObject);
             }
             activeCards.Clear();
+        }
+        
+        private void LayoutCards()
+        {
+            if (activeCards.Count == 0) return;
+            
+            // Get container and card dimensions
+            RectTransform containerRect = handContainer.GetComponent<RectTransform>();
+            float containerWidth = containerRect.rect.width;
+            
+            // Assume all cards have the same width (get from prefab)
+            float cardWidth = cardPrefab.GetComponent<RectTransform>().sizeDelta.x;
+            
+            // Calculate total width if cards were placed with default spacing
+            float totalDefaultWidth = (activeCards.Count * cardWidth) + ((activeCards.Count - 1) * defaultCardSpacing);
+            
+            float spacing;
+            if (totalDefaultWidth > containerWidth && activeCards.Count > 1)
+            {
+                // Overlap mode: calculate spacing to fit in container
+                spacing = (containerWidth - cardWidth) / (activeCards.Count - 1);
+                spacing = Mathf.Max(spacing, minCardSpacing); // Respect minimum spacing
+            }
+            else
+            {
+                // Normal mode: use default spacing
+                spacing = cardWidth + defaultCardSpacing;
+            }
+            
+            // Calculate starting X position (center the hand)
+            float totalWidth = (activeCards.Count - 1) * spacing + cardWidth;
+            float startX = -totalWidth / 2f + cardWidth / 2f;
+            
+            // Get default Y position from prefab
+            float baseYPos = cardPrefab.GetComponent<RectTransform>().anchoredPosition.y;
+            
+            // Position each card
+            for (int i = 0; i < activeCards.Count; i++)
+            {
+                CardView card = activeCards[i];
+                float xPos = startX + (i * spacing);
+                
+                // Calculate fan effect
+                float centerIndex = (activeCards.Count - 1) / 2f;
+                float relativeIndex = i - centerIndex;
+                
+                // Rotation: edges rotate outward
+                float rotationZ = 0f;
+                if (activeCards.Count > 1)
+                {
+                    float normalizedPos = relativeIndex / centerIndex; // -1 to 1
+                    rotationZ = normalizedPos * maxRotationAngle;
+                }
+                
+                // Y offset: parabolic curve (center high, edges low)
+                // Using absolute value makes edges lower than center
+                float arcOffset = -Mathf.Abs(relativeIndex / centerIndex) * arcHeight;
+                float yPos = baseYPos + arcOffset;
+                
+                RectTransform cardRect = card.GetComponent<RectTransform>();
+                
+                // Ensure scale is 1 (in case scale animation gets killed)
+                cardRect.localScale = Vector3.one;
+                
+                cardRect.DOKill(); // Kill any existing position tweens
+                cardRect.DOAnchorPos(new Vector2(xPos, yPos), 0.3f).SetEase(Ease.OutQuad);
+                cardRect.DORotate(new Vector3(0, 0, rotationZ), 0.3f).SetEase(Ease.OutQuad);
+            }
         }
 
         private void UpdateFollowers(int val)
@@ -226,42 +302,36 @@ namespace ApprovalMonster.UI
             // Animation
             card.transform.localScale = Vector3.zero;
             card.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack);
+            
+            // Update card layout
+            LayoutCards();
         }
 
         private void OnCardDiscarded(CardData data)
         {
-            // Find the card view corresponding to this data
-            // This is a simple implementation; ideally map data->view
-            var view = activeCards.Find(c => c.CardName == data.cardName); // Hacky identification
-            if (view != null)
+            Debug.Log($"[UIManager] OnCardDiscarded called for {data.cardName}");
+            
+            // Find the first card view with matching CardData reference
+            CardView target = activeCards.Find(c => c.CardData == data);
+            
+            if (target != null)
             {
-                activeCards.Remove(view);
-                view.transform.DOScale(0f, 0.2f).OnComplete(() => Destroy(view.gameObject));
+                Debug.Log($"[UIManager] Found CardView to remove: {target.CardName}");
+                activeCards.Remove(target);
+                
+                // Kill any active tweens on this object
+                target.transform.DOKill();
+                
+                // Immediate destroy (animation can be added back later)
+                Destroy(target.gameObject);
+                Debug.Log($"[UIManager] Destroyed {target.CardName} immediately");
+                
+                // Update layout for remaining cards
+                LayoutCards();
             }
             else
             {
-                // Just remove the first one matching? simple list management needed
-                // For MVP, just refresh all could be safer but slower. 
-                // Let's implement destroy first one found
-                 CardView target = null;
-                 // Ideally CardView holds ref to Data and we compare refs
-                 // Assuming Setup stores _data, but CardData is shared SO.
-                 // We need a unique ID or rely on object equality if DeckManager passes specific instance from list?
-                 // DeckManager uses List<CardData>, so same SO can be there multiple times.
-                 // We need to just pop one instance.
-                 foreach(var c in activeCards)
-                 {
-                    // For now, destroy the first generic match
-                    // In real game, map Hand Index to Card View
-                     target = c; 
-                     break; 
-                 }
-                 
-                 if(target != null)
-                 {
-                     activeCards.Remove(target);
-                     Destroy(target.gameObject);
-                 }
+                Debug.LogWarning($"[UIManager] Could not find CardView for {data.cardName}");
             }
         }
     }

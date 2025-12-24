@@ -19,13 +19,15 @@ namespace ApprovalMonster.UI
         [SerializeField] private Image riskIcon;
         
         [Header("Animation")]
-        [SerializeField] private float hoverScale = 1.2f;
+        [SerializeField] private float hoverSlideDistance = 100f;
+        [SerializeField] private float hoverScale = 1.15f;
         [SerializeField] private float hoverDuration = 0.2f;
 
         private CardData _data;
         private CanvasGroup _canvasGroup;
         private RectTransform _rectTransform;
         private Vector3 _originalScale;
+        private Vector2 _originalPosition;
 
         private Canvas _canvas;
         private GraphicRaycaster _graphicRaycaster;
@@ -35,6 +37,7 @@ namespace ApprovalMonster.UI
             _canvasGroup = GetComponent<CanvasGroup>();
             _rectTransform = GetComponent<RectTransform>();
             _originalScale = transform.localScale;
+            _originalPosition = _rectTransform.anchoredPosition;
 
             // Setup Canvas for sorting override
             _canvas = gameObject.GetComponent<Canvas>();
@@ -77,16 +80,34 @@ namespace ApprovalMonster.UI
 
         public string CardName => nameText.text;
         public CardData CardData => _data;
+        
+        /// <summary>
+        /// Update the original position (called by UIManager after layout changes)
+        /// </summary>
+        public void UpdateOriginalPosition()
+        {
+            _originalPosition = _rectTransform.anchoredPosition;
+        }
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            Debug.Log($"[CardView] OnPointerClick called for {_data.cardName}");
             // Simple click to play for now
             GameManager.Instance.TryPlayCard(_data);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            // Store current position before hover
+            _originalPosition = _rectTransform.anchoredPosition;
+            
+            // Slide up to reveal full card
+            _rectTransform.DOKill();
+            _rectTransform.DOAnchorPosY(_originalPosition.y + hoverSlideDistance, hoverDuration);
+            
+            // Scale up (Do not call DOKill here again as it kills the position tween above)
             transform.DOScale(_originalScale * hoverScale, hoverDuration);
+            
             if (_canvas != null)
             {
                 _canvas.overrideSorting = true;
@@ -96,12 +117,18 @@ namespace ApprovalMonster.UI
 
         public void OnPointerExit(PointerEventData eventData)
         {
-             transform.DOScale(_originalScale, hoverDuration);
-             if (_canvas != null)
-             {
-                 _canvas.overrideSorting = false;
-                 _canvas.sortingOrder = 0;
-             }
+            // Slide back to original position
+            _rectTransform.DOKill();
+            _rectTransform.DOAnchorPosY(_originalPosition.y, hoverDuration);
+            
+            // Scale back to original
+            transform.DOScale(_originalScale, hoverDuration);
+            
+            if (_canvas != null)
+            {
+                _canvas.overrideSorting = false;
+                _canvas.sortingOrder = 0;
+            }
         }
     }
 }
