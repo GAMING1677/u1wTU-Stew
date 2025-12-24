@@ -152,8 +152,6 @@ namespace ApprovalMonster.Core
                 return;
             }
 
-            // Pay costs
-            resourceManager.UseMotivation(card.motivationCost);
             // Mental cost (positive = hurt)
             if (card.mentalCost > 0)
                 resourceManager.DamageMental(card.mentalCost);

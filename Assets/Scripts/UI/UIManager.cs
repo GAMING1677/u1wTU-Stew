@@ -20,7 +20,10 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI motivationText;
         [SerializeField] private TextMeshProUGUI impressionText;
         [SerializeField] private TextMeshProUGUI turnText;
-        [SerializeField] private Slider mentalSlider;
+        
+        [Header("Fill Images")]
+        [SerializeField] private Image mentalFillImage;
+        [SerializeField] private Image motivationFillImage;
         
         [Header("Buttons")]
         [SerializeField] private Button endTurnButton;
@@ -115,25 +118,39 @@ namespace ApprovalMonster.UI
 
         private void UpdateFollowers(int val)
         {
-            followersText.text = $"{val:N0} Followers";
+            followersText.text = $"{val:N0} ";
+            followersText.transform.DOKill();
+            followersText.transform.localScale = Vector3.one;
             followersText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
         }
 
         private void UpdateMental(int current, int max)
         {
             mentalText.text = $"{current}/{max}";
-            mentalSlider.maxValue = max;
-            mentalSlider.DOValue(current, 0.5f);
+            if (mentalFillImage != null)
+            {
+                float fillAmount = max > 0 ? (float)current / max : 0f;
+                mentalFillImage.DOKill();
+                mentalFillImage.DOFillAmount(fillAmount, 0.5f);
+            }
         }
 
         private void UpdateMotivation(int current, int max)
         {
-            motivationText.text = $"Motivation: {current}/{max}";
+            motivationText.text = $"{current}/{max}";
+            if (motivationFillImage != null)
+            {
+                float fillAmount = max > 0 ? (float)current / max : 0f;
+                motivationFillImage.DOKill();
+                motivationFillImage.DOFillAmount(fillAmount, 0.3f);
+            }
         }
 
         private void UpdateImpressions(long val)
         {
-            impressionText.text = $"{val:N0} Impressions";
+            impressionText.text = $"{val:N0}インプ";
+            impressionText.transform.DOKill();
+            impressionText.transform.localScale = Vector3.one;
             impressionText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
         }
         
@@ -141,7 +158,7 @@ namespace ApprovalMonster.UI
         {
             if (turnText != null)
             {
-                turnText.text = $"Turn {turn}/5";
+                turnText.text = $"{turn}ターン";
                 turnText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
             }
         }
