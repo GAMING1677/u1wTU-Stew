@@ -15,7 +15,9 @@ MonoBehaviour:
   initialFollowers: 100
   maxMental: 5
   maxMotivation: 3
-  initialHandSize: 3
+  initialHandSize: 5
   monsterThreshold: 3
+  monsterDraftCardCount: 3
   monsterModeMultiplier: 3
+  monsterFollowerPenalty: 0
   scoreCap: 9999999999

@@ -17,6 +17,10 @@ namespace ApprovalMonster.Data
         [TextArea(3, 5)]
         public string flavorText;
 
+        [BoxGroup("Basic Info")]
+        [TextArea(2, 4)]
+        public System.Collections.Generic.List<string> postComments;
+
         [BoxGroup("Costs")]
         [MinValue(0)]
         public int motivationCost;

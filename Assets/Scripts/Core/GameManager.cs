@@ -253,11 +253,12 @@ namespace ApprovalMonster.Core
             else if (card.mentalCost < 0)
                 resourceManager.HealMental(-card.mentalCost);
 
+            long gainedImpressions = 0;
             // Execute Effects
             resourceManager.AddFollowers(card.followerGain);
             if (card.impressionRate > 0)
             {
-                resourceManager.AddImpression(card.impressionRate);
+                gainedImpressions = resourceManager.AddImpression(card.impressionRate);
             }
 
             // New Effects: Draw & AP Logic
@@ -310,6 +311,14 @@ namespace ApprovalMonster.Core
             {
                 StartMonsterDraft();
                 return; // ドラフト待機へ
+            }
+            
+            
+            // 6. Post Comment (Timeline)
+            if (card.postComments != null && card.postComments.Count > 0 && gainedImpressions > 0)
+            {
+                string comment = card.postComments[Random.Range(0, card.postComments.Count)];
+                FindObjectOfType<UI.UIManager>()?.AddPost(comment, gainedImpressions);
             }
             
             // Check turn end condition

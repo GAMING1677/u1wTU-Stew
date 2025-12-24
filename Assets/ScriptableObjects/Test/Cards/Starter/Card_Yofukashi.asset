@@ -15,11 +15,18 @@ MonoBehaviour:
   cardName: "\u591C\u66F4\u304B\u3057"
   cardImage: {fileID: 0}
   flavorText: "\u8EAB\u3092\u524A\u3063\u3066\u5C11\u3057\u591A\u3081\u306E\u30D5\u30A9\u30ED\u30EF\u30FC\u3092\u7372\u5F97\u3059\u308B\u3002\u81EA\u50B7\u30AB\u30FC\u30C9\u306E\u57FA\u672C\u3002"
+  postComments:
+  - "\u4ECA\u65E5\u3082\u5BDD\u308C\u306A\u3044\u3002\u3074\u3048\u3093\u3002"
   motivationCost: 1
   mentalCost: 1
   followerGain: 50
+  drawCount: 0
+  motivationRecovery: 0
+  turnDrawBonus: 0
+  maxMotivationBonus: 0
   impressionRate: 2
   cardType: 1
+  rarity: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0
