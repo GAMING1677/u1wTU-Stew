@@ -38,6 +38,11 @@ namespace ApprovalMonster.UI
         [Header("Fan Layout")]
         [SerializeField] private float maxRotationAngle = 10f; // Max rotation at edges (degrees)
         [SerializeField] private float arcHeight = 50f; // How much lower the edges are
+        
+        [Header("Quota")]
+        [SerializeField] private TextMeshProUGUI quotaText; // Displays "Remaining: XXX"
+        [SerializeField] private GameObject penaltyRiskContainer; // Parent object containing text and image
+        [SerializeField] private TextMeshProUGUI penaltyRiskText; // Displays "Risk: YYY"
 
         private List<CardView> activeCards = new List<CardView>();
 
@@ -62,11 +67,13 @@ namespace ApprovalMonster.UI
                 gm.deckManager.OnCardDrawn -= OnCardDrawn;
                 gm.deckManager.OnCardDiscarded -= OnCardDiscarded;
                 gm.deckManager.OnReset -= OnReset;
+                gm.onQuotaUpdate.RemoveListener(UpdateQuota);
 
                 gm.resourceManager.onFollowersChanged.AddListener(UpdateFollowers);
                 gm.resourceManager.onMentalChanged.AddListener(UpdateMental);
                 gm.resourceManager.onMotivationChanged.AddListener(UpdateMotivation);
                 gm.resourceManager.onImpressionsChanged.AddListener(UpdateImpressions);
+                gm.onQuotaUpdate.AddListener(UpdateQuota);
                 
                 gm.deckManager.OnCardDrawn += OnCardDrawn;
                 gm.deckManager.OnCardDiscarded += OnCardDiscarded;
@@ -236,6 +243,55 @@ namespace ApprovalMonster.UI
             {
                 turnText.text = $"{turn}ターン";
                 turnText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
+            }
+        }
+
+        private void UpdateQuota(long gained, long target, int penalty)
+        {
+            long remaining = System.Math.Max(0, target - gained);
+
+            if (quotaText != null)
+            {
+                if (remaining > 0)
+                {
+                    // "{xxx}"
+                    quotaText.text = $" <size=50%>ノルマまで…</size>\n<align=right>{remaining:N0}</align>";
+                    quotaText.color = Color.white; 
+                }
+                else
+                {
+                    quotaText.text = "ノルマ達成！";
+                    quotaText.color = Color.green;
+                }
+            }
+
+            if (penaltyRiskText != null)
+            {
+                if (remaining > 0)
+                {
+                    // "未達だと…{penalty}病む"
+                    penaltyRiskText.text = $"未達だと…\n{penalty} ポイント病む";
+                    
+                    if (penaltyRiskContainer != null)
+                    {
+                        penaltyRiskContainer.SetActive(true);
+                    }
+                    else
+                    {
+                        penaltyRiskText.gameObject.SetActive(true);
+                    }
+                }
+                else
+                {
+                    if (penaltyRiskContainer != null)
+                    {
+                        penaltyRiskContainer.SetActive(false);
+                    }
+                    else
+                    {
+                        penaltyRiskText.gameObject.SetActive(false);
+                    }
+                }
             }
         }
         
