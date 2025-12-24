@@ -24,6 +24,7 @@ namespace ApprovalMonster.Core
         public UnityEvent<int> OnTurnChanged;
 
         private int turnCount;
+        public int CurrentTurnCount => turnCount;
 
         public void StartGame()
         {
@@ -52,7 +53,7 @@ namespace ApprovalMonster.Core
             }
         }
 
-        private void SetPhase(TurnPhase nextPhase)
+        public void SetPhase(TurnPhase nextPhase)
         {
             currentPhase = nextPhase;
             
@@ -73,7 +74,6 @@ namespace ApprovalMonster.Core
                     break;
                 case TurnPhase.EndStep:
                     OnTurnEnd?.Invoke();
-                    OnTurnEnd?.Invoke();
                     turnCount++;
                     
                     // PROTOTYPE: End game after 5 turns
@@ -84,7 +84,7 @@ namespace ApprovalMonster.Core
                     }
                     else
                     {
-                        StartTurn(); 
+                        // Wait for GameManager to trigger next turn
                     }
                     break;
                 case TurnPhase.Result:

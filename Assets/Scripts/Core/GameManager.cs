@@ -26,7 +26,13 @@ namespace ApprovalMonster.Core
         [SerializeField] private bool hasPerformedMonsterDraft = false;
         
         // Persistent modifiers
+        // Persistent modifiers
         private int extraTurnDraws = 0;
+        
+        // Quota System
+        private long turnStartImpressions;
+        private long currentTurnQuota;
+        public QuotaUpdateEvent onQuotaUpdate = new QuotaUpdateEvent();
 
         private void Awake()
         {
@@ -61,31 +67,59 @@ namespace ApprovalMonster.Core
             {
                  resourceManager.Initialize(gameSettings);
             }
+
+            if (currentStage != null)
+            {
+                deckManager.InitializeDeck(currentStage.initialDeck, gameSettings);
+            }
             
             // Prevent duplicate listeners
             turnManager.OnTurnStart.RemoveListener(OnTurnStart);
             turnManager.OnTurnEnd.RemoveListener(OnTurnEnd);
             turnManager.OnDraftStart.RemoveListener(OnDraftStart);
+            
+            // Resource listeners
+            resourceManager.onMentalChanged.RemoveListener(OnMentalChanged);
+            resourceManager.onImpressionsChanged.RemoveListener(OnImpressionsChanged);
 
-            // Hook up events
             // Hook up events
             turnManager.OnTurnStart.AddListener(OnTurnStart);
             turnManager.OnTurnEnd.AddListener(OnTurnEnd);
             turnManager.OnDraftStart.AddListener(OnDraftStart);
             
-            // Resource listeners
-            resourceManager.onMentalChanged.RemoveListener(OnMentalChanged);
             resourceManager.onMentalChanged.AddListener(OnMentalChanged);
-
+            resourceManager.onImpressionsChanged.AddListener(OnImpressionsChanged);
+            
             turnManager.StartGame();
         }
         
+        private void OnImpressionsChanged(long total)
+        {
+            UpdateQuotaDisplay();
+        }
+
         private void OnMentalChanged(int current, int max)
         {
             if (isGameActive && current <= 0)
             {
                 GameOver();
             }
+        }
+
+        public void CheckGameOver()
+        {
+            if (resourceManager.currentMental <= 0)
+            {
+                GameOver();
+            }
+        }
+
+        private void GameOver()
+        {
+            Debug.Log("Game Over!");
+            isGameActive = false;
+            turnManager.SetPhase(TurnManager.TurnPhase.GameOver);
+            // Show Game Over UI
         }
 
         public void ResetGame()
@@ -103,33 +137,94 @@ namespace ApprovalMonster.Core
                 deckManager.InitializeDeck(currentStage.initialDeck, gameSettings);
             }
             
-            // 3. Reset Draft Manager
+            // 3. Reset Quota
+            turnStartImpressions = 0;
+            currentTurnQuota = 0;
+            
+            // 4. Reset Draft Manager
             if (draftManager != null)
             {
                 draftManager.ResetSelectedCards();
             }
+            
+            // 5. Reset Turn
+            turnManager.StartGame();
         }
 
         private void OnTurnStart()
         {
-            Debug.Log("[GameManager] OnTurnStart received. Drawing cards.");
+            Debug.Log($"[GameManager] OnTurnStart Turn {turnManager.CurrentTurnCount}");
             resourceManager.ResetMotivation();
             
-            // Apply persistent draw bonus
-            int drawCount = gameSettings.initialHandSize + extraTurnDraws;
+            // Apply persistent Draw Bonus
+            int drawCount = gameSettings != null ? gameSettings.initialHandSize + extraTurnDraws : 5 + extraTurnDraws;
+            
             deckManager.DrawCards(drawCount);
+            
+            // Setup Quota for this turn
+            turnStartImpressions = resourceManager.totalImpressions;
+            currentTurnQuota = CalculateTurnQuota();
+            UpdateQuotaDisplay();
         }
 
         private void OnTurnEnd()
         {
+            Debug.Log("[GameManager] OnTurnEnd");
+            
+            // Check Quota
+            long gained = resourceManager.totalImpressions - turnStartImpressions;
+            
+            if (gained < currentTurnQuota)
+            {
+                int penalty = CalculatePenalty();
+                Debug.Log($"[GameManager] Quota Failed! Penalty: {penalty} Mental Damage");
+                resourceManager.DamageMental(penalty);
+            }
+            else
+            {
+                Debug.Log("[GameManager] Quota Met!");
+            }
+            
             deckManager.DiscardHand();
-            // Check Quota or Monster Mode consistency here
+            turnManager.StartTurn();
         }
         
+        public long CalculateTurnQuota()
+        {
+            // Quota is half of total impressions at start of turn
+            // If total is 0 (first turn), maybe set a minimum? 
+            // For now, implementing strictly "half of cumulative"
+            return turnStartImpressions / 2;
+        }
+        
+        public int CalculatePenalty()
+        {
+            // Penalty: Turn Count / 2 (Ceiled)
+            return Mathf.CeilToInt(turnManager.CurrentTurnCount / 2f);
+        }
+        
+        private void UpdateQuotaDisplay()
+        {
+            long gained = resourceManager.totalImpressions - turnStartImpressions;
+            int penalty = CalculatePenalty();
+            
+            // Notify UI
+            onQuotaUpdate?.Invoke(gained, currentTurnQuota, penalty);
+        }
+
         private void OnDraftStart()
         {
-            Debug.Log("[GameManager] OnDraftStart received. Generating draft options.");
-            // Draft options will be generated and shown by UIManager
+            Debug.Log("[GameManager] OnDraftStart");
+            if (resourceManager.isMonsterMode && !hasPerformedMonsterDraft)
+            {
+                // Monster draft logic
+                StartMonsterDraft();
+            }
+            else
+            {
+                // Regular draft or skip
+                turnManager.CompleteDraft();
+            }
         }
         
         public void OnDraftComplete(CardData selectedCard)
@@ -258,12 +353,7 @@ namespace ApprovalMonster.Core
         
 
 
-        private void GameOver()
-        {
-            Debug.Log("[GameManager] Game Over! Mental depleted.");
-            isGameActive = false;
-            FinishStage();
-        }
+        // Duplicate GameOver removed. Using the one defined earlier.
 
         public void FinishStage()
         {
@@ -298,4 +388,7 @@ namespace ApprovalMonster.Core
             }
         }
     }
+    
+    [System.Serializable]
+    public class QuotaUpdateEvent : UnityEngine.Events.UnityEvent<long, long, int> { }
 }
