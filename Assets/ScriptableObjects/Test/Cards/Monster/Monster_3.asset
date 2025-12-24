@@ -18,8 +18,10 @@ MonoBehaviour:
   motivationCost: 0
   mentalCost: 1
   followerGain: 0
-  drawCount: 5
+  drawCount: 3
   motivationRecovery: 2
+  turnDrawBonus: 1
+  maxMotivationBonus: 3
   impressionRate: 0
   cardType: 2
   rarity: 0
