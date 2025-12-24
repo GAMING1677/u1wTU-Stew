@@ -76,8 +76,8 @@ namespace ApprovalMonster.Core
                     OnTurnEnd?.Invoke();
                     turnCount++;
                     
-                    // PROTOTYPE: End game after 5 turns
-                    if (turnCount > 5)
+                    // Turn limit checked (20 turns)
+                    if (turnCount > 20)
                     {
                         SetPhase(TurnPhase.Result);
                         GameManager.Instance.FinishStage();

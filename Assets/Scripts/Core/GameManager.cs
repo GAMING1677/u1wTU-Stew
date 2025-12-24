@@ -31,6 +31,8 @@ namespace ApprovalMonster.Core
         
         // Quota System
         private long turnStartImpressions;
+        private int turnStartFollowers; // New field
+        private int lastTurnGainedFollowers; // New field
         private long currentTurnQuota;
         public QuotaUpdateEvent onQuotaUpdate = new QuotaUpdateEvent();
 
@@ -163,6 +165,7 @@ namespace ApprovalMonster.Core
             
             // Setup Quota for this turn
             turnStartImpressions = resourceManager.totalImpressions;
+            turnStartFollowers = resourceManager.currentFollowers; // Record start followers
             currentTurnQuota = CalculateTurnQuota();
             UpdateQuotaDisplay();
         }
@@ -173,6 +176,10 @@ namespace ApprovalMonster.Core
             
             // Check Quota
             long gained = resourceManager.totalImpressions - turnStartImpressions;
+            
+            // Record follower gain for next turn's quota
+            lastTurnGainedFollowers = resourceManager.currentFollowers - turnStartFollowers;
+            if (lastTurnGainedFollowers < 0) lastTurnGainedFollowers = 0; // Should not trigger, but safe guard
             
             if (gained < currentTurnQuota)
             {
@@ -191,16 +198,42 @@ namespace ApprovalMonster.Core
         
         public long CalculateTurnQuota()
         {
-            // Quota is half of total impressions at start of turn
-            // If total is 0 (first turn), maybe set a minimum? 
-            // For now, implementing strictly "half of cumulative"
-            return turnStartImpressions / 2;
+            int turn = turnManager.CurrentTurnCount;
+            
+            // Turn 1 Fixed Quota
+            if (turn <= 1) return 1;
+
+            // Updated Formula:
+            // 1: LastTurnGainedFollowers
+            // 2: Turn
+            // 3: 0.3 * Round(Turn / 3) [Float division]
+            // Quota = (1 * 2) * 2 / 10 * 3
+            
+            float factor3 = 0.3f * Mathf.Round(turn / 3.0f);
+            
+            // Calculate
+            // (LastGain * Turn) * Turn / 10
+            float baseValue = (float)(lastTurnGainedFollowers * turn) * turn / 10.0f;
+            
+            long quota = (long)(baseValue * factor3);
+            
+            // Ensure quota doesn't drop to 0 unexpectedly if calculation results in small number
+            if (quota < 1) quota = 1;
+
+            return quota;
         }
         
         public int CalculatePenalty()
         {
-            // Penalty: Turn Count / 2 (Ceiled)
-            return Mathf.CeilToInt(turnManager.CurrentTurnCount / 2f);
+            // Monster Mode: Penalty = Max Mental (Instant Death potential)
+            if (resourceManager.isMonsterMode)
+            {
+                return resourceManager.MaxMental;
+            }
+
+            // Normal Mode: Round(MaxMental * Turn / 10)
+            float penalty = resourceManager.MaxMental * turnManager.CurrentTurnCount / 10.0f;
+            return Mathf.RoundToInt(penalty);
         }
         
         private void UpdateQuotaDisplay()
