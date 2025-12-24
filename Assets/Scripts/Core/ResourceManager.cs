@@ -21,6 +21,7 @@ namespace ApprovalMonster.Core
         // Persistent modifiers
         private int bonusMaxMotivation = 0;
         public int MaxMotivation => settings != null ? settings.maxMotivation + bonusMaxMotivation : 3;
+        public int MaxMental => settings != null ? settings.maxMental : 10;
 
         private bool hasTriggeredMonsterMode = false;
 
