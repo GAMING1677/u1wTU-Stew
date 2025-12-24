@@ -15,11 +15,17 @@ MonoBehaviour:
   cardName: "TL\u8B66\u5099"
   cardImage: {fileID: 0}
   flavorText: "\u30A4\u30F3\u30D7\u306F\u7A3C\u304C\u306A\u3044\u304C\u3001\u751F\u5B58\u306B\u5FC5\u8981\u306A\u4F11\u61A9\u30AB\u30FC\u30C9\u3002"
+  postComments: []
   motivationCost: 1
   mentalCost: -1
   followerGain: 0
+  drawCount: 0
+  motivationRecovery: 0
+  turnDrawBonus: 0
+  maxMotivationBonus: 0
   impressionRate: 0
   cardType: 0
+  rarity: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0

@@ -72,7 +72,7 @@ namespace ApprovalMonster.Core
             onFollowersChanged?.Invoke(currentFollowers);
         }
 
-        public void AddImpression(float rate)
+        public long AddImpression(float rate)
         {
             // Monster Mode Multiplier check
             bool isMonster = currentMental <= settings.monsterThreshold; // OR use isMonsterMode
@@ -81,6 +81,8 @@ namespace ApprovalMonster.Core
             long gained = (long)(currentFollowers * finalRate);
             totalImpressions += gained;
             onImpressionsChanged?.Invoke(totalImpressions);
+            
+            return gained;
         }
 
         public void DamageMental(int amount)

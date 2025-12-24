@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using ApprovalMonster.UI; // Explicitly add namespace
 using TMPro;
 using ApprovalMonster.Core;
 using ApprovalMonster.Data;
@@ -43,6 +44,11 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI quotaText; // Displays "Remaining: XXX"
         [SerializeField] private GameObject penaltyRiskContainer; // Parent object containing text and image
         [SerializeField] private TextMeshProUGUI penaltyRiskText; // Displays "Risk: YYY"
+        
+        [Header("Timeline")]
+        [SerializeField] private GameObject postPrefab;
+        [SerializeField] private Transform timelineContainer;
+        [SerializeField] private int maxPosts = 5;
 
         private List<CardView> activeCards = new List<CardView>();
 
@@ -292,6 +298,28 @@ namespace ApprovalMonster.UI
                         penaltyRiskText.gameObject.SetActive(false);
                     }
                 }
+            }
+        }
+        
+        public void AddPost(string text, long impressionCount)
+        {
+            if (postPrefab == null || timelineContainer == null) return;
+
+            GameObject postObj = Instantiate(postPrefab, timelineContainer);
+            ApprovalMonster.UI.PostView view = postObj.GetComponent<ApprovalMonster.UI.PostView>();
+            if (view != null)
+            {
+                view.SetContent(text, impressionCount);
+            }
+            
+            // Add to top
+            postObj.transform.SetAsFirstSibling();
+
+            // Limit number of posts
+            if (timelineContainer.childCount > maxPosts)
+            {
+                // Destroy oldest (last child)
+                Destroy(timelineContainer.GetChild(timelineContainer.childCount - 1).gameObject);
             }
         }
         
