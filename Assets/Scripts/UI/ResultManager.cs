@@ -13,20 +13,19 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI resultLabel;
         [SerializeField] private Button titleButton;
 
-        private void Start()
+        private void OnEnable()
         {
-            // In a real implementation, we would pass the score via a static persistent object or SceneNavigator
-            // For now, let's grab it from ResourceManager if it persists, or SaveDataManager
+            Debug.Log("[ResultManager] OnEnable called");
             
             long score = 0;
-            // Assuming ResourceManager is destroyed on scene load, we might need a way to pass data.
-            // For MVP, let's assume SaveDataManager holds the 'LastRunScore' or similar.
-            // Or simpler: SceneNavigator can hold "LastScore".
-            
-            // For now, dummy display or fetch from SceneNavigator (need to add property there)
             if (SceneNavigator.Instance != null)
             {
                 score = SceneNavigator.Instance.LastGameScore;
+                Debug.Log($"[ResultManager] Score from SceneNavigator: {score}");
+            }
+            else
+            {
+                Debug.LogWarning("[ResultManager] SceneNavigator.Instance is null!");
             }
 
             if (scoreText != null)
@@ -39,9 +38,14 @@ namespace ApprovalMonster.UI
                     scoreText.text = $"{currentDisplayScore:N0}";
                 }, score, 1.5f).SetEase(Ease.OutExpo);
             }
+            else
+            {
+                Debug.LogWarning("[ResultManager] scoreText is not assigned!");
+            }
 
             if (titleButton != null)
             {
+                titleButton.onClick.RemoveListener(OnReturnToTitle);
                 titleButton.onClick.AddListener(OnReturnToTitle);
             }
         }

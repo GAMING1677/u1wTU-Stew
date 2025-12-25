@@ -80,6 +80,7 @@ namespace ApprovalMonster.Core
 
         /// <summary>
         /// モンスタードラフト用の候補カードを生成
+        /// MonsterDeck の全カードをドラフト対象として返す
         /// </summary>
         public List<CardData> GenerateMonsterDraftOptions(List<CardData> monsterDeck, int count)
         {
@@ -89,18 +90,10 @@ namespace ApprovalMonster.Core
                 return new List<CardData>();
             }
             
-            var options = new List<CardData>();
-            var availableCards = new List<CardData>(monsterDeck);
+            // MonsterDeckの全カードをドラフト対象として返す
+            var options = new List<CardData>(monsterDeck);
             
-            // ランダムに指定枚数選択
-            for (int i = 0; i < count && availableCards.Count > 0; i++)
-            {
-                int randomIndex = Random.Range(0, availableCards.Count);
-                options.Add(availableCards[randomIndex]);
-                availableCards.RemoveAt(randomIndex); // 重複を避ける
-            }
-            
-            Debug.Log($"[DraftManager] Generated {options.Count} monster draft options");
+            Debug.Log($"[DraftManager] Generated {options.Count} monster draft options (all cards from MonsterDeck)");
             return options;
         }
 

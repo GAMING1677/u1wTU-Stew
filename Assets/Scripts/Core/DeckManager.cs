@@ -119,6 +119,19 @@ namespace ApprovalMonster.Core
              discardPile.Add(newCard);
         }
 
+        public void AddCardToHand(CardData card)
+        {
+            hand.Add(card);
+            Debug.Log($"[DeckManager] Card added to hand: {card.cardName}");
+            OnCardDrawn?.Invoke(card);
+        }
+
+        public void AddCardToTopOfDraw(CardData card)
+        {
+            drawPile.Insert(0, card);
+            Debug.Log($"[DeckManager] Card added to top of draw pile: {card.cardName}");
+        }
+
         public void ExhaustCard(CardData card)
         {
             if (hand.Contains(card))
@@ -129,6 +142,40 @@ namespace ApprovalMonster.Core
                 OnCardDiscarded?.Invoke(card);
                 // Card is not added to discard pile - it's removed from the game
             }
+        }
+
+        /// <summary>
+        /// 手札内の特定カードの枚数をカウント（自分自身を除外可能）
+        /// </summary>
+        public int CountCardInHand(CardData targetCard, CardData excludeSelf = null)
+        {
+            int count = 0;
+            foreach (var c in hand)
+            {
+                if (c == targetCard && c != excludeSelf)
+                    count++;
+            }
+            return count;
+        }
+
+        /// <summary>
+        /// 手札から特定カードをn枚除外（Exhaust）
+        /// </summary>
+        public int ExhaustCardsOfType(CardData targetCard, int count, CardData excludeSelf = null)
+        {
+            int exhausted = 0;
+            for (int i = hand.Count - 1; i >= 0 && exhausted < count; i--)
+            {
+                if (hand[i] == targetCard && hand[i] != excludeSelf)
+                {
+                    CardData card = hand[i];
+                    hand.RemoveAt(i);
+                    Debug.Log($"[DeckManager] Card exhausted by effect: {card.cardName}");
+                    OnCardDiscarded?.Invoke(card);
+                    exhausted++;
+                }
+            }
+            return exhausted;
         }
     }
 }

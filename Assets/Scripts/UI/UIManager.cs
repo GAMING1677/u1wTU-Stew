@@ -183,7 +183,7 @@ namespace ApprovalMonster.UI
                 
                 // Rotation: edges rotate outward
                 float rotationZ = 0f;
-                if (activeCards.Count > 1)
+                if (activeCards.Count > 1 && centerIndex > 0)
                 {
                     float normalizedPos = relativeIndex / centerIndex; // -1 to 1
                     rotationZ = normalizedPos * maxRotationAngle;
@@ -191,7 +191,11 @@ namespace ApprovalMonster.UI
                 
                 // Y offset: parabolic curve (center high, edges low)
                 // Using absolute value makes edges lower than center
-                float arcOffset = -Mathf.Abs(relativeIndex / centerIndex) * arcHeight;
+                float arcOffset = 0f;
+                if (centerIndex > 0)
+                {
+                    arcOffset = -Mathf.Abs(relativeIndex / centerIndex) * arcHeight;
+                }
                 float yPos = baseYPos + arcOffset;
                 
                 RectTransform cardRect = card.GetComponent<RectTransform>();

@@ -28,12 +28,14 @@ namespace ApprovalMonster.Core
 
         public void StartGame()
         {
+            Debug.Log($"[TurnManager] StartGame called. StackTrace:\n{System.Environment.StackTrace}");
             turnCount = 1;
             SetPhase(TurnPhase.StartStep);
         }
 
         public void StartTurn()
         {
+            Debug.Log($"[TurnManager] StartTurn called. StackTrace:\n{System.Environment.StackTrace}");
             SetPhase(TurnPhase.StartStep);
         }
 
@@ -73,18 +75,21 @@ namespace ApprovalMonster.Core
                     // Enable Input
                     break;
                 case TurnPhase.EndStep:
-                    OnTurnEnd?.Invoke();
+                    // Increment turn count BEFORE firing OnTurnEnd
+                    // This ensures the next turn starts with correct count
                     turnCount++;
                     
                     // Turn limit checked (20 turns)
                     if (turnCount > 20)
                     {
+                        OnTurnEnd?.Invoke();
                         SetPhase(TurnPhase.Result);
                         GameManager.Instance.FinishStage();
                     }
                     else
                     {
-                        // Wait for GameManager to trigger next turn
+                        OnTurnEnd?.Invoke();
+                        // GameManager.OnTurnEnd will call StartTurn()
                     }
                     break;
                 case TurnPhase.Result:

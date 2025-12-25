@@ -77,7 +77,48 @@ namespace ApprovalMonster.Data
         [ShowIf("HasRisk")]
         public int riskValue; // Damage or specific value
 
+        [BoxGroup("Card Generation")]
+        [Tooltip("プレイ時に生成するカードのリスト")]
+        public System.Collections.Generic.List<GeneratedCard> generatedCards;
+
+        [BoxGroup("Hand-Based Effects")]
+        [Tooltip("この効果の対象となるカード")]
+        public CardData handEffectTargetCard;
+
+        [BoxGroup("Hand-Based Effects")]
+        [Tooltip("① 手札の対象カードをすべて除外する")]
+        public bool exhaustAllTargetCards = false;
+
+        [BoxGroup("Hand-Based Effects")]
+        [Tooltip("② 手札枚数×この値でインプレッション獲得（0=使用しない）")]
+        public float handCountImpressionRate = 0f;
+
+        [BoxGroup("Hand-Based Effects")]
+        [Tooltip("③ 手札枚数分ドローする（false=使用しない）")]
+        public bool drawByHandCount = false;
+
+        [BoxGroup("Hand-Based Effects")]
+        [Tooltip("②③の最低必要枚数（コスト）")]
+        public int handEffectMinCount = 1;
+
         public bool HasRisk() => cardType == CardType.Risk || riskType != RiskType.None;
+    }
+
+    [System.Serializable]
+    public class GeneratedCard
+    {
+        [Tooltip("生成するカード")]
+        public CardData card;
+        
+        [Tooltip("カードの追加先")]
+        public CardDestination destination;
+    }
+
+    public enum CardDestination
+    {
+        Discard,    // 捨て札
+        Hand,       // 手札
+        DrawPile    // 山札の一番上
     }
 
     public enum CardType
