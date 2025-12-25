@@ -14,12 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ApprovalMonster.Data.GameSettings
   initialFollowers: 100
   maxMental: 100
-  maxMotivation: 2
+  maxMotivation: 1
   initialHandSize: 3
   turnDrawCount: 3
+  lastDraftTurn: 10
+  maxTurnCount: 15
   monsterThreshold: 50
   monsterDraftCardCount: 3
-  monsterModeMultiplier: 3
+  monsterModeMultiplier: 1
   monsterPenaltyMultiplier: 2
   monsterFollowerPenalty: 0
   scoreCap: 9999999999

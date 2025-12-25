@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
-  m_Name: Sacu_d1_dubble
+  m_Name: Sacu_d2_dubble
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u30C9\u30E9\u5F31_\u30C0\u30D6\u30EB"
+  cardName: "\u30C9\u30E9\u4E2D_\u30C0\u30D6\u30EB"
   cardImage: {fileID: 0}
   flavorText: 
   postComments:
   - "\u3084\u3063\u307B\u30FC"
   motivationCost: 1
-  mentalCost: 8
-  followerGain: 500
+  mentalCost: 6
+  followerGain: 20000
   isTurnMultiplierEffect: 0
   drawCount: 0
   motivationRecovery: 0
   turnDrawBonus: 0
   maxMotivationBonus: 0
-  impressionRate: 0.5
+  impressionRate: 0.2
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 0
+  rarity: 1
   riskType: 0
   riskProbability: 1
   riskValue: 0
@@ -38,4 +38,5 @@ MonoBehaviour:
   exhaustAllTargetCards: 0
   handCountImpressionRate: 0
   drawByHandCount: 0
+  handCountFollowerRate: 0
   handEffectMinCount: 1

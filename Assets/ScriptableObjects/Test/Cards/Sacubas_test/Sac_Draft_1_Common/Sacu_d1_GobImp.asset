@@ -18,14 +18,14 @@ MonoBehaviour:
   postComments:
   - "\u3084\u3063\u307B\u30FC"
   motivationCost: 1
-  mentalCost: 5
+  mentalCost: 6
   followerGain: 0
   isTurnMultiplierEffect: 0
   drawCount: 0
   motivationRecovery: 0
   turnDrawBonus: 0
   maxMotivationBonus: 0
-  impressionRate: 5
+  impressionRate: 0.4
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0

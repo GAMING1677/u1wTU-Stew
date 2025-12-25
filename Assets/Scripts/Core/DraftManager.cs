@@ -7,7 +7,7 @@ namespace ApprovalMonster.Core
 {
     /// <summary>
     /// カードドラフトシステムを管理するクラス
-    /// インプレッション値に基づいてレアリティの重み付けを行い、候補カードを生成
+    /// Tier1=Common, Tier2=Rare, Tier3=Epicからカードを選択
     /// </summary>
     public class DraftManager : MonoBehaviour
     {
@@ -15,15 +15,12 @@ namespace ApprovalMonster.Core
         [Tooltip("ドラフトで提示するカード枚数")]
         public int draftCardCount = 3;
 
-        [Header("Rarity Weights by Impression Tier")]
-        [Tooltip("インプレッション 0-10000")]
-        public RarityWeights tier1Weights = new RarityWeights(70f, 25f, 5f);
+        [Header("Impression Tier Thresholds")]
+        [Tooltip("Tier1(Common) の上限インプレッション")]
+        public long tier1MaxImpressions = 10000;
         
-        [Tooltip("インプレッション 10001-50000")]
-        public RarityWeights tier2Weights = new RarityWeights(50f, 35f, 15f);
-        
-        [Tooltip("インプレッション 50001+")]
-        public RarityWeights tier3Weights = new RarityWeights(30f, 40f, 30f);
+        [Tooltip("Tier2(Rare) の上限インプレッション（超えたらTier3=Epic）")]
+        public long tier2MaxImpressions = 50000;
 
         private List<CardData> selectedCards = new List<CardData>();
 
@@ -38,10 +35,9 @@ namespace ApprovalMonster.Core
 
         /// <summary>
         /// ドラフト候補カードを生成
+        /// Tier1=Common, Tier2=Rare, Tier3=Epicから選択
+        /// カードが足りない場合は1ランク下のTierにフォールバック
         /// </summary>
-        /// <param name="pool">ドラフトプール（StageDataから取得）</param>
-        /// <param name="currentImpressions">現在のインプレッション値</param>
-        /// <returns>ドラフト候補カードのリスト</returns>
         public List<CardData> GenerateDraftOptions(List<CardData> pool, long currentImpressions)
         {
             if (pool == null || pool.Count == 0)
@@ -61,20 +57,20 @@ namespace ApprovalMonster.Core
             }
 
             var options = new List<CardData>();
-            var weights = GetWeightsForImpressions(currentImpressions);
+            int tier = GetTierForImpressions(currentImpressions);
 
             for (int i = 0; i < draftCardCount && availablePool.Count > 0; i++)
             {
-                var card = SelectWeightedCard(availablePool, weights);
+                var card = SelectCardByTier(availablePool, tier);
                 if (card != null)
                 {
                     options.Add(card);
-                    // 同じカードが複数回選ばれないように一時的に除外
                     availablePool.Remove(card);
                 }
+                // カードが見つからない場合はスキップ
             }
 
-            Debug.Log($"[DraftManager] Generated {options.Count} draft options from {availablePool.Count + selectedCards.Count} total cards");
+            Debug.Log($"[DraftManager] Generated {options.Count} draft options (Tier {tier}) from {availablePool.Count + options.Count} available cards");
             return options;
         }
 
@@ -121,65 +117,67 @@ namespace ApprovalMonster.Core
         }
 
         /// <summary>
-        /// インプレッション値に応じた重み設定を取得
+        /// インプレッション値に応じたTierを取得 (1, 2, 3)
         /// </summary>
-        private RarityWeights GetWeightsForImpressions(long impressions)
+        private int GetTierForImpressions(long impressions)
         {
-            if (impressions <= 10000)
-                return tier1Weights;
-            else if (impressions <= 50000)
-                return tier2Weights;
+            if (impressions <= tier1MaxImpressions)
+                return 1;
+            else if (impressions <= tier2MaxImpressions)
+                return 2;
             else
-                return tier3Weights;
+                return 3;
         }
 
         /// <summary>
-        /// 重み付けに基づいてカードを選択
+        /// Tierに基づいてカードを選択
+        /// Tier1=Common, Tier2=Rare, Tier3=Epic
+        /// カードが足りない場合は1ランク下にフォールバック
         /// </summary>
-        private CardData SelectWeightedCard(List<CardData> pool, RarityWeights weights)
+        private CardData SelectCardByTier(List<CardData> pool, int tier)
         {
             // レアリティごとにカードを分類
             var commonCards = pool.Where(c => c.rarity == CardRarity.Common).ToList();
             var rareCards = pool.Where(c => c.rarity == CardRarity.Rare).ToList();
             var epicCards = pool.Where(c => c.rarity == CardRarity.Epic).ToList();
 
-            // 重み付け抽選
-            float totalWeight = weights.commonWeight + weights.rareWeight + weights.epicWeight;
-            float randomValue = Random.Range(0f, totalWeight);
-
-            if (randomValue < weights.commonWeight && commonCards.Count > 0)
+            // Tierに応じたプールを選択
+            List<CardData> targetPool = null;
+            
+            switch (tier)
             {
-                return commonCards[Random.Range(0, commonCards.Count)];
+                case 3: // Epic
+                    if (epicCards.Count > 0)
+                        targetPool = epicCards;
+                    else if (rareCards.Count > 0)
+                        targetPool = rareCards; // フォールバック: Rare
+                    else if (commonCards.Count > 0)
+                        targetPool = commonCards; // フォールバック: Common
+                    break;
+                    
+                case 2: // Rare
+                    if (rareCards.Count > 0)
+                        targetPool = rareCards;
+                    else if (commonCards.Count > 0)
+                        targetPool = commonCards; // フォールバック: Common
+                    break;
+                    
+                case 1: // Common
+                default:
+                    if (commonCards.Count > 0)
+                        targetPool = commonCards;
+                    break;
             }
-            else if (randomValue < weights.commonWeight + weights.rareWeight && rareCards.Count > 0)
+            
+            // ターゲットプールが見つからない場合はnullを返す（スキップ）
+            if (targetPool == null || targetPool.Count == 0)
             {
-                return rareCards[Random.Range(0, rareCards.Count)];
+                Debug.Log($"[DraftManager] No cards available for Tier {tier} or fallback");
+                return null;
             }
-            else if (epicCards.Count > 0)
-            {
-                return epicCards[Random.Range(0, epicCards.Count)];
-            }
-
-            // フォールバック: どのレアリティも該当しない場合はプール全体からランダム
-            return pool[Random.Range(0, pool.Count)];
-        }
-    }
-
-    /// <summary>
-    /// レアリティごとの重み設定
-    /// </summary>
-    [System.Serializable]
-    public class RarityWeights
-    {
-        public float commonWeight;
-        public float rareWeight;
-        public float epicWeight;
-
-        public RarityWeights(float common, float rare, float epic)
-        {
-            commonWeight = common;
-            rareWeight = rare;
-            epicWeight = epic;
+            
+            // ランダムに1枚選択
+            return targetPool[Random.Range(0, targetPool.Count)];
         }
     }
 }

@@ -10,36 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
-  m_Name: Sacu_d2_GobImp
+  m_Name: Sacu_d3_Action
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u30B4\u30D6\u6368\u672D_\u30D5\u30A9\u30ED\u30EF\u30FC"
+  cardName: "\u30C9\u30E9\u5F37_\u3084\u308B\u6C17\u4E0A\u9650"
   cardImage: {fileID: 0}
   flavorText: 
-  postComments:
-  - "\u3084\u3063\u307B\u30FC"
-  motivationCost: 1
-  mentalCost: 10
+  postComments: []
+  motivationCost: 2
+  mentalCost: 0
   followerGain: 0
   isTurnMultiplierEffect: 0
   drawCount: 0
   motivationRecovery: 0
   turnDrawBonus: 0
-  maxMotivationBonus: 0
-  impressionRate: 50
+  maxMotivationBonus: 1
+  impressionRate: 0
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 0
+  rarity: 2
   riskType: 0
   riskProbability: 1
   riskValue: 0
-  generatedCards:
-  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
-    destination: 0
-  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
-    destination: 0
-  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
-    destination: 0
+  generatedCards: []
   handEffectTargetCard: {fileID: 0}
   exhaustAllTargetCards: 0
   handCountImpressionRate: 0

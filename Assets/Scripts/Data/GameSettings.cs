@@ -14,6 +14,12 @@ namespace ApprovalMonster.Data
         
         [Tooltip("Number of cards to draw at the start of each turn (after turn 1)")]
         public int turnDrawCount = 2;
+        
+        [Tooltip("ドラフトが行われる最後のターン（これ以降はドラフトをスキップ）")]
+        public int lastDraftTurn = 10;
+        
+        [Tooltip("ゲームの最大ターン数")]
+        public int maxTurnCount = 20;
 
         [Header("Monster Mode")]
         [Tooltip("Mental threshold to trigger Monster Mode")]
