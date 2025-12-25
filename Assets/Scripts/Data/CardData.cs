@@ -98,7 +98,11 @@ namespace ApprovalMonster.Data
         public bool drawByHandCount = false;
 
         [BoxGroup("Hand-Based Effects")]
-        [Tooltip("②③の最低必要枚数（コスト）")]
+        [Tooltip("④ 手札枚数×この値でフォロワー獲得（0=使用しない）")]
+        public int handCountFollowerRate = 0;
+
+        [BoxGroup("Hand-Based Effects")]
+        [Tooltip("②③④の最低必要枚数（コスト）")]
         public int handEffectMinCount = 1;
 
         public bool HasRisk() => cardType == CardType.Risk || riskType != RiskType.None;

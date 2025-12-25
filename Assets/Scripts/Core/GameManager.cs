@@ -35,9 +35,36 @@ namespace ApprovalMonster.Core
         // Quota System
         private long turnStartImpressions;
         private int turnStartFollowers; // New field
+        private int turnStartMental; // For tracking mental changes
         private int lastTurnGainedFollowers; // New field
         private long currentTurnQuota;
         public QuotaUpdateEvent onQuotaUpdate = new QuotaUpdateEvent();
+        
+        // Debug Statistics - ターンごとの統計
+        [Header("Debug - Turn Statistics")]
+        [SerializeField, ReorderableList] 
+        private System.Collections.Generic.List<TurnStats> turnStatsList = new System.Collections.Generic.List<TurnStats>();
+        
+        [TextArea(5, 15)]
+        [SerializeField] private string statsTextOutput = "";
+        
+        [Button("統計をテキスト出力")]
+        private void ExportStatsToText()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("Turn\tFollowers\tImpressions\tMental\tQuota\tMet");
+            sb.AppendLine("----\t---------\t-----------\t------\t-----\t---");
+            
+            foreach (var s in turnStatsList)
+            {
+                string met = s.quotaMet ? "Y" : "N";
+                sb.AppendLine($"{s.turnNumber}\t{s.followersGained}\t{s.impressionsGained}\t{s.mentalChange}\t{s.quota}\t{met}");
+            }
+            
+            statsTextOutput = sb.ToString();
+            GUIUtility.systemCopyBuffer = statsTextOutput;
+            Debug.Log("[GameManager] Stats copied to clipboard!");
+        }
 
         private void Awake()
         {
@@ -124,8 +151,22 @@ namespace ApprovalMonster.Core
             Debug.Log("[GameManager] GameOver() called!");
             isGameActive = false;
             turnManager.SetPhase(TurnManager.TurnPhase.GameOver);
-            // Navigate to result screen
-            SceneNavigator.Instance?.GoToResult();
+            
+            // Show game over cut-in, then navigate to result
+            var uiManager = FindObjectOfType<UI.UIManager>();
+            if (uiManager != null)
+            {
+                uiManager.ShowGameOverCutIn(() =>
+                {
+                    // This runs after user clicks the cut-in
+                    SceneNavigator.Instance?.GoToResult();
+                });
+            }
+            else
+            {
+                // Fallback: go directly to result
+                SceneNavigator.Instance?.GoToResult();
+            }
         }
 
         public void ResetGame()
@@ -136,6 +177,9 @@ namespace ApprovalMonster.Core
             // 1. Reset Resources
             resourceManager.Initialize(gameSettings);
             extraTurnDraws = 0;
+            
+            // Clear debug statistics
+            turnStatsList.Clear();
             
             // 2. Reset Deck
             if (currentStage != null)
@@ -186,35 +230,73 @@ namespace ApprovalMonster.Core
             
             // Setup Quota for this turn
             turnStartImpressions = resourceManager.totalImpressions;
-            turnStartFollowers = resourceManager.currentFollowers; // Record start followers
+            turnStartFollowers = resourceManager.currentFollowers;
+            turnStartMental = resourceManager.currentMental; // Record start mental
             currentTurnQuota = CalculateTurnQuota();
             UpdateQuotaDisplay();
         }
 
         private void OnTurnEnd()
         {
-            Debug.Log("[GameManager] OnTurnEnd");
+            // Note: TurnManager already incremented turnCount before calling this
+            // So CurrentTurnCount is actually the NEXT turn number
+            int endedTurn = turnManager.CurrentTurnCount - 1;
             
-            // Check Quota
-            long gained = resourceManager.totalImpressions - turnStartImpressions;
+            Debug.Log($"[GameManager] OnTurnEnd - Ended Turn: {endedTurn}, Current Phase: {turnManager.CurrentPhase}");
+            
+            // Calculate gains/changes
+            long impGained = resourceManager.totalImpressions - turnStartImpressions;
+            int followerGained = resourceManager.currentFollowers - turnStartFollowers;
+            int mentalChange = resourceManager.currentMental - turnStartMental;
             
             // Record follower gain for next turn's quota
-            lastTurnGainedFollowers = resourceManager.currentFollowers - turnStartFollowers;
-            if (lastTurnGainedFollowers < 0) lastTurnGainedFollowers = 0; // Should not trigger, but safe guard
+            lastTurnGainedFollowers = followerGained;
+            if (lastTurnGainedFollowers < 0) lastTurnGainedFollowers = 0;
             
-            if (gained < currentTurnQuota)
+            bool quotaMet = impGained >= currentTurnQuota;
+            
+            if (!quotaMet)
             {
                 int penalty = CalculatePenalty();
                 Debug.Log($"[GameManager] Quota Failed! Penalty: {penalty} Mental Damage");
                 resourceManager.DamageMental(penalty);
+                
+                // Check if GameOver was triggered by DamageMental
+                if (!isGameActive)
+                {
+                    Debug.Log("[GameManager] OnTurnEnd - GameOver was triggered during penalty, stopping");
+                    return;
+                }
+                
+                // Update mental change after penalty
+                mentalChange = resourceManager.currentMental - turnStartMental;
             }
             else
             {
                 Debug.Log("[GameManager] Quota Met!");
             }
             
+            // Record turn statistics for debug (use ended turn number, not next turn)
+            var stats = new TurnStats(endedTurn, followerGained, impGained, mentalChange, currentTurnQuota, quotaMet);
+            turnStatsList.Add(stats);
+            Debug.Log($"[GameManager] Turn Stats: {stats}");
+            
             deckManager.DiscardHand();
-            turnManager.StartTurn();
+            
+            // Only start next turn if game is still active and not ending
+            Debug.Log($"[GameManager] OnTurnEnd - After processing, Phase: {turnManager.CurrentPhase}, isGameActive: {isGameActive}");
+            
+            if (isGameActive && 
+                turnManager.CurrentPhase != TurnManager.TurnPhase.Result && 
+                turnManager.CurrentPhase != TurnManager.TurnPhase.GameOver)
+            {
+                Debug.Log("[GameManager] OnTurnEnd - Starting next turn");
+                turnManager.StartTurn();
+            }
+            else
+            {
+                Debug.Log("[GameManager] OnTurnEnd - Game is ending, not starting next turn");
+            }
         }
         
         public long CalculateTurnQuota()
@@ -234,11 +316,10 @@ namespace ApprovalMonster.Core
         public int CalculatePenalty()
         {
             int turn = turnManager.CurrentTurnCount;
-            int maxMental = resourceManager.MaxMental;
             
-            // Normal penalty: MaxMental × (Turn / 20)
-            float normalPenalty = maxMental * ((float)turn / 20.0f);
-            int basePenalty = Mathf.Max(1, Mathf.RoundToInt(normalPenalty));
+            // New formula: ceil(turn / 4) * 5
+            // Turn 1-4 = 5, Turn 5-8 = 10, Turn 9-12 = 15, etc.
+            int basePenalty = Mathf.CeilToInt(turn / 4.0f) * 5;
             
             // Monster Mode: Apply multiplier
             if (resourceManager.isMonsterMode)
@@ -261,7 +342,19 @@ namespace ApprovalMonster.Core
 
         private void OnDraftStart()
         {
-            Debug.Log($"[GameManager] OnDraftStart - isMonsterMode={resourceManager.isMonsterMode}, hasPerformedMonsterDraft={hasPerformedMonsterDraft}");
+            int currentTurn = turnManager.CurrentTurnCount;
+            int lastDraftTurn = gameSettings != null ? gameSettings.lastDraftTurn : 10;
+            
+            Debug.Log($"[GameManager] OnDraftStart - Turn={currentTurn}, lastDraftTurn={lastDraftTurn}, isMonsterMode={resourceManager.isMonsterMode}, hasPerformedMonsterDraft={hasPerformedMonsterDraft}");
+            
+            // Skip ALL drafts after lastDraftTurn
+            if (currentTurn > lastDraftTurn)
+            {
+                Debug.Log($"[GameManager] OnDraftStart -> Turn {currentTurn} > lastDraftTurn {lastDraftTurn}, skipping draft");
+                turnManager.CompleteDraft();
+                return;
+            }
+            
             if (resourceManager.isMonsterMode && !hasPerformedMonsterDraft)
             {
                 Debug.Log("[GameManager] OnDraftStart -> Starting Monster Draft");
@@ -324,8 +417,8 @@ namespace ApprovalMonster.Core
                     return;
                 }
                 
-                // ②③ Min count check
-                if ((card.handCountImpressionRate > 0 || card.drawByHandCount) 
+                // ②③④ Min count check
+                if ((card.handCountImpressionRate > 0 || card.drawByHandCount || card.handCountFollowerRate > 0) 
                     && handCount < card.handEffectMinCount)
                 {
                     Debug.Log($"[GameManager] Need at least {card.handEffectMinCount} {card.handEffectTargetCard.cardName} in hand!");
@@ -455,6 +548,14 @@ namespace ApprovalMonster.Core
                     deckManager.DrawCards(handCount);
                     Debug.Log($"[GameManager] Drew {handCount} cards based on hand count.");
                 }
+                
+                // ④ Count-based followers
+                if (card.handCountFollowerRate > 0 && handCount > 0)
+                {
+                    int followers = handCount * card.handCountFollowerRate;
+                    resourceManager.AddFollowers(followers);
+                    Debug.Log($"[GameManager] Hand count effect: {handCount} cards × {card.handCountFollowerRate} = {followers} followers.");
+                }
             }
 
             // Risk Logic
@@ -499,11 +600,7 @@ namespace ApprovalMonster.Core
                 FindObjectOfType<UI.UIManager>()?.AddPost(comment, gainedImpressions);
             }
             
-            // Check turn end condition
-            if (resourceManager.currentMotivation <= 0)
-            {
-                turnManager.EndPlayerAction();
-            }
+            // Player must click End Turn button to proceed (no automatic turn end)
 
 
         }
@@ -563,11 +660,7 @@ namespace ApprovalMonster.Core
             turnManager.CompleteDraft();
             Debug.Log($"[GameManager] OnMonsterDraftComplete - Phase is now: {turnManager.CurrentPhase}");
             
-            // Check turn end again as drafting might have happened at 0 motivation
-            if (resourceManager.currentMotivation <= 0)
-            {
-                turnManager.EndPlayerAction();
-            }
+            // Player must click End Turn button to proceed (no automatic turn end)
         }
         
 
@@ -610,4 +703,34 @@ namespace ApprovalMonster.Core
     
     [System.Serializable]
     public class QuotaUpdateEvent : UnityEngine.Events.UnityEvent<long, long, int> { }
+    
+    /// <summary>
+    /// ターンごとの統計情報（デバッグ用）
+    /// </summary>
+    [System.Serializable]
+    public class TurnStats
+    {
+        public int turnNumber;
+        public int followersGained;
+        public long impressionsGained;
+        public int mentalChange;
+        public long quota;
+        public bool quotaMet;
+        
+        public TurnStats(int turn, int followers, long imps, int mental, long quota, bool met)
+        {
+            turnNumber = turn;
+            followersGained = followers;
+            impressionsGained = imps;
+            mentalChange = mental;
+            this.quota = quota;
+            quotaMet = met;
+        }
+        
+        public override string ToString()
+        {
+            string status = quotaMet ? "✓" : "✗";
+            return $"T{turnNumber}: F+{followersGained}, I+{impressionsGained}, M{mentalChange:+#;-#;0} [{status}]";
+        }
+    }
 }

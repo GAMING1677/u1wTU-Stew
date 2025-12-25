@@ -49,6 +49,9 @@ namespace ApprovalMonster.UI
         [SerializeField] private GameObject postPrefab;
         [SerializeField] private Transform timelineContainer;
         [SerializeField] private int maxPosts = 5;
+        
+        [Header("Cut-In")]
+        [SerializeField] private CutInUI cutInUI;
 
         private List<CardView> activeCards = new List<CardView>();
 
@@ -251,7 +254,8 @@ namespace ApprovalMonster.UI
         {
             if (turnText != null)
             {
-                turnText.text = $"{turn}ターン";
+                int maxTurn = GameManager.Instance?.gameSettings?.maxTurnCount ?? 20;
+                turnText.text = $"{turn}/{maxTurn}ターン";
                 turnText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
             }
         }
@@ -339,9 +343,21 @@ namespace ApprovalMonster.UI
         
         private void OnDraftStart()
         {
-            Debug.Log("[UIManager] OnDraftStart received. Showing draft UI.");
             var gm = GameManager.Instance;
-            if (gm != null && gm.draftManager != null && gm.currentStage != null)
+            if (gm == null) return;
+            
+            // Check if we're past the last draft turn
+            int currentTurn = gm.turnManager.CurrentTurnCount;
+            int lastDraftTurn = gm.gameSettings != null ? gm.gameSettings.lastDraftTurn : 10;
+            
+            if (currentTurn > lastDraftTurn)
+            {
+                Debug.Log($"[UIManager] OnDraftStart - Turn {currentTurn} > lastDraftTurn {lastDraftTurn}, not showing draft UI");
+                return;
+            }
+            
+            Debug.Log("[UIManager] OnDraftStart received. Showing draft UI.");
+            if (gm.draftManager != null && gm.currentStage != null)
             {
                 var options = gm.draftManager.GenerateDraftOptions(
                     gm.currentStage.draftPool,
@@ -420,6 +436,38 @@ namespace ApprovalMonster.UI
             else
             {
                 Debug.LogWarning($"[UIManager] Could not find CardView for {data.cardName}");
+            }
+        }
+        
+        /// <summary>
+        /// ゲームオーバーカットインを表示（プリセット対応）
+        /// </summary>
+        public void ShowGameOverCutIn(System.Action onComplete)
+        {
+            if (cutInUI != null)
+            {
+                cutInUI.ShowGameOver(onComplete);
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] CutInUI is not assigned! Proceeding directly.");
+                onComplete?.Invoke();
+            }
+        }
+        
+        /// <summary>
+        /// 汎用カットインを表示
+        /// </summary>
+        public void ShowCutIn(string title, string message, System.Action onComplete = null)
+        {
+            if (cutInUI != null)
+            {
+                cutInUI.Show(title, message, onComplete);
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] CutInUI is not assigned!");
+                onComplete?.Invoke();
             }
         }
     }

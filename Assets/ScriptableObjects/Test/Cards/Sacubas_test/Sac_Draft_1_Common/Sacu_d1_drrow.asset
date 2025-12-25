@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
-  m_Name: Sac_Gob
+  m_Name: Sacu_d1_drrow
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u30B4\u30D6\u30EA\u30F3"
+  cardName: "\u30C9\u30E9\u5F31\u2017\u30C9\u30ED\u30FC"
   cardImage: {fileID: 0}
-  flavorText: "\u52B9\u679C\u306A\u3057"
+  flavorText: 
   postComments: []
-  motivationCost: 0
-  mentalCost: 0
-  followerGain: 0
+  motivationCost: 1
+  mentalCost: 5
+  followerGain: -4000
   isTurnMultiplierEffect: 0
-  drawCount: 0
+  drawCount: 2
   motivationRecovery: 0
   turnDrawBonus: 0
   maxMotivationBonus: 0
@@ -32,7 +32,9 @@ MonoBehaviour:
   riskType: 0
   riskProbability: 1
   riskValue: 0
-  generatedCards: []
+  generatedCards:
+  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
+    destination: 0
   handEffectTargetCard: {fileID: 0}
   exhaustAllTargetCards: 0
   handCountImpressionRate: 0

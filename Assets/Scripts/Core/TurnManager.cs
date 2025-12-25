@@ -79,8 +79,11 @@ namespace ApprovalMonster.Core
                     // This ensures the next turn starts with correct count
                     turnCount++;
                     
-                    // Turn limit checked (20 turns)
-                    if (turnCount > 20)
+                    // Get max turn count from settings
+                    int maxTurns = GameManager.Instance?.gameSettings?.maxTurnCount ?? 20;
+                    
+                    // Turn limit checked
+                    if (turnCount > maxTurns)
                     {
                         OnTurnEnd?.Invoke();
                         SetPhase(TurnPhase.Result);
