@@ -31,6 +31,10 @@ namespace ApprovalMonster.Data
 
         [BoxGroup("Effects")]
         public int followerGain;
+
+        [BoxGroup("Effects")]
+        [Tooltip("If true, gain (CurrentFollowers * CurrentTurn) followers instead of followerGain.")]
+        public bool isTurnMultiplierEffect = false;
         
         [BoxGroup("Effects")]
         public int drawCount = 0; // Number of cards to draw immediately
@@ -45,10 +49,19 @@ namespace ApprovalMonster.Data
         public int maxMotivationBonus = 0; // Increase Max AP (Persistent)
         
         [BoxGroup("Effects")]
+        [Tooltip("Multiplier for impression gain based on current followers.")]
         public float impressionRate = 1.0f;
+
+        [BoxGroup("Effects")]
+        [Tooltip("If true, gain impressions = CurrentFollowers * (CurrentTurn / 10) instead of using impressionRate.")]
+        public bool isTurnImpressionEffect = false;
 
         [BoxGroup("Type & Risk")]
         public CardType cardType;
+
+        [BoxGroup("Type & Risk")]
+        [Tooltip("If true, this card is removed from the game after use (not sent to discard pile).")]
+        public bool isExhaust = false;
         
         [BoxGroup("Type & Risk")]
         public CardRarity rarity = CardRarity.Common;

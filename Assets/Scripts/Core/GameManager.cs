@@ -50,16 +50,14 @@ namespace ApprovalMonster.Core
 
         private void Start()
         {
-            // For prototyping, start immediately
-            if (gameSettings != null && currentStage != null)
-            {
-                StartGame();
-            }
+            // Game will be started by SceneNavigator button click
+            // Automatic start removed to prevent duplicate initialization
         }
 
         public void StartGame()
         {
             Debug.Log("[GameManager] StartGame called.");
+            Debug.Log($"[GameManager] StartGame StackTrace:\n{System.Environment.StackTrace}");
             isGameActive = true;
             hasPerformedMonsterDraft = false;
             extraTurnDraws = 0;
@@ -75,14 +73,14 @@ namespace ApprovalMonster.Core
                 deckManager.InitializeDeck(currentStage.initialDeck, gameSettings);
             }
             
-            // Prevent duplicate listeners
-            turnManager.OnTurnStart.RemoveListener(OnTurnStart);
-            turnManager.OnTurnEnd.RemoveListener(OnTurnEnd);
-            turnManager.OnDraftStart.RemoveListener(OnDraftStart);
+            // Prevent duplicate listeners - use RemoveAllListeners for clean state
+            turnManager.OnTurnStart.RemoveAllListeners();
+            turnManager.OnTurnEnd.RemoveAllListeners();
+            turnManager.OnDraftStart.RemoveAllListeners();
             
             // Resource listeners
-            resourceManager.onMentalChanged.RemoveListener(OnMentalChanged);
-            resourceManager.onImpressionsChanged.RemoveListener(OnImpressionsChanged);
+            resourceManager.onMentalChanged.RemoveAllListeners();
+            resourceManager.onImpressionsChanged.RemoveAllListeners();
 
             // Hook up events
             turnManager.OnTurnStart.AddListener(OnTurnStart);
@@ -156,10 +154,25 @@ namespace ApprovalMonster.Core
         private void OnTurnStart()
         {
             Debug.Log($"[GameManager] OnTurnStart Turn {turnManager.CurrentTurnCount}");
+            Debug.Log($"[GameManager] OnTurnStart StackTrace:\n{System.Environment.StackTrace}");
             resourceManager.ResetMotivation();
             
-            // Apply persistent Draw Bonus
-            int drawCount = gameSettings != null ? gameSettings.initialHandSize + extraTurnDraws : 5 + extraTurnDraws;
+            // Draw cards
+            int drawCount;
+            if (turnManager.CurrentTurnCount == 1)
+            {
+                // First turn: use initial hand size
+                drawCount = gameSettings != null ? gameSettings.initialHandSize : 3;
+                Debug.Log($"[GameManager] Turn 1: Drawing initial hand of {drawCount} cards");
+            }
+            else
+            {
+                // Subsequent turns: use turn draw count (usually smaller) + bonuses
+                // TODO: Add turnDrawCount to GameSettings if needed
+                int baseTurnDraw = 2; // Default: draw 2 cards per turn
+                drawCount = baseTurnDraw + extraTurnDraws;
+                Debug.Log($"[GameManager] Turn {turnManager.CurrentTurnCount}: Drawing {drawCount} cards (base: {baseTurnDraw}, bonus: {extraTurnDraws})");
+            }
             
             deckManager.DrawCards(drawCount);
             
@@ -288,8 +301,33 @@ namespace ApprovalMonster.Core
 
             long gainedImpressions = 0;
             // Execute Effects
-            resourceManager.AddFollowers(card.followerGain);
-            if (card.impressionRate > 0)
+            
+            // Turn Multiplier Effect
+            if (card.isTurnMultiplierEffect)
+            {
+                int currentFollowers = resourceManager.currentFollowers;
+                int currentTurn = turnManager.CurrentTurnCount;
+                int multipliedGain = currentFollowers * currentTurn;
+                resourceManager.AddFollowers(multipliedGain);
+                Debug.Log($"[GameManager] Turn Multiplier Effect: {currentFollowers} × {currentTurn} = {multipliedGain} followers gained!");
+            }
+            else
+            {
+                resourceManager.AddFollowers(card.followerGain);
+            }
+            
+            
+            // Impression Gain
+            if (card.isTurnImpressionEffect)
+            {
+                int currentFollowers = resourceManager.currentFollowers;
+                int currentTurn = turnManager.CurrentTurnCount;
+                float turnMultiplier = currentTurn / 10.0f;
+                float calculatedRate = currentFollowers * turnMultiplier;
+                gainedImpressions = resourceManager.AddImpression(calculatedRate);
+                Debug.Log($"[GameManager] Turn Impression Effect: {currentFollowers} × ({currentTurn}/10) = {calculatedRate:F2} rate, {gainedImpressions} impressions gained!");
+            }
+            else if (card.impressionRate > 0)
             {
                 gainedImpressions = resourceManager.AddImpression(card.impressionRate);
             }
@@ -334,9 +372,15 @@ namespace ApprovalMonster.Core
             }
             
 
-
-            // Move card
-            deckManager.PlayCard(card);
+            // Move card (Exhaust or Discard)
+            if (card.isExhaust)
+            {
+                deckManager.ExhaustCard(card);
+            }
+            else
+            {
+                deckManager.PlayCard(card);
+            }
             
             // カードプレイ完了後、モンスタードラフトチェック
             // まだドラフトを行っておらず、かつモンスターモードになった場合のみ実行

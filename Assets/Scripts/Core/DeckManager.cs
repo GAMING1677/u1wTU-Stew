@@ -118,5 +118,17 @@ namespace ApprovalMonster.Core
         {
              discardPile.Add(newCard);
         }
+
+        public void ExhaustCard(CardData card)
+        {
+            if (hand.Contains(card))
+            {
+                hand.Remove(card);
+                Debug.Log($"[DeckManager] Card exhausted (removed from game): {card.cardName}");
+                // Trigger event so UI updates
+                OnCardDiscarded?.Invoke(card);
+                // Card is not added to discard pile - it's removed from the game
+            }
+        }
     }
 }

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32c8f3617824a64bb41f5a00b165acf, type: 3}
+  m_Name: Stage_Turn
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.StageData
+  stageName: "\u30BF\u30FC\u30F3\u30C6\u30B9\u30C8"
+  quotaScore: 50000
+  initialDeck:
+  - {fileID: 11400000, guid: 2f5ec459737ed0c4a9f48428289d2218, type: 2}
+  - {fileID: 11400000, guid: f10e5107b86421e45b977c81cae75981, type: 2}
+  - {fileID: 11400000, guid: e2f4fc560ee393f4996d4e7cca843890, type: 2}
+  - {fileID: 11400000, guid: b29e3cf3723169d47b6a1a04d9867eff, type: 2}
+  - {fileID: 11400000, guid: 829124da519d3634bbdfa65c2480c980, type: 2}
+  draftPool:
+  - {fileID: 11400000, guid: 8b9001254ef30b44da8167d3cd5c5ed2, type: 2}
+  - {fileID: 11400000, guid: 308012b475fc88a4ead5f60a927d0015, type: 2}
+  - {fileID: 11400000, guid: fa54350e3d981dc4e97f8fe330afa501, type: 2}
+  monsterDeck: []
+  background: {fileID: 0}
+  themeColor: {r: 1, g: 1, b: 1, a: 1}
