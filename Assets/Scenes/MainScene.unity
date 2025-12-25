@@ -1066,7 +1066,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -4138,7 +4138,8 @@ MonoBehaviour:
   turnManager: {fileID: 1399698461}
   draftManager: {fileID: 1199935523}
   gameSettings: {fileID: 11400000, guid: c43b06aabe873c040b3a8d233e63b017, type: 2}
-  currentStage: {fileID: 11400000, guid: c6d89581d9ca6af40b06fd79dceeae9e, type: 2}
+  currentStage: {fileID: 11400000, guid: 6600d5104e2b5d146b9411558d97ff0e, type: 2}
+  quotaSettings: {fileID: 11400000, guid: 357f637eb3f2c5b42a8eb2fa25bf9d3d, type: 2}
   isGameActive: 0
   isWaitingForMonsterDraft: 0
   hasPerformedMonsterDraft: 0
@@ -4734,7 +4735,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -6094,7 +6095,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.ResultManager
   scoreText: {fileID: 1411817448}
-  resultLabel: {fileID: 0}
+  resultLabel: {fileID: 279209078}
   titleButton: {fileID: 921377412}
 --- !u!114 &1893173051
 MonoBehaviour:
@@ -6574,7 +6575,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278190080
   m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -6587,7 +6588,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2

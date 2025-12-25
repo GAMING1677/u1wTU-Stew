@@ -19,6 +19,9 @@ namespace ApprovalMonster.Core
         public GameSettings gameSettings;
         [Expandable]
         public StageData currentStage;
+        [Expandable]
+        [Tooltip("ターンごとのノルマ設定")]
+        public QuotaSettings quotaSettings;
 
         [Header("State")]
         [SerializeField] private bool isGameActive = false;
@@ -73,14 +76,14 @@ namespace ApprovalMonster.Core
                 deckManager.InitializeDeck(currentStage.initialDeck, gameSettings);
             }
             
-            // Prevent duplicate listeners - use RemoveAllListeners for clean state
-            turnManager.OnTurnStart.RemoveAllListeners();
-            turnManager.OnTurnEnd.RemoveAllListeners();
-            turnManager.OnDraftStart.RemoveAllListeners();
+            // Prevent duplicate listeners - only remove GameManager's own listeners
+            turnManager.OnTurnStart.RemoveListener(OnTurnStart);
+            turnManager.OnTurnEnd.RemoveListener(OnTurnEnd);
+            turnManager.OnDraftStart.RemoveListener(OnDraftStart);
             
-            // Resource listeners
-            resourceManager.onMentalChanged.RemoveAllListeners();
-            resourceManager.onImpressionsChanged.RemoveAllListeners();
+            // Remove GameManager's resource listeners (not all listeners!)
+            resourceManager.onMentalChanged.RemoveListener(OnMentalChanged);
+            resourceManager.onImpressionsChanged.RemoveListener(OnImpressionsChanged);
 
             // Hook up events
             turnManager.OnTurnStart.AddListener(OnTurnStart);
@@ -100,8 +103,10 @@ namespace ApprovalMonster.Core
 
         private void OnMentalChanged(int current, int max)
         {
+            Debug.Log($"[GameManager] OnMentalChanged called: current={current}, max={max}, isGameActive={isGameActive}");
             if (isGameActive && current <= 0)
             {
+                Debug.Log("[GameManager] Mental <= 0, triggering GameOver!");
                 GameOver();
             }
         }
@@ -116,10 +121,11 @@ namespace ApprovalMonster.Core
 
         private void GameOver()
         {
-            Debug.Log("Game Over!");
+            Debug.Log("[GameManager] GameOver() called!");
             isGameActive = false;
             turnManager.SetPhase(TurnManager.TurnPhase.GameOver);
-            // Show Game Over UI
+            // Navigate to result screen
+            SceneNavigator.Instance?.GoToResult();
         }
 
         public void ResetGame()
@@ -147,8 +153,11 @@ namespace ApprovalMonster.Core
                 draftManager.ResetSelectedCards();
             }
             
-            // 5. Reset Turn
-            turnManager.StartGame();
+            // 5. Reset flags
+            hasPerformedMonsterDraft = false;
+            isWaitingForMonsterDraft = false;
+            
+            // NOTE: Don't start turn here - StartGame() will call turnManager.StartGame()
         }
 
         private void OnTurnStart()
@@ -167,9 +176,8 @@ namespace ApprovalMonster.Core
             }
             else
             {
-                // Subsequent turns: use turn draw count (usually smaller) + bonuses
-                // TODO: Add turnDrawCount to GameSettings if needed
-                int baseTurnDraw = 2; // Default: draw 2 cards per turn
+                // Subsequent turns: use turn draw count from settings + bonuses
+                int baseTurnDraw = gameSettings != null ? gameSettings.turnDrawCount : 2;
                 drawCount = baseTurnDraw + extraTurnDraws;
                 Debug.Log($"[GameManager] Turn {turnManager.CurrentTurnCount}: Drawing {drawCount} cards (base: {baseTurnDraw}, bonus: {extraTurnDraws})");
             }
@@ -213,40 +221,33 @@ namespace ApprovalMonster.Core
         {
             int turn = turnManager.CurrentTurnCount;
             
-            // Turn 1 Fixed Quota
-            if (turn <= 1) return 1;
-
-            // Updated Formula:
-            // 1: LastTurnGainedFollowers
-            // 2: Turn
-            // 3: 0.3 * Round(Turn / 3) [Float division]
-            // Quota = (1 * 2) * 2 / 10 * 3
+            // Use QuotaSettings if available
+            if (quotaSettings != null)
+            {
+                return quotaSettings.GetQuotaForTurn(turn);
+            }
             
-            float factor3 = 0.3f * Mathf.Round(turn / 3.0f);
-            
-            // Calculate
-            // (LastGain * Turn) * Turn / 10
-            float baseValue = (float)(lastTurnGainedFollowers * turn) * turn / 10.0f;
-            
-            long quota = (long)(baseValue * factor3);
-            
-            // Ensure quota doesn't drop to 0 unexpectedly if calculation results in small number
-            if (quota < 1) quota = 1;
-
-            return quota;
+            // Fallback: simple scaling
+            return turn * 100;
         }
         
         public int CalculatePenalty()
         {
-            // Monster Mode: Penalty = Max Mental (Instant Death potential)
+            int turn = turnManager.CurrentTurnCount;
+            int maxMental = resourceManager.MaxMental;
+            
+            // Normal penalty: MaxMental × (Turn / 20)
+            float normalPenalty = maxMental * ((float)turn / 20.0f);
+            int basePenalty = Mathf.Max(1, Mathf.RoundToInt(normalPenalty));
+            
+            // Monster Mode: Apply multiplier
             if (resourceManager.isMonsterMode)
             {
-                return resourceManager.MaxMental;
+                float multiplier = gameSettings != null ? gameSettings.monsterPenaltyMultiplier : 2.0f;
+                return Mathf.Max(1, Mathf.RoundToInt(basePenalty * multiplier));
             }
 
-            // Normal Mode: Round(MaxMental * Turn / 10)
-            float penalty = resourceManager.MaxMental * turnManager.CurrentTurnCount / 10.0f;
-            return Mathf.RoundToInt(penalty);
+            return basePenalty;
         }
         
         private void UpdateQuotaDisplay()
@@ -260,16 +261,19 @@ namespace ApprovalMonster.Core
 
         private void OnDraftStart()
         {
-            Debug.Log("[GameManager] OnDraftStart");
+            Debug.Log($"[GameManager] OnDraftStart - isMonsterMode={resourceManager.isMonsterMode}, hasPerformedMonsterDraft={hasPerformedMonsterDraft}");
             if (resourceManager.isMonsterMode && !hasPerformedMonsterDraft)
             {
+                Debug.Log("[GameManager] OnDraftStart -> Starting Monster Draft");
                 // Monster draft logic
                 StartMonsterDraft();
             }
             else
             {
+                Debug.Log("[GameManager] OnDraftStart -> Calling CompleteDraft (skipping regular draft)");
                 // Regular draft or skip
                 turnManager.CompleteDraft();
+                Debug.Log($"[GameManager] OnDraftStart -> After CompleteDraft, Phase is now: {turnManager.CurrentPhase}");
             }
         }
         
@@ -282,8 +286,52 @@ namespace ApprovalMonster.Core
 
         public void TryPlayCard(CardData card)
         {
-            if (!isGameActive || deckManager.isDrawing || isWaitingForMonsterDraft) return;
-            if (turnManager.CurrentPhase != TurnManager.TurnPhase.PlayerAction) return;
+            // Detailed debug logging
+            Debug.Log($"[GameManager] TryPlayCard called for: {card?.cardName ?? "NULL"}");
+            Debug.Log($"[GameManager] State: isGameActive={isGameActive}, isDrawing={deckManager.isDrawing}, isWaitingForMonsterDraft={isWaitingForMonsterDraft}");
+            Debug.Log($"[GameManager] Phase: {turnManager.CurrentPhase}, isMonsterMode={resourceManager.isMonsterMode}, hasPerformedMonsterDraft={hasPerformedMonsterDraft}");
+            
+            if (!isGameActive)
+            {
+                Debug.Log("[GameManager] BLOCKED: Game is not active");
+                return;
+            }
+            if (deckManager.isDrawing)
+            {
+                Debug.Log("[GameManager] BLOCKED: Deck is drawing");
+                return;
+            }
+            if (isWaitingForMonsterDraft)
+            {
+                Debug.Log("[GameManager] BLOCKED: Waiting for monster draft");
+                return;
+            }
+            if (turnManager.CurrentPhase != TurnManager.TurnPhase.PlayerAction)
+            {
+                Debug.Log($"[GameManager] BLOCKED: Wrong phase ({turnManager.CurrentPhase} != PlayerAction)");
+                return;
+            }
+
+            // Hand-Based Effect Cost Check
+            if (card.handEffectTargetCard != null)
+            {
+                int handCount = deckManager.CountCardInHand(card.handEffectTargetCard, card);
+                
+                // ① Exhaust all cost check (need at least 1)
+                if (card.exhaustAllTargetCards && handCount < 1)
+                {
+                    Debug.Log($"[GameManager] No {card.handEffectTargetCard.cardName} in hand to exhaust!");
+                    return;
+                }
+                
+                // ②③ Min count check
+                if ((card.handCountImpressionRate > 0 || card.drawByHandCount) 
+                    && handCount < card.handEffectMinCount)
+                {
+                    Debug.Log($"[GameManager] Need at least {card.handEffectMinCount} {card.handEffectTargetCard.cardName} in hand!");
+                    return;
+                }
+            }
 
             // Check motivation
             if (!resourceManager.UseMotivation(card.motivationCost))
@@ -356,6 +404,59 @@ namespace ApprovalMonster.Core
                 Debug.Log($"[GameManager] Max Motivation increased by {card.maxMotivationBonus}.");
             }
 
+            // Card Generation Effect
+            if (card.generatedCards != null && card.generatedCards.Count > 0)
+            {
+                foreach (var gen in card.generatedCards)
+                {
+                    if (gen.card == null) continue;
+                    
+                    switch (gen.destination)
+                    {
+                        case CardDestination.Discard:
+                            deckManager.AddCardToDiscard(gen.card);
+                            Debug.Log($"[GameManager] Generated card '{gen.card.cardName}' added to discard.");
+                            break;
+                        case CardDestination.Hand:
+                            deckManager.AddCardToHand(gen.card);
+                            Debug.Log($"[GameManager] Generated card '{gen.card.cardName}' added to hand.");
+                            break;
+                        case CardDestination.DrawPile:
+                            deckManager.AddCardToTopOfDraw(gen.card);
+                            Debug.Log($"[GameManager] Generated card '{gen.card.cardName}' added to draw pile.");
+                            break;
+                    }
+                }
+            }
+
+            // Hand-Based Effects Execution
+            if (card.handEffectTargetCard != null)
+            {
+                int handCount = deckManager.CountCardInHand(card.handEffectTargetCard, card);
+                
+                // ① Exhaust ALL target cards in hand
+                if (card.exhaustAllTargetCards && handCount > 0)
+                {
+                    deckManager.ExhaustCardsOfType(card.handEffectTargetCard, handCount, card);
+                    Debug.Log($"[GameManager] Exhausted all {handCount} {card.handEffectTargetCard.cardName} cards.");
+                }
+                
+                // ② Count-based impressions
+                if (card.handCountImpressionRate > 0 && handCount > 0)
+                {
+                    float rate = handCount * card.handCountImpressionRate;
+                    long gained = resourceManager.AddImpression(rate);
+                    Debug.Log($"[GameManager] Hand count effect: {handCount} cards × {card.handCountImpressionRate} rate = {gained} impressions.");
+                }
+                
+                // ③ Count-based draw
+                if (card.drawByHandCount && handCount > 0)
+                {
+                    deckManager.DrawCards(handCount);
+                    Debug.Log($"[GameManager] Drew {handCount} cards based on hand count.");
+                }
+            }
+
             // Risk Logic
             if (card.HasRisk())
             {
@@ -410,12 +511,31 @@ namespace ApprovalMonster.Core
         private void StartMonsterDraft()
         {
             Debug.Log("[GameManager] Starting Monster Draft");
+            
+            // Check if monster deck exists and has cards
+            if (currentStage == null || currentStage.monsterDeck == null || currentStage.monsterDeck.Count == 0)
+            {
+                Debug.LogWarning("[GameManager] Monster deck is empty! Skipping monster draft.");
+                hasPerformedMonsterDraft = true; // Mark as done so it doesn't try again
+                turnManager.CompleteDraft(); // IMPORTANT: Complete draft to transition to PlayerAction
+                return;
+            }
+            
             isWaitingForMonsterDraft = true;
             
             var options = draftManager.GenerateMonsterDraftOptions(
                 currentStage.monsterDeck,
                 gameSettings.monsterDraftCardCount
             );
+            
+            if (options == null || options.Count == 0)
+            {
+                Debug.LogWarning("[GameManager] Failed to generate monster draft options!");
+                isWaitingForMonsterDraft = false;
+                hasPerformedMonsterDraft = true;
+                turnManager.CompleteDraft(); // IMPORTANT: Complete draft to transition to PlayerAction
+                return;
+            }
             
             FindObjectOfType<UI.UIManager>()?.ShowMonsterDraft(options);
         }
@@ -424,11 +544,24 @@ namespace ApprovalMonster.Core
         {
             Debug.Log($"[GameManager] Monster Draft complete. Selected: {selectedCard.cardName}");
             
+            // Add to hand (1 copy)
             deckManager.hand.Add(selectedCard);
             FindObjectOfType<UI.UIManager>()?.OnCardDrawn(selectedCard);
             
+            // Add to draw pile (1 copy)
+            deckManager.AddCardToTopOfDraw(selectedCard);
+            
+            // Add to discard pile (1 copy)
+            deckManager.AddCardToDiscard(selectedCard);
+            
+            Debug.Log($"[GameManager] Monster card '{selectedCard.cardName}' added: 1 to hand, 1 to draw pile, 1 to discard pile");
+            
             isWaitingForMonsterDraft = false;
             hasPerformedMonsterDraft = true;
+            
+            // IMPORTANT: Complete draft to transition to PlayerAction phase
+            turnManager.CompleteDraft();
+            Debug.Log($"[GameManager] OnMonsterDraftComplete - Phase is now: {turnManager.CurrentPhase}");
             
             // Check turn end again as drafting might have happened at 0 motivation
             if (resourceManager.currentMotivation <= 0)

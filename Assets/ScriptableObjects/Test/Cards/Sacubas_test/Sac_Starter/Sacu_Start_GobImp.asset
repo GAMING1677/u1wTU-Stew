@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
+  m_Name: Sacu_Start_GobImp
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
+  cardName: "\u521D\u671F\u30A4\u30F3\u30D7\u30FB\u30B4\u30D6"
+  cardImage: {fileID: 0}
+  flavorText: 
+  postComments:
+  - "\u3084\u3063\u307B\u30FC"
+  motivationCost: 1
+  mentalCost: 2
+  followerGain: 0
+  isTurnMultiplierEffect: 0
+  drawCount: 0
+  motivationRecovery: 0
+  turnDrawBonus: 0
+  maxMotivationBonus: 0
+  impressionRate: 0.5
+  isTurnImpressionEffect: 0
+  cardType: 0
+  isExhaust: 0
+  rarity: 0
+  riskType: 0
+  riskProbability: 1
+  riskValue: 0
+  generatedCards:
+  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
+    destination: 1
+  handEffectTargetCard: {fileID: 0}
+  exhaustAllTargetCards: 0
+  handCountImpressionRate: 0
+  drawByHandCount: 0
+  handEffectMinCount: 1
