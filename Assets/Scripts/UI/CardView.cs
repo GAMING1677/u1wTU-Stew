@@ -76,6 +76,15 @@ namespace ApprovalMonster.UI
             {
                 riskIcon.gameObject.SetActive(false);
             }
+
+            // Ensure RectTransform is initialized
+            if (_rectTransform == null)
+            {
+                _rectTransform = GetComponent<RectTransform>();
+            }
+
+            // Store original position after setup
+            _originalPosition = _rectTransform.anchoredPosition;
         }
 
         public string CardName => nameText.text;
@@ -98,10 +107,7 @@ namespace ApprovalMonster.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            // Store current position before hover
-            _originalPosition = _rectTransform.anchoredPosition;
-            
-            // Slide up to reveal full card
+            // Slide up to reveal full card (using stored original position)
             _rectTransform.DOKill();
             _rectTransform.DOAnchorPosY(_originalPosition.y + hoverSlideDistance, hoverDuration);
             

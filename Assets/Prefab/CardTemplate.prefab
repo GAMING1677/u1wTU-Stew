@@ -282,7 +282,8 @@ MonoBehaviour:
   flavorText: {fileID: 7069850885426871631}
   mentalCostText: {fileID: 2351188015983717534}
   riskIcon: {fileID: 8676741931728145650}
-  hoverSlideDistance: 100
+  hoverSlideDistance: 200
+  hoverScale: 1.15
   hoverDuration: 0.2
 --- !u!225 &6100228661105836764
 CanvasGroup:

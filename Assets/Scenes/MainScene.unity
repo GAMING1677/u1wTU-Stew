@@ -396,7 +396,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30E1\u30F3\u30BF\u30EB\n10/10"
+  m_text: "\u30E1\u30F3\u30BF\u30EB\n100/100"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
   m_sharedMaterial: {fileID: 5778998312778993265, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
@@ -3702,7 +3702,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 999,999,999
+  m_text: 999,999,999,999
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
   m_sharedMaterial: {fileID: 5778998312778993265, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
@@ -4138,7 +4138,7 @@ MonoBehaviour:
   turnManager: {fileID: 1399698461}
   draftManager: {fileID: 1199935523}
   gameSettings: {fileID: 11400000, guid: c43b06aabe873c040b3a8d233e63b017, type: 2}
-  currentStage: {fileID: 11400000, guid: 078ba435c97eafe48b9eb09583726ce6, type: 2}
+  currentStage: {fileID: 11400000, guid: c6d89581d9ca6af40b06fd79dceeae9e, type: 2}
   isGameActive: 0
   isWaitingForMonsterDraft: 0
   hasPerformedMonsterDraft: 0

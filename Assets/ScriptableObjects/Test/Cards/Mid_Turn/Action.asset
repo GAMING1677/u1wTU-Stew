@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
+  m_Name: Action
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
+  cardName: "\u30C9\u30ED\u30FC"
+  cardImage: {fileID: 0}
+  flavorText: 
+  postComments: []
+  motivationCost: 1
+  mentalCost: 50
+  followerGain: 0
+  isTurnMultiplierEffect: 0
+  drawCount: 1
+  motivationRecovery: 0
+  turnDrawBonus: 0
+  maxMotivationBonus: 0
+  impressionRate: 0
+  isTurnImpressionEffect: 0
+  cardType: 0
+  isExhaust: 1
+  rarity: 0
+  riskType: 0
+  riskProbability: 1
+  riskValue: 0
