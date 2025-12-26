@@ -127,6 +127,7 @@ namespace ApprovalMonster.UI
         
         /// <summary>
         /// モンスターモード用プリセットで表示
+        /// NOTE: モンスターモード専用のMonsterModeCutInUIを使用することを推奨
         /// </summary>
         public void ShowMonsterMode(Action onComplete = null)
         {

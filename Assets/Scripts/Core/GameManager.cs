@@ -13,6 +13,9 @@ namespace ApprovalMonster.Core
         public DeckManager deckManager;
         public TurnManager turnManager;
         public DraftManager draftManager;
+        
+        [Header("UI")]
+        public UI.MonsterModeCutInUI monsterModeCutInUI;
 
         [Header("Data")]
         [Expandable]
@@ -125,6 +128,11 @@ namespace ApprovalMonster.Core
             {
                 deckManager.InitializeDeck(currentStage.initialDeck, gameSettings);
             }
+            
+            
+            // Subscribe to monster mode event (モンスターモード発動時のイベントリスナー)
+            resourceManager.onMonsterModeTriggered.AddListener(OnMonsterModeTriggered);
+            Debug.Log("[GameManager] Monster mode event listener registered");
             
             // Prevent duplicate listeners - only remove GameManager's own listeners
             turnManager.OnTurnStart.RemoveListener(OnTurnStart);
@@ -639,6 +647,40 @@ namespace ApprovalMonster.Core
 
         }
 
+        
+        /// <summary>
+        /// モンスターモード発動時の処理
+        /// 1. カットイン表示 → 2. クリック待ち → 3. モンスタードラフト開始
+        /// </summary>
+        private void OnMonsterModeTriggered()
+        {
+            Debug.Log("[GameManager] ===== OnMonsterModeTriggered() CALLED =====");
+            Debug.Log($"[GameManager] monsterModeCutInUI null? {monsterModeCutInUI == null}");
+            Debug.Log($"[GameManager] currentStage null? {currentStage == null}");
+            
+            if (currentStage != null)
+            {
+                Debug.Log($"[GameManager] currentStage.monsterModePreset null? {currentStage.monsterModePreset == null}");
+            }
+            
+            if (monsterModeCutInUI != null && currentStage != null)
+            {
+                // Show cut-in with stage-specific preset
+                Debug.Log($"[GameManager] Calling monsterModeCutInUI.Show() with preset: {(currentStage.monsterModePreset != null ? currentStage.monsterModePreset.name : "null")}");
+                monsterModeCutInUI.Show(currentStage.monsterModePreset, () => {
+                    // After user clicks cut-in, start monster draft
+                    Debug.Log("[GameManager] Cut-in complete. Starting monster draft...");
+                    StartMonsterDraft();
+                });
+            }
+            else
+            {
+                // Fallback: directly start monster draft without cut-in
+                Debug.LogWarning($"[GameManager] Skipping cut-in. monsterModeCutInUI null? {monsterModeCutInUI == null}, currentStage null? {currentStage == null}");
+                StartMonsterDraft();
+            }
+        }
+        
         private void StartMonsterDraft()
         {
             Debug.Log("[GameManager] Starting Monster Draft");
