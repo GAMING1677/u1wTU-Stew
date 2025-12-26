@@ -69,6 +69,7 @@ namespace ApprovalMonster.UI
         /// <param name="showTag">Whether to show tag/rarity (for draft UI only)</param>
         public void Setup(CardData data, bool showTag = false)
         {
+            Debug.Log($"[CardView] Setup() START - Card: {data?.cardName ?? "NULL"}, FlavorText: '{data?.flavorText ?? "NULL"}', Description: '{data?.description ?? "NULL"}'");
             _data = data;
 
             if (cardImage != null)
