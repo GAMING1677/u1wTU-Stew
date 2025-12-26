@@ -346,12 +346,53 @@ namespace ApprovalMonster.Core
             // Only start next turn if game is still active and not ending
             Debug.Log($"[GameManager] OnTurnEnd - After processing, Phase: {turnManager.CurrentPhase}, isGameActive: {isGameActive}");
             
+            // Only start next turn if game is still active and not ending
+            Debug.Log($"[GameManager] OnTurnEnd - After processing, Phase: {turnManager.CurrentPhase}, isGameActive: {isGameActive}");
+            
             if (isGameActive && 
                 turnManager.CurrentPhase != TurnManager.TurnPhase.Result && 
                 turnManager.CurrentPhase != TurnManager.TurnPhase.GameOver)
             {
-                Debug.Log("[GameManager] OnTurnEnd - Starting next turn");
-                turnManager.StartTurn();
+                // Show Turn Result Cut-in
+                string title = quotaMet ? "ノルマ達成！" : "ノルマ未達...";
+                string message = quotaMet 
+                    ? $"インプレッション: +{impGained:N0}\nフォロワー: +{followerGained:N0}" 
+                    : $"ペナルティ: メンタル -{CalculateQuotaPenalty(endedTurn)}";
+                
+                // Color override (Green for success, Red/Purple for fail?) - Optional
+                // For now just standard cut-in
+                
+                Debug.Log("[GameManager] Showing Turn Result CutIn");
+                
+                // Determine Character Reaction
+                double ratio = (double)impGained / currentTurnQuota;
+                UI.CharacterAnimator.ReactionType reactionType = UI.CharacterAnimator.ReactionType.Sad_1;
+                
+                if (ratio >= 5.0) reactionType = UI.CharacterAnimator.ReactionType.Happy_3;
+                else if (ratio >= 1.0) reactionType = UI.CharacterAnimator.ReactionType.Happy_2;
+                else if (ratio < 0.5) reactionType = UI.CharacterAnimator.ReactionType.Sad_2;
+                else reactionType = UI.CharacterAnimator.ReactionType.Sad_1; // 0.5 <= ratio < 1.0
+                
+                Debug.Log($"[GameManager] Quota Ratio: {ratio:F2} (Gained: {impGained} / Quota: {currentTurnQuota}) -> Reaction: {reactionType}");
+                
+                var ui = FindObjectOfType<UI.UIManager>();
+                if (ui != null)
+                {
+                    ui.ShowCharacterReaction(reactionType, loop: true);
+                }
+                else
+                {
+                    Debug.LogError("[GameManager] UIManager not found when trying to show reaction!");
+                }
+                
+                FindObjectOfType<UI.UIManager>()?.ShowCutIn(title, message, () => {
+                    Debug.Log("[GameManager] CutIn dismissed - Stopping reaction and starting next turn");
+                    
+                    // Stop looping reaction
+                    FindObjectOfType<UI.UIManager>()?.StopCharacterReaction();
+                    
+                    turnManager.StartTurn();
+                });
             }
             else
             {
@@ -654,6 +695,9 @@ namespace ApprovalMonster.Core
             {
                 deckManager.PlayCard(card);
             }
+            
+            // Show Happy reaction on card play
+            FindObjectOfType<UI.UIManager>()?.ShowCharacterReaction(UI.CharacterAnimator.ReactionType.Happy_1);
             
             // カードプレイ完了後、モンスタードラフトチェック
             // まだドラフトを行っておらず、かつモンスターモードになった場合のみ実行

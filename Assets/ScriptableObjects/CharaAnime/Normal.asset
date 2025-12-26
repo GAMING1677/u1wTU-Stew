@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb9c5475ef563924faa1fa463a384015, type: 3}
+  m_Name: Normal
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CharacterProfile
+  idleFrames:
+  - {fileID: -3275938841986514438, guid: 4f74fcdb9d47af149a624d53833ae959, type: 3}
+  - {fileID: -4923841174517841142, guid: 611b1c99ff7f72940a9b58625186e759, type: 3}
+  - {fileID: -4451973480304037569, guid: b1c5e2231e542d740bca9b1a851daf21, type: 3}
+  - {fileID: -4923841174517841142, guid: 611b1c99ff7f72940a9b58625186e759, type: 3}
+  - {fileID: -3275938841986514438, guid: 4f74fcdb9d47af149a624d53833ae959, type: 3}
+  frameRate: 0.1
+  minIdleWait: 0.5
+  maxIdleWait: 3
+  reactionHappy_1: {fileID: 21300000, guid: 02fb62cb181bfcf428ca83370cb842d3, type: 3}
+  reactionHappy_2: {fileID: 21300000, guid: c27b84ef470283e438a13a70477c1656, type: 3}
+  reactionHappy_3: {fileID: 21300000, guid: c96df55201c9c21438a7bec3057fe9e2, type: 3}
+  reactionSad_1: {fileID: 21300000, guid: 2fe35520adab156439cf25357b20f8c7, type: 3}
+  reactionSad_2: {fileID: 21300000, guid: 7e834232e08313e449032f167546d9c1, type: 3}
+  reactionDuration: 1
