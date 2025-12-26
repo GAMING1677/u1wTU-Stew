@@ -88,15 +88,22 @@ namespace ApprovalMonster.Core
 
         public void DamageMental(int amount)
         {
+            Debug.Log($"[ResourceManager] DamageMental called: amount={amount}, currentMental={currentMental}");
+            
             currentMental -= amount;
+            
+            Debug.Log($"[ResourceManager] After damage: currentMental={currentMental}, threshold={settings.monsterThreshold}, hasTriggeredMonsterMode={hasTriggeredMonsterMode}");
             
             if (currentMental <= 0)
             {
                 currentMental = 0;
+                Debug.Log("[ResourceManager] Mental <= 0, would trigger GameOver");
                 // Trigger Game Over logic handled by GameManager usually
             }
             else if (!hasTriggeredMonsterMode && currentMental <= settings.monsterThreshold)
             {
+                Debug.Log($"[ResourceManager] *** MONSTER MODE CONDITIONS MET *** currentMental({currentMental}) <= threshold({settings.monsterThreshold}), hasTriggered={hasTriggeredMonsterMode}");
+                
                 // Trigger Monster Mode (Once per game session/stage)
                 isMonsterMode = true;
                 hasTriggeredMonsterMode = true;
@@ -106,7 +113,14 @@ namespace ApprovalMonster.Core
                 currentMental += healAmount;
                 Debug.Log($"[ResourceManager] Monster Mode Triggered! Healed {healAmount} mental (from {currentMental - healAmount} to {currentMental})");
                 
+                // Invoke event
+                Debug.Log($"[ResourceManager] Invoking onMonsterModeTriggered event. Listener count: {onMonsterModeTriggered?.GetPersistentEventCount()}");
                 onMonsterModeTriggered?.Invoke();
+                Debug.Log("[ResourceManager] onMonsterModeTriggered event invoked");
+            }
+            else
+            {
+                Debug.Log($"[ResourceManager] Monster mode NOT triggered. Reasons: hasTriggered={hasTriggeredMonsterMode}, mental({currentMental}) > threshold({settings.monsterThreshold})? {currentMental > settings.monsterThreshold}");
             }
             
             onMentalChanged?.Invoke(currentMental, settings.maxMental);

@@ -18,6 +18,10 @@ namespace ApprovalMonster.Data
         public List<CardData> draftPool;
         public List<CardData> monsterDeck;
         
+        [Header("Monster Mode")]
+        [Tooltip("このステージ専用のモンスターモードカットイン設定")]
+        public MonsterModePreset monsterModePreset;
+        
         [Header("Visuals")]
         public Sprite background;
         public Color themeColor = Color.white;
