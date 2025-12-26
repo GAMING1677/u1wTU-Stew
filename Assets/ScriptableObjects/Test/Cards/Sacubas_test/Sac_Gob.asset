@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u30B4\u30D6\u30EA\u30F3"
   cardImage: {fileID: 0}
-  flavorText: "\u52B9\u679C\u306A\u3057"
+  description: "\u52B9\u679C\u306A\u3057"
+  cardTag: 
+  flavorText: 
   postComments: []
   motivationCost: 0
   mentalCost: 0
