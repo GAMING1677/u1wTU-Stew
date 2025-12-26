@@ -191,22 +191,43 @@ namespace ApprovalMonster.Core
                 Debug.Log($"[GameManager] Saved game over score: {score}");
             }
             
-            // Show game over cut-in, then navigate to result
-            var uiManager = FindObjectOfType<UI.UIManager>();
-            if (uiManager != null)
+            // Navigate directly to result scene
+            if (SceneNavigator.Instance != null)
             {
-                uiManager.ShowGameOverCutIn(() =>
-                {
-                    // This runs after user clicks the cut-in
-                    SceneNavigator.Instance?.GoToResult();
-                });
+                Debug.Log("[GameManager] Navigating to Result scene after game over");
+                SceneNavigator.Instance.GoToResult();
             }
             else
             {
-                // Fallback: go directly to result
-                SceneNavigator.Instance?.GoToResult();
+                Debug.LogError("[GameManager] SceneNavigator.Instance is null!");
             }
         }
+        
+        public void FinishStage()
+        {
+            Debug.Log("[GameManager] FinishStage() called (Turn limit reached)!");
+            isGameActive = false;
+            
+            // Save Score
+            long score = resourceManager.totalImpressions;
+            if (SceneNavigator.Instance != null)
+            {
+                SceneNavigator.Instance.LastGameScore = score;
+                Debug.Log($"[GameManager] Saved finish score: {score}");
+            }
+            
+            // Navigate directly to result scene
+            if (SceneNavigator.Instance != null)
+            {
+                Debug.Log("[GameManager] Navigating to Result scene after stage completion");
+                SceneNavigator.Instance.GoToResult();
+            }
+            else
+            {
+                Debug.LogError("[GameManager] SceneNavigator.Instance is null!");
+            }
+        }
+
 
         public void ResetGame()
         {
@@ -296,8 +317,8 @@ namespace ApprovalMonster.Core
             
             if (!quotaMet)
             {
-                int penalty = 5; // Fixed penalty for quota failure
-                Debug.Log($"[GameManager] Quota Failed! Penalty: {penalty} Mental Damage");
+                int penalty = CalculateQuotaPenalty(turnManager.CurrentTurnCount);
+                Debug.Log($"[GameManager] Quota Failed! Turn {turnManager.CurrentTurnCount}, Penalty: {penalty} Mental Damage");
                 resourceManager.DamageMental(penalty);
                 
                 // Check if GameOver was triggered by DamageMental
@@ -334,8 +355,20 @@ namespace ApprovalMonster.Core
             }
             else
             {
-                Debug.Log("[GameManager] OnTurnEnd - Game is ending, not starting next turn");
+                Debug.Log("[ GameManager] OnTurnEnd - Game is ending, not starting next turn");
             }
+        }
+        
+        /// <summary>
+        /// ノルマ未達成時のペナルティ計算
+        /// round(ターン数 / 10) × 5
+        /// 例: 10ターン以下なら5, 11-20ターンなら10, 21-30ターンなら15
+        /// </summary>
+        public int CalculateQuotaPenalty(int currentTurn)
+        {
+            int multiplier = Mathf.CeilToInt(currentTurn / 10f);
+            if (multiplier < 1) multiplier = 1; // 最低でも1（つまり5ダメージ）
+            return multiplier * 5;
         }
         
         public long CalculateTurnQuota()
@@ -373,10 +406,9 @@ namespace ApprovalMonster.Core
         private void UpdateQuotaDisplay()
         {
             long gained = resourceManager.totalImpressions - turnStartImpressions;
-            int penalty = CalculatePenalty();
             
-            // Notify UI
-            onQuotaUpdate?.Invoke(gained, currentTurnQuota, penalty);
+            // Notify UI (penalty is now calculated by UI itself)
+            onQuotaUpdate?.Invoke(gained, currentTurnQuota);
         }
 
         private void OnDraftStart()
@@ -743,35 +775,6 @@ namespace ApprovalMonster.Core
 
         // Duplicate GameOver removed. Using the one defined earlier.
 
-        public void FinishStage()
-        {
-            Debug.Log("[GameManager] FinishStage() called!");
-            
-            // Save Score
-            long score = resourceManager.totalImpressions;
-            if (SceneNavigator.Instance != null)
-            {
-                SceneNavigator.Instance.LastGameScore = score;
-                SaveDataManager.Instance.SaveHighScore(score); // Auto save high score
-            }
-            
-            // Show stage clear cut-in, then navigate to result
-            var uiManager = FindObjectOfType<UI.UIManager>();
-            if (uiManager != null)
-            {
-                uiManager.ShowStageClearCutIn(() =>
-                {
-                    // This runs after user clicks the cut-in
-                    SceneNavigator.Instance?.GoToResult();
-                });
-            }
-            else
-            {
-                // Fallback: go directly to result
-                Debug.LogWarning("UIManager not found, going directly to Result.");
-                SceneNavigator.Instance?.GoToResult();
-            }
-        }
         
         private void ApplyRisk(RiskType risk, int value)
         {
@@ -792,7 +795,7 @@ namespace ApprovalMonster.Core
     }
     
     [System.Serializable]
-    public class QuotaUpdateEvent : UnityEngine.Events.UnityEvent<long, long, int> { }
+    public class QuotaUpdateEvent : UnityEngine.Events.UnityEvent<long, long> { }
     
     /// <summary>
     /// ターンごとの統計情報（デバッグ用）

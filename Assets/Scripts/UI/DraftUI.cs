@@ -47,7 +47,7 @@ namespace ApprovalMonster.UI
             // モンスタードラフトならタイトル変更
             if (isMonsterDraft)
             {
-                titleText.text = "モンスターの力を選べ";
+                titleText.text = "モンスターの力を選べ\n<size=50%>選んだカードを3枚入手し、デッキ・手札・山札に加える</size>";
                 titleText.color = Color.red;
             }
             else
