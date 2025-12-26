@@ -100,8 +100,13 @@ namespace ApprovalMonster.Core
                 // Trigger Monster Mode (Once per game session/stage)
                 isMonsterMode = true;
                 hasTriggeredMonsterMode = true;
+                
+                // Heal mental: currentMental / 2 (rounded up)
+                int healAmount = Mathf.CeilToInt(currentMental / 2f);
+                currentMental += healAmount;
+                Debug.Log($"[ResourceManager] Monster Mode Triggered! Healed {healAmount} mental (from {currentMental - healAmount} to {currentMental})");
+                
                 onMonsterModeTriggered?.Invoke();
-                Debug.Log("[ResourceManager] Monster Mode Triggered!");
             }
             
             onMentalChanged?.Invoke(currentMental, settings.maxMental);

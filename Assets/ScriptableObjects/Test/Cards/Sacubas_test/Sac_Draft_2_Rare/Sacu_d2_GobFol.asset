@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Sacu_d2_GobFol
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u30B4\u30D6\u6368\u672D_\u30D5\u30A9\u30ED\u30EF\u30FC"
+  cardName: "\u30AE\u30EA\u30AE\u30EA\u306E\u81EA\u64AE\u308A"
   cardImage: {fileID: 0}
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C8\u4E07\u4EBA\u5897\u3048\u308B\n\u6368\u3066\u672D\u306B\u30B4\u30D6\u30EA\u30F3\u30923\u679A\u8FFD\u52A0\u3059\u308B"
   flavorText: 
   postComments:
-  - "\u3084\u3063\u307B\u30FC"
+  - "\u5F8C\u3067\u6D88\u3059"
   motivationCost: 1
   mentalCost: 9
   followerGain: 80000

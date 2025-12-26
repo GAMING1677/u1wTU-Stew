@@ -30,13 +30,33 @@ namespace ApprovalMonster.UI
 
             if (scoreText != null)
             {
+                Debug.Log($"[ResultManager] scoreText is assigned. Starting animation from 0 to {score}");
                 scoreText.text = "0";
-                // DOTween.To to animate number
-                long currentDisplayScore = 0;
-                DOTween.To(() => currentDisplayScore, x => {
+                
+                // DOTween.To to animate number (use float for interpolation)
+                float currentDisplayScore = 0;
+                var tween = DOTween.To(() => currentDisplayScore, x => {
                     currentDisplayScore = x;
-                    scoreText.text = $"{currentDisplayScore:N0}";
-                }, score, 1.5f).SetEase(Ease.OutExpo);
+                    scoreText.text = $"{(long)currentDisplayScore:N0}";
+                }, (float)score, 1.5f)
+                .SetEase(Ease.OutExpo)
+                .OnStart(() => {
+                    Debug.Log("[ResultManager] Score animation STARTED");
+                })
+                .OnUpdate(() => {
+                    // Log every 10th update to avoid spam
+                    if (Time.frameCount % 10 == 0)
+                    {
+                        Debug.Log($"[ResultManager] Score animation UPDATE: {currentDisplayScore}");
+                    }
+                })
+                .OnComplete(() => {
+                    Debug.Log($"[ResultManager] Score animation COMPLETE: {currentDisplayScore}");
+                    // Ensure final value is exact
+                    scoreText.text = $"{score:N0}";
+                });
+                
+                Debug.Log($"[ResultManager] Tween created: {tween != null}");
             }
             else
             {

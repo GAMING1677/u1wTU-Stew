@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u304A\u306F\u3088\u3046"
   cardImage: {fileID: 0}
+  description: "10%\u30A4\u30F3\u30D7\u3092\u5F97\u308B"
   flavorText: "\u6328\u62F6\u306F\u5927\u5207\u306B"
-  description: "10%\u306E\u30A4\u30F3\u30D7\u3092\u5F97\u308B"
   postComments:
   - "\u3084\u3063\u307B\u30FC"
-  - "\u304A\u306F\u3088\u3046"
+  - "\u304A\u306F\u3088"
   - "\u3082\u3046\u671D\u3060\u306D"
   motivationCost: 0
   mentalCost: 1

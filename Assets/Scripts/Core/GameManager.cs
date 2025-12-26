@@ -78,6 +78,17 @@ namespace ApprovalMonster.Core
             }
         }
 
+        private void Update()
+        {
+            // Press R to reload scene (using new Input System)
+            if (UnityEngine.InputSystem.Keyboard.current != null && 
+                UnityEngine.InputSystem.Keyboard.current.rKey.wasPressedThisFrame)
+            {
+                Debug.Log("[GameManager] R key pressed - Reloading scene");
+                SceneNavigator.Instance?.ReloadScene();
+            }
+        }
+
         private void Start()
         {
             // Game will be started by SceneNavigator button click
@@ -163,6 +174,14 @@ namespace ApprovalMonster.Core
             Debug.Log("[GameManager] GameOver() called!");
             isGameActive = false;
             turnManager.SetPhase(TurnManager.TurnPhase.GameOver);
+            
+            // Save Score
+            long score = resourceManager.totalImpressions;
+            if (SceneNavigator.Instance != null)
+            {
+                SceneNavigator.Instance.LastGameScore = score;
+                Debug.Log($"[GameManager] Saved game over score: {score}");
+            }
             
             // Show game over cut-in, then navigate to result
             var uiManager = FindObjectOfType<UI.UIManager>();
@@ -269,7 +288,7 @@ namespace ApprovalMonster.Core
             
             if (!quotaMet)
             {
-                int penalty = CalculatePenalty();
+                int penalty = 5; // Fixed penalty for quota failure
                 Debug.Log($"[GameManager] Quota Failed! Penalty: {penalty} Mental Damage");
                 resourceManager.DamageMental(penalty);
                 
@@ -610,8 +629,8 @@ namespace ApprovalMonster.Core
             if (card.postComments != null && card.postComments.Count > 0)
             {
                 string comment = card.postComments[Random.Range(0, card.postComments.Count)];
-                // gainedImpressionsが0でも表示（最低値として1を使用）
-                long displayImpressions = gainedImpressions > 0 ? gainedImpressions : 1;
+                // gainedImpressionsが0の場合、フォロワー数×1%を使用
+                long displayImpressions = gainedImpressions > 0 ? gainedImpressions : (long)(resourceManager.currentFollowers * 0.01f);
                 FindObjectOfType<UI.UIManager>()?.AddPost(comment, displayImpressions);
             }
             

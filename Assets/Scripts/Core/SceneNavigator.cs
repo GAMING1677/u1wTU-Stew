@@ -107,5 +107,29 @@ namespace ApprovalMonster.Core
                 fadePanel.DOFade(0f, fadeDuration).OnComplete(() => fadePanel.gameObject.SetActive(false));
             }
         }
+        
+        /// <summary>
+        /// Reload the current scene with fade transition
+        /// </summary>
+        public void ReloadScene()
+        {
+            Debug.Log("[SceneNavigator] Reloading scene with fade");
+            StartCoroutine(ReloadSceneRoutine());
+        }
+        
+        private IEnumerator ReloadSceneRoutine()
+        {
+            if (fadePanel != null)
+            {
+                fadePanel.gameObject.SetActive(true);
+                fadePanel.DOFade(1f, fadeDuration);
+                yield return new WaitForSeconds(fadeDuration);
+            }
+            
+            // Reload the current scene
+            UnityEngine.SceneManagement.SceneManager.LoadScene(
+                UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex
+            );
+        }
     }
 }
