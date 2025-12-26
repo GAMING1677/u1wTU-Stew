@@ -11,8 +11,11 @@ namespace ApprovalMonster.UI
     /// モンスターモード専用カットインUI
     /// ステージごとの画像・サイズ・アニメーションを管理
     /// </summary>
-    public class MonsterModeCutInUI : MonoBehaviour, IPointerClickHandler
+    public class MonsterModeCutInUI : MonoBehaviour
     {
+        [Header("Target")]
+        [SerializeField] private GameObject targetObject; // MonsterCutIn GameObject
+        
         [Header("UI Elements")]
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private Image backgroundImage;
@@ -45,7 +48,60 @@ namespace ApprovalMonster.UI
             if (canvasGroup == null)
                 canvasGroup = GetComponent<CanvasGroup>();
             
-            gameObject.SetActive(false);
+            // Setup click detection on target object
+            SetupClickDetection();
+            
+            // Hide target object on start
+            if (targetObject != null)
+            {
+                targetObject.SetActive(false);
+            }
+        }
+        
+        /// <summary>
+        /// targetObjectに透明なImageとEventTriggerを追加してクリック検知を有効化
+        /// </summary>
+        private void SetupClickDetection()
+        {
+            if (targetObject == null)
+            {
+                Debug.LogWarning("[MonsterModeCutInUI] targetObject is null, cannot setup click detection");
+                return;
+            }
+            
+            // Add transparent Image for raycast target (if not already present)
+            Image clickDetector = targetObject.GetComponent<Image>();
+            if (clickDetector == null)
+            {
+                clickDetector = targetObject.AddComponent<Image>();
+                clickDetector.color = new Color(0, 0, 0, 0); // Fully transparent
+                clickDetector.raycastTarget = true;
+                
+                // Stretch to fill entire screen
+                RectTransform rect = targetObject.GetComponent<RectTransform>();
+                if (rect != null)
+                {
+                    rect.anchorMin = Vector2.zero;
+                    rect.anchorMax = Vector2.one;
+                    rect.sizeDelta = Vector2.zero;
+                    rect.anchoredPosition = Vector2.zero;
+                }
+            }
+            
+            // Add EventTrigger for click detection (if not already present)
+            EventTrigger trigger = targetObject.GetComponent<EventTrigger>();
+            if (trigger == null)
+            {
+                trigger = targetObject.AddComponent<EventTrigger>();
+            }
+            
+            // Add pointer click event
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerClick;
+            entry.callback.AddListener((data) => { OnPointerClick((PointerEventData)data); });
+            trigger.triggers.Add(entry);
+            
+            Debug.Log("[MonsterModeCutInUI] Click detection setup complete on targetObject");
         }
         
         /// <summary>
@@ -81,8 +137,22 @@ namespace ApprovalMonster.UI
             showTime = Time.time;
             onClickCallback = onComplete;
             
-            Debug.Log("[MonsterModeCutInUI] Activating GameObject");
-            gameObject.SetActive(true);
+            Debug.Log("[MonsterModeCutInUI] Showing UI");
+            
+            // Activate target object
+            if (targetObject != null)
+            {
+                targetObject.SetActive(true);
+            }
+            
+            // Debug: Check GameObject state
+            Debug.Log($"[MonsterModeCutInUI] targetObject null: {targetObject == null}");
+            Debug.Log($"[MonsterModeCutInUI] targetObject.activeInHierarchy: {targetObject?.activeInHierarchy}");
+            Debug.Log($"[MonsterModeCutInUI] canvasGroup null: {canvasGroup == null}, alpha: {canvasGroup?.alpha}");
+            Debug.Log($"[MonsterModeCutInUI] backgroundImage null: {backgroundImage == null}");
+            Debug.Log($"[MonsterModeCutInUI] characterImage null: {characterImage == null}");
+            Debug.Log($"[MonsterModeCutInUI] titleText null: {titleText == null}");
+            Debug.Log($"[MonsterModeCutInUI] messageText null: {messageText == null}");
             
             // Apply preset settings
             if (preset != null)
@@ -260,12 +330,14 @@ namespace ApprovalMonster.UI
             
             hideSeq.OnComplete(() =>
             {
-                gameObject.SetActive(false);
+                // Deactivate target object
+                if (targetObject != null)
+                {
+                    targetObject.SetActive(false);
+                }
+                
                 isShowing = false;
                 canClick = false;
-                
-                // Reset alpha for next time
-                if (canvasGroup != null) canvasGroup.alpha = 1f;
                 
                 onClickCallback?.Invoke();
                 onClickCallback = null;
@@ -279,7 +351,13 @@ namespace ApprovalMonster.UI
         public void ForceHide()
         {
             DOTween.Kill(this);
-            gameObject.SetActive(false);
+            
+            // Deactivate target object
+            if (targetObject != null)
+            {
+                targetObject.SetActive(false);
+            }
+            
             isShowing = false;
             canClick = false;
             onClickCallback = null;

@@ -5021,7 +5021,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &719432426
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5041,9 +5041,9 @@ RectTransform:
   - {fileID: 1490540508}
   - {fileID: 105123383}
   - {fileID: 1109154664}
+  - {fileID: 581304070}
   - {fileID: 1553979974}
   - {fileID: 895301225}
-  - {fileID: 581304070}
   - {fileID: 1307431910}
   - {fileID: 1391963675}
   m_Father: {fileID: 1372415956}
@@ -8069,7 +8069,7 @@ MonoBehaviour:
   deckManager: {fileID: 1210851279}
   turnManager: {fileID: 1399698461}
   draftManager: {fileID: 1199935523}
-  monsterModeCutInUI: {fileID: 1571167611}
+  monsterModeCutInUI: {fileID: 1391963676}
   gameSettings: {fileID: 11400000, guid: c43b06aabe873c040b3a8d233e63b017, type: 2}
   currentStage: {fileID: 11400000, guid: 6600d5104e2b5d146b9411558d97ff0e, type: 2}
   quotaSettings: {fileID: 11400000, guid: 357f637eb3f2c5b42a8eb2fa25bf9d3d, type: 2}
@@ -9013,6 +9013,7 @@ GameObject:
   - component: {fileID: 1391963679}
   - component: {fileID: 1391963678}
   - component: {fileID: 1391963677}
+  - component: {fileID: 1391963676}
   m_Layer: 0
   m_Name: MonsterCutIn
   m_TagString: Untagged
@@ -9027,7 +9028,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1391963674}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9042,6 +9043,33 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 960, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1391963676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391963674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96137a0a32b94b469e9398d53f13913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.MonsterModeCutInUI
+  canvasGroup: {fileID: 1391963679}
+  backgroundImage: {fileID: 225490452}
+  characterImage: {fileID: 680376514}
+  titleText: {fileID: 393826191}
+  messageText: {fileID: 139238670}
+  backgroundSlideInDuration: 0.5
+  characterSlideInDelay: 0.15
+  characterSlideInDuration: 0.4
+  inertiaDuration: 1.5
+  inertiaDistance: 20
+  slideOutDuration: 0.4
+  clickDelay: 0.5
+  audioSource: {fileID: 0}
+  showSound: {fileID: 0}
+  clickSound: {fileID: 0}
 --- !u!114 &1391963677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10444,7 +10472,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1571167610}
   - component: {fileID: 1571167609}
-  - component: {fileID: 1571167611}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -10503,34 +10530,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1571167611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1571167608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a96137a0a32b94b469e9398d53f13913, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.MonsterModeCutInUI
-  targetObject: {fileID: 1391963674}
-  canvasGroup: {fileID: 1391963679}
-  backgroundImage: {fileID: 225490452}
-  characterImage: {fileID: 680376514}
-  titleText: {fileID: 393826191}
-  messageText: {fileID: 139238670}
-  backgroundSlideInDuration: 0.5
-  characterSlideInDelay: 0.15
-  characterSlideInDuration: 0.4
-  inertiaDuration: 1.5
-  inertiaDistance: 20
-  slideOutDuration: 0.4
-  clickDelay: 0.5
-  audioSource: {fileID: 0}
-  showSound: {fileID: 0}
-  clickSound: {fileID: 0}
 --- !u!1 &1623249830
 GameObject:
   m_ObjectHideFlags: 0
@@ -10913,7 +10912,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ver0.0.3
+  m_text: ver0.0.2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
   m_sharedMaterial: {fileID: 5778998312778993265, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
