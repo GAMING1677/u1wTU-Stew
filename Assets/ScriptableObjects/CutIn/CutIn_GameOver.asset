@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63dac9d5f79086b418366c7cf7222e42, type: 3}
   m_Name: CutIn_GameOver
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CutInPreset
-  title: "\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC"
-  message: 
+  title: 
+  message: "\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC"
   backgroundImage: {fileID: 31222901589935591, guid: 3d35c26e896566348bdaae99f67dec18, type: 3}
   backgroundColor: {r: 0, g: 0, b: 0, a: 0.8}
   iconImage: {fileID: 0}

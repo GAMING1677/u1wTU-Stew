@@ -166,25 +166,31 @@ namespace ApprovalMonster.UI
         /// <summary>
         /// Format number with K/M notation
         /// 1000+ = K, 1000000+ = M
+        /// Supports negative values (e.g., -1.5K, -2.3M)
         /// </summary>
         private string FormatNumber(int value)
         {
             if (value == 0)
                 return "";
             
-            if (value >= 1000000)
+            // Handle negative values
+            bool isNegative = value < 0;
+            int absValue = Mathf.Abs(value);
+            string sign = isNegative ? "-" : "";
+            
+            if (absValue >= 1000000)
             {
-                float millions = value / 1000000f;
-                return $"{millions:F1}M";
+                float millions = absValue / 1000000f;
+                return $"{sign}{millions:F1}M";
             }
-            else if (value >= 1000)
+            else if (absValue >= 1000)
             {
-                float thousands = value / 1000f;
-                return $"{thousands:F1}K";
+                float thousands = absValue / 1000f;
+                return $"{sign}{thousands:F1}K";
             }
             else
             {
-                return value.ToString();
+                return value.ToString(); // Includes sign naturally
             }
         }
 

@@ -297,7 +297,7 @@ namespace ApprovalMonster.UI
             }
         }
 
-        private void UpdateQuota(long gained, long target, int penalty)
+        private void UpdateQuota(long gained, long target)
         {
             long remaining = System.Math.Max(0, target - gained);
 
@@ -320,6 +320,13 @@ namespace ApprovalMonster.UI
             {
                 if (remaining > 0)
                 {
+                    // Calculate penalty dynamically from current turn
+                    int penalty = 5; // Default fallback
+                    if (GameManager.Instance != null && GameManager.Instance.turnManager != null)
+                    {
+                        penalty = GameManager.Instance.CalculateQuotaPenalty(GameManager.Instance.turnManager.CurrentTurnCount);
+                    }
+                    
                     // "未達だと…{penalty}病む"
                     penaltyRiskText.text = $"<size=50%>足りないと…</size>\n{penalty} <size=50%>病む</size>";
                     
