@@ -25,5 +25,12 @@ namespace ApprovalMonster.Data
         [Header("Visuals")]
         public Sprite background;
         public Color themeColor = Color.white;
+        
+        [Header("Character")]
+        [Tooltip("通常時のキャラクター設定")]
+        public CharacterProfile normalProfile;
+        
+        [Tooltip("モンスターモード時のキャラクター設定")]
+        public CharacterProfile monsterProfile;
     }
 }

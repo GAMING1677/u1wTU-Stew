@@ -55,11 +55,49 @@ namespace ApprovalMonster.UI
         [Header("Cut-In")]
         [SerializeField] private CutInUI cutInUI;
 
+        [Header("Character")]
+        [SerializeField] private CharacterAnimator characterAnimator;
+
         private List<CardView> activeCards = new List<CardView>();
 
         private void Awake()
         {
             Debug.Log("[UIManager] Awake called.");
+        }
+
+        public void SetupCharacter(CharacterProfile profile)
+        {
+            if (characterAnimator != null)
+            {
+                characterAnimator.SetProfile(profile);
+            }
+        }
+        
+        public void ShowCharacterReaction(CharacterAnimator.ReactionType type)
+        {
+            ShowCharacterReaction(type, loop: false);
+        }
+        
+        public void ShowCharacterReaction(CharacterAnimator.ReactionType type, bool loop)
+        {
+            if (characterAnimator != null)
+            {
+                Debug.Log($"[UIManager] ShowCharacterReaction called with {type}, loop: {loop}. Delegating to CharacterAnimator.");
+                characterAnimator.PlayReaction(type, loop);
+            }
+            else
+            {
+                Debug.LogError("[UIManager] ShowCharacterReaction called but characterAnimator is NULL!");
+            }
+        }
+        
+        public void StopCharacterReaction()
+        {
+            if (characterAnimator != null)
+            {
+                Debug.Log("[UIManager] StopCharacterReaction called.");
+                characterAnimator.StopCurrentReaction();
+            }
         }
 
         private void OnEnable()
@@ -98,6 +136,10 @@ namespace ApprovalMonster.UI
                 // Subscribe to draft events
                 gm.turnManager.OnDraftStart.RemoveListener(OnDraftStart);
                 gm.turnManager.OnDraftStart.AddListener(OnDraftStart);
+                
+                // Subscribe to monster mode event
+                gm.resourceManager.onMonsterModeTriggered.RemoveListener(OnMonsterModeTriggered);
+                gm.resourceManager.onMonsterModeTriggered.AddListener(OnMonsterModeTriggered);
             }
             else
             {
@@ -108,6 +150,12 @@ namespace ApprovalMonster.UI
         private void Start()
         {
              Debug.Log("[UIManager] Start called.");
+             
+             // Initial Setup for Character
+             if (GameManager.Instance != null && GameManager.Instance.currentStage != null)
+             {
+                 SetupCharacter(GameManager.Instance.currentStage.normalProfile);
+             }
              
              // Setup button listener
              if (endTurnButton != null)
@@ -133,6 +181,16 @@ namespace ApprovalMonster.UI
                  gm.deckManager.OnDeckCountChanged -= UpdateDeckCounts;
                  gm.turnManager.OnTurnChanged.RemoveListener(UpdateTurnDisplay);
              }
+        }
+        
+        private void OnMonsterModeTriggered()
+        {
+            Debug.Log("[UIManager] Monster Mode Triggered! Switching Profile...");
+            if (GameManager.Instance != null && GameManager.Instance.currentStage != null)
+            {
+                SetupCharacter(GameManager.Instance.currentStage.monsterProfile);
+                ShowCharacterReaction(CharacterAnimator.ReactionType.Sad_2);
+            }
         }
         
         private void OnReset()
