@@ -23,8 +23,8 @@ namespace ApprovalMonster.UI
 
         private void OnStartDates()
         {
-            Debug.Log("[TitleManager] Start Button Clicked. calling GoToMain.");
-            SceneNavigator.Instance.GoToMain();
+            Debug.Log("[TitleManager] Start Button Clicked. Going to Stage Select.");
+            SceneNavigator.Instance.GoToStageSelect();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace ApprovalMonster.Core
 
         [Header("UI Panels")]
         [SerializeField] private GameObject titlePanel;
+        [SerializeField] private GameObject stageSelectPanel;
         [SerializeField] private GameObject mainGamePanel;
         [SerializeField] private GameObject resultPanel;
         
@@ -50,6 +51,12 @@ namespace ApprovalMonster.Core
             StartCoroutine(TransitionRoutine(mainGamePanel));
         }
 
+        public void GoToStageSelect()
+        {
+            Debug.Log("[SceneNavigator] GoToStageSelect called.");
+            StartCoroutine(TransitionRoutine(stageSelectPanel));
+        }
+
         public void GoToTitle()
         {
              StartCoroutine(TransitionRoutine(titlePanel));
@@ -70,6 +77,7 @@ namespace ApprovalMonster.Core
         private void SetPanel(GameObject activePanel)
         {
             if (titlePanel != null) titlePanel.SetActive(titlePanel == activePanel);
+            if (stageSelectPanel != null) stageSelectPanel.SetActive(stageSelectPanel == activePanel);
             if (mainGamePanel != null) mainGamePanel.SetActive(mainGamePanel == activePanel);
             if (resultPanel != null) resultPanel.SetActive(resultPanel == activePanel);
         }

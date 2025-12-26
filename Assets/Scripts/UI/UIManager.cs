@@ -244,7 +244,7 @@ namespace ApprovalMonster.UI
 
         private void UpdateImpressions(long val)
         {
-            impressionText.text = $"{val:N0}インプ";
+            impressionText.text = $"{val:N0}";
             impressionText.transform.DOKill();
             impressionText.transform.localScale = Vector3.one;
             impressionText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
@@ -447,6 +447,22 @@ namespace ApprovalMonster.UI
             if (cutInUI != null)
             {
                 cutInUI.ShowGameOver(onComplete);
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] CutInUI is not assigned! Proceeding directly.");
+                onComplete?.Invoke();
+            }
+        }
+        
+        /// <summary>
+        /// ステージクリアカットインを表示（プリセット対応）
+        /// </summary>
+        public void ShowStageClearCutIn(System.Action onComplete)
+        {
+            if (cutInUI != null)
+            {
+                cutInUI.ShowStageClear(onComplete);
             }
             else
             {

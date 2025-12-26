@@ -12,9 +12,14 @@ namespace ApprovalMonster.Data
         [BoxGroup("Basic Info")]
         [ShowAssetPreview]
         public Sprite cardImage;
-        
+           
         [BoxGroup("Basic Info")]
+        [Tooltip("カード効果の説明文")]
         [TextArea(3, 5)]
+        public string description;
+     
+        [BoxGroup("Basic Info")]
+        [TextArea(2, 4)]
         public string flavorText;
 
         [BoxGroup("Basic Info")]
