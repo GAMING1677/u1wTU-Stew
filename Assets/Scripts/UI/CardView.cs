@@ -15,7 +15,10 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI costText;
         [SerializeField] private TextMeshProUGUI flavorText;
+        [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private TextMeshProUGUI mentalCostText;
+        [SerializeField] private TextMeshProUGUI followerGainText;
+        [SerializeField] private TextMeshProUGUI impressionRateText;
         [SerializeField] private Image riskIcon;
         
         [Header("Animation")]
@@ -52,20 +55,59 @@ namespace ApprovalMonster.UI
             _data = data;
             nameText.text = data.cardName;
             costText.text = data.motivationCost.ToString();
-            flavorText.text = data.flavorText;
+            
+            // Flavor text
+            if (flavorText != null)
+            {
+                flavorText.text = data.flavorText;
+                Debug.Log($"[CardView] Set flavorText for {data.cardName}: '{data.flavorText}'");
+            }
+            else
+            {
+                Debug.LogWarning($"[CardView] flavorText is null for {data.cardName}");
+            }
+            
+            // Description text (new)
+            if (descriptionText != null)
+            {
+                descriptionText.text = data.description;
+                Debug.Log($"[CardView] Set description for {data.cardName}: '{data.description}'");
+            }
+            else
+            {
+                Debug.LogWarning($"[CardView] descriptionText is null for {data.cardName}");
+            }
 
             if (data.cardImage != null)
             {
                 cardImage.sprite = data.cardImage;
             }
 
-            // Positive mental cost means damage (Red), Negative is heal (Green)
-            if (data.mentalCost > 0)
-                mentalCostText.text = $"-{data.mentalCost} Men";
-            else if (data.mentalCost < 0)
-                mentalCostText.text = $"+{-data.mentalCost} Men";
-            else
-                mentalCostText.text = "";
+            // Mental cost: number only
+            if (mentalCostText != null)
+            {
+                if (data.mentalCost > 0)
+                    mentalCostText.text = data.mentalCost.ToString();
+                else if (data.mentalCost < 0)
+                    mentalCostText.text = $"+{-data.mentalCost}";
+                else
+                    mentalCostText.text = "";
+            }
+            
+            // Follower gain with K/M formatting
+            if (followerGainText != null)
+            {
+                followerGainText.text = FormatNumber(data.followerGain);
+            }
+            
+            // Impression rate as percentage
+            if (impressionRateText != null)
+            {
+                if (data.impressionRate != 0)
+                    impressionRateText.text = $"{(data.impressionRate * 100):F0}%";
+                else
+                    impressionRateText.text = "";
+            }
 
             if (data.HasRisk())
             {
@@ -85,6 +127,31 @@ namespace ApprovalMonster.UI
 
             // Store original position after setup
             _originalPosition = _rectTransform.anchoredPosition;
+        }
+        
+        /// <summary>
+        /// Format number with K/M notation
+        /// 1000+ = K, 1000000+ = M
+        /// </summary>
+        private string FormatNumber(int value)
+        {
+            if (value == 0)
+                return "";
+            
+            if (value >= 1000000)
+            {
+                float millions = value / 1000000f;
+                return $"{millions:F1}M";
+            }
+            else if (value >= 1000)
+            {
+                float thousands = value / 1000f;
+                return $"{thousands:F1}K";
+            }
+            else
+            {
+                return value.ToString();
+            }
         }
 
         public string CardName => nameText.text;

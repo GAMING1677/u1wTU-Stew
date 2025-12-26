@@ -92,6 +92,18 @@ namespace ApprovalMonster.Core
             hasPerformedMonsterDraft = false;
             extraTurnDraws = 0;
             
+            // Get selected stage from StageManager
+            if (StageManager.Instance != null && StageManager.Instance.SelectedStage != null)
+            {
+                currentStage = StageManager.Instance.SelectedStage;
+                Debug.Log($"[GameManager] Using selected stage from StageManager: {currentStage.stageName}");
+            }
+            else
+            {
+                Debug.LogError("[GameManager] No stage selected in StageManager! Cannot start game.");
+                return;
+            }
+            
             // Initial setup if not already done via Reset
             if (resourceManager.currentMental <= 0 && gameSettings != null)
             {
@@ -594,10 +606,13 @@ namespace ApprovalMonster.Core
             
             
             // 6. Post Comment (Timeline)
-            if (card.postComments != null && card.postComments.Count > 0 && gainedImpressions > 0)
+            // ポストは常に表示（インプレッション獲得条件を削除）
+            if (card.postComments != null && card.postComments.Count > 0)
             {
                 string comment = card.postComments[Random.Range(0, card.postComments.Count)];
-                FindObjectOfType<UI.UIManager>()?.AddPost(comment, gainedImpressions);
+                // gainedImpressionsが0でも表示（最低値として1を使用）
+                long displayImpressions = gainedImpressions > 0 ? gainedImpressions : 1;
+                FindObjectOfType<UI.UIManager>()?.AddPost(comment, displayImpressions);
             }
             
             // Player must click End Turn button to proceed (no automatic turn end)
@@ -669,17 +684,31 @@ namespace ApprovalMonster.Core
 
         public void FinishStage()
         {
+            Debug.Log("[GameManager] FinishStage() called!");
+            
             // Save Score
             long score = resourceManager.totalImpressions;
             if (SceneNavigator.Instance != null)
             {
                 SceneNavigator.Instance.LastGameScore = score;
                 SaveDataManager.Instance.SaveHighScore(score); // Auto save high score
-                SceneNavigator.Instance.GoToResult();
+            }
+            
+            // Show stage clear cut-in, then navigate to result
+            var uiManager = FindObjectOfType<UI.UIManager>();
+            if (uiManager != null)
+            {
+                uiManager.ShowStageClearCutIn(() =>
+                {
+                    // This runs after user clicks the cut-in
+                    SceneNavigator.Instance?.GoToResult();
+                });
             }
             else
             {
-                Debug.LogWarning("SceneNavigator not found, cannot go to Result.");
+                // Fallback: go directly to result
+                Debug.LogWarning("UIManager not found, going directly to Result.");
+                SceneNavigator.Instance?.GoToResult();
             }
         }
         

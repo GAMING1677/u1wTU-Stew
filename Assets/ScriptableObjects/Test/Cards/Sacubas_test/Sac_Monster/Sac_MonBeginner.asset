@@ -25,7 +25,7 @@ MonoBehaviour:
   motivationRecovery: 1
   turnDrawBonus: 0
   maxMotivationBonus: 0
-  impressionRate: 1
+  impressionRate: 0.1
   isTurnImpressionEffect: 0
   cardType: 2
   isExhaust: 0

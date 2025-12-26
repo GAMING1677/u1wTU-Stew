@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Sacu_Start_GobImp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u521D\u671F\u30A4\u30F3\u30D7\u30FB\u30B4\u30D6"
+  cardName: "\u9B45\u60D1\u306E\u8E0A\u308A\u5B50"
   cardImage: {fileID: 0}
-  flavorText: 
+  flavorText: "\u4E00\u756A\u5927\u4E8B\u306A\u306E\u306F\u9854"
+  description: "20%\u306E\u30A4\u30F3\u30D7\u3092\u5F97\u308B\n\u30B4\u30D6\u30EA\u30F3\u3092\u624B\u672D\u306B\uFF11\u679A\u52A0\u3048\u308B"
   postComments:
-  - "\u3084\u3063\u307B\u30FC"
+  - "\u8E0A\u3063\u3066\u307F\u305F"
   motivationCost: 1
   mentalCost: 3
   followerGain: 0
@@ -40,4 +41,5 @@ MonoBehaviour:
   exhaustAllTargetCards: 0
   handCountImpressionRate: 0
   drawByHandCount: 0
+  handCountFollowerRate: 0
   handEffectMinCount: 1
