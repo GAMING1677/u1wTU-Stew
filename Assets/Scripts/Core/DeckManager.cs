@@ -20,6 +20,9 @@ namespace ApprovalMonster.Core
         public System.Action<CardData> OnCardDiscarded;
         public System.Action OnDeckShuffled;
         public System.Action OnReset; // New event
+        
+        // Deck count events
+        public System.Action<int, int> OnDeckCountChanged; // (drawPileCount, discardPileCount)
 
         public bool isDrawing { get; set; } = false;
 
@@ -85,6 +88,9 @@ namespace ApprovalMonster.Core
                 Debug.Log($"[DeckManager] Drawing card: {card.cardName}. Invoking OnCardDrawn.");
                 OnCardDrawn?.Invoke(card);
             }
+            
+            // Notify deck count change
+            OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
         }
 
         private void ReshuffleDiscardToDraw()
@@ -92,6 +98,9 @@ namespace ApprovalMonster.Core
             drawPile.AddRange(discardPile);
             discardPile.Clear();
             ShuffleDrawPile();
+            
+            // Notify deck count change
+            OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
         }
 
         public void DiscardHand()
@@ -102,6 +111,9 @@ namespace ApprovalMonster.Core
                 OnCardDiscarded?.Invoke(card);
             }
             hand.Clear();
+            
+            // Notify deck count change
+            OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
         }
 
         public void PlayCard(CardData card)
@@ -111,12 +123,18 @@ namespace ApprovalMonster.Core
                 hand.Remove(card);
                 discardPile.Add(card);
                 OnCardDiscarded?.Invoke(card); // Or specific OnCardPlayed event
+                
+                // Notify deck count change
+                OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
             }
         }
         
         public void AddCardToDiscard(CardData newCard)
         {
              discardPile.Add(newCard);
+             
+             // Notify deck count change
+             OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
         }
 
         public void AddCardToHand(CardData card)
@@ -130,6 +148,9 @@ namespace ApprovalMonster.Core
         {
             drawPile.Insert(0, card);
             Debug.Log($"[DeckManager] Card added to top of draw pile: {card.cardName}");
+            
+            // Notify deck count change
+            OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
         }
 
         public void ExhaustCard(CardData card)
