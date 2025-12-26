@@ -17,6 +17,10 @@ namespace ApprovalMonster.Data
         [Tooltip("カード効果の説明文")]
         [TextArea(3, 5)]
         public string description;
+        
+        [BoxGroup("Basic Info")]
+        [Tooltip("カードのタグ（モンスターカード用：初心者向け、上級者向けなど）")]
+        public string cardTag = "";
      
         [BoxGroup("Basic Info")]
         [TextArea(2, 4)]

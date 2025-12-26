@@ -19,6 +19,7 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI mentalCostText;
         [SerializeField] private TextMeshProUGUI followerGainText;
         [SerializeField] private TextMeshProUGUI impressionRateText;
+        [SerializeField] private TextMeshProUGUI tagText; // Tag or Rarity display
         [SerializeField] private Image riskIcon;
         
         [Header("Animation")]
@@ -61,63 +62,61 @@ namespace ApprovalMonster.UI
             if (_graphicRaycaster == null) _graphicRaycaster = gameObject.AddComponent<GraphicRaycaster>();
         }
 
-        public void Setup(CardData data)
+        /// <summary>
+        /// Set up card with data
+        /// </summary>
+        /// <param name="data">Card data to display</param>
+        /// <param name="showTag">Whether to show tag/rarity (for draft UI only)</param>
+        public void Setup(CardData data, bool showTag = false)
         {
             _data = data;
-            nameText.text = data.cardName;
-            costText.text = data.motivationCost.ToString();
-            
-            // Flavor text
-            if (flavorText != null)
+
+            if (cardImage != null)
+                cardImage.sprite = data.cardImage;
+            if (nameText != null)
+                nameText.text = data.cardName;
+            if (costText != null)
+                costText.text = data.motivationCost.ToString();
+
+            // Display flavor text
+            if (flavorText != null && !string.IsNullOrEmpty(data.flavorText))
             {
                 flavorText.text = data.flavorText;
-                Debug.Log($"[CardView] Set flavorText for {data.cardName}: '{data.flavorText}'");
+                Debug.Log($"[CardView] Flavor text set: {data.flavorText}");
             }
             else
             {
-                Debug.LogWarning($"[CardView] flavorText is null for {data.cardName}");
+                Debug.LogWarning($"[CardView] Flavor text is null or empty for {data.cardName}");
             }
-            
-            // Description text (new)
-            if (descriptionText != null)
+
+            // Display description
+            if (descriptionText != null && !string.IsNullOrEmpty(data.description))
             {
                 descriptionText.text = data.description;
-                Debug.Log($"[CardView] Set description for {data.cardName}: '{data.description}'");
+                Debug.Log($"[CardView] Description set: {data.description}");
             }
             else
             {
-                Debug.LogWarning($"[CardView] descriptionText is null for {data.cardName}");
+                Debug.LogWarning($"[CardView] Description is null or empty for {data.cardName}");
             }
 
-            if (data.cardImage != null)
-            {
-                cardImage.sprite = data.cardImage;
-            }
-
-            // Mental cost: number only
+            // Mental Cost - display number only
             if (mentalCostText != null)
             {
-                if (data.mentalCost > 0)
-                    mentalCostText.text = data.mentalCost.ToString();
-                else if (data.mentalCost < 0)
-                    mentalCostText.text = $"+{-data.mentalCost}";
-                else
-                    mentalCostText.text = "";
+                mentalCostText.text = data.mentalCost.ToString();
             }
-            
-            // Follower gain with K/M formatting
+
+            // Follower Gain - K/M notation
             if (followerGainText != null)
             {
                 followerGainText.text = FormatNumber(data.followerGain);
             }
-            
-            // Impression rate as percentage
+
+            // Impression Rate - percentage
             if (impressionRateText != null)
             {
-                if (data.impressionRate != 0)
-                    impressionRateText.text = $"{(data.impressionRate * 100):F0}%";
-                else
-                    impressionRateText.text = "";
+                float percentage = data.impressionRate * 100f;
+                impressionRateText.text = $"{percentage:F0}%";
             }
 
             if (data.HasRisk())
@@ -128,6 +127,30 @@ namespace ApprovalMonster.UI
             else
             {
                 riskIcon.gameObject.SetActive(false);
+            }
+            
+            // Display tag or rarity (draft only)
+            if (tagText != null)
+            {
+                if (showTag)
+                {
+                    tagText.gameObject.SetActive(true);
+                    if (!string.IsNullOrEmpty(data.cardTag))
+                    {
+                        // Monster card: show custom tag
+                        tagText.text = data.cardTag;
+                    }
+                    else
+                    {
+                        // Regular card: show rarity
+                        tagText.text = data.rarity.ToString();
+                    }
+                }
+                else
+                {
+                    // Hide tag in normal card display
+                    tagText.gameObject.SetActive(false);
+                }
             }
 
             // Ensure RectTransform is initialized

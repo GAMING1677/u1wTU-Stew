@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Sacu_d1_dubble
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u30C9\u30E9\u5F31_\u30C0\u30D6\u30EB"
+  cardName: "\u30B9\u30BF\u30D0\u306A\u3046"
   cardImage: {fileID: 0}
-  flavorText: 
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC1000\u4EBA\u5897\n\u30A4\u30F3\u30D7\u309210%\u5F97\u308B\n1\u679A\u30C9\u30ED\u30FC\u3059\u308B"
+  cardTag: 
+  flavorText: "\u3042\u308B\u6642\u306F\u30B3\u30FC\u30D2\u30FC\u3001\u3042\u308B\u6642\u306F\u30E9\u30FC\u30E1\u30F3"
   postComments:
-  - "\u3084\u3063\u307B\u30FC"
+  - "\u30B9\u30BF\u30D0\u6765\u305F\uFF01"
   motivationCost: 1
   mentalCost: 4
   followerGain: 1000

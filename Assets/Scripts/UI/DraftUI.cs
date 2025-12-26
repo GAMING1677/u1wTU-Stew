@@ -76,7 +76,8 @@ namespace ApprovalMonster.UI
             foreach (var cardData in options)
             {
                 var cardView = Instantiate(cardViewPrefab, cardOptionsContainer);
-                cardView.Setup(cardData);
+                cardView.Setup(cardData, showTag: true); // Show tag/rarity in draft
+                
                 
                 // CardViewのクリックイベントを無効化（ドラフト中はプレイさせない）
                 cardView.enabled = false;

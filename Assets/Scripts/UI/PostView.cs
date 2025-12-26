@@ -23,16 +23,16 @@ namespace ApprovalMonster.UI
             if (impressionsText != null) impressionsText.text = impressionCount.ToString("N0");
             
             // Calculate Metrics
-            // Likes: 5-10%
-            int likes = Mathf.CeilToInt(impressionCount * Random.Range(0.05f, 0.1f));
+            // Likes: 20-50%
+            int likes = Mathf.CeilToInt(impressionCount * Random.Range(0.2f, 0.5f));
             if (likesText != null) likesText.text = likes.ToString("N0");
             
-            // RT: 20-50%
-            int rt = Mathf.CeilToInt(impressionCount * Random.Range(0.2f, 0.5f));
+            // RT: 5-60%
+            int rt = Mathf.CeilToInt(impressionCount * Random.Range(0.05f, 0.6f));
             if (rtText != null) rtText.text = rt.ToString("N0");
             
-            // Replies: 10-30%
-            int replies = Mathf.CeilToInt(impressionCount * Random.Range(0.1f, 0.3f));
+            // Replies: 1-20%
+            int replies = Mathf.CeilToInt(impressionCount * Random.Range(0.01f, 0.2f));
             if (repliesText != null) repliesText.text = replies.ToString("N0");
         }
     }
