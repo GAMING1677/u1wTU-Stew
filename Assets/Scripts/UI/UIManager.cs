@@ -21,6 +21,8 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI motivationText;
         [SerializeField] private TextMeshProUGUI impressionText;
         [SerializeField] private TextMeshProUGUI turnText;
+        [SerializeField] private TextMeshProUGUI drawPileCountText;
+        [SerializeField] private TextMeshProUGUI discardPileCountText;
         
         [Header("Fill Images")]
         [SerializeField] private Image mentalFillImage;
@@ -87,6 +89,7 @@ namespace ApprovalMonster.UI
                 gm.deckManager.OnCardDrawn += OnCardDrawn;
                 gm.deckManager.OnCardDiscarded += OnCardDiscarded;
                 gm.deckManager.OnReset += OnReset;
+                gm.deckManager.OnDeckCountChanged += UpdateDeckCounts;
                 
                 // Subscribe to turn events
                 gm.turnManager.OnTurnChanged.RemoveListener(UpdateTurnDisplay);
@@ -127,6 +130,7 @@ namespace ApprovalMonster.UI
                  gm.deckManager.OnCardDrawn -= OnCardDrawn;
                  gm.deckManager.OnCardDiscarded -= OnCardDiscarded;
                  gm.deckManager.OnReset -= OnReset;
+                 gm.deckManager.OnDeckCountChanged -= UpdateDeckCounts;
                  gm.turnManager.OnTurnChanged.RemoveListener(UpdateTurnDisplay);
              }
         }
@@ -178,6 +182,14 @@ namespace ApprovalMonster.UI
             for (int i = 0; i < activeCards.Count; i++)
             {
                 CardView card = activeCards[i];
+                
+                // Skip layout for selected cards to prevent animation override
+                if (card.IsSelected)
+                {
+                    Debug.Log($"[UIManager] Skipping layout for selected card: {card.CardName}");
+                    continue;
+                }
+                
                 float xPos = startX + (i * spacing);
                 
                 // Calculate fan effect
@@ -207,7 +219,10 @@ namespace ApprovalMonster.UI
                 cardRect.localScale = Vector3.one;
                 
                 cardRect.DOKill(); // Kill any existing position tweens
-                cardRect.DOAnchorPos(new Vector2(xPos, yPos), 0.3f).SetEase(Ease.OutQuad);
+                cardRect.DOAnchorPos(new Vector2(xPos, yPos), 0.3f).SetEase(Ease.OutQuad).OnComplete(() => {
+                    // Update the original position after layout is complete
+                    card.UpdateOriginalPosition();
+                });
                 cardRect.DORotate(new Vector3(0, 0, rotationZ), 0.3f).SetEase(Ease.OutQuad);
             }
         }
@@ -259,6 +274,28 @@ namespace ApprovalMonster.UI
                 turnText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
             }
         }
+        
+        /// <summary>
+        /// Update draw pile and discard pile count display with animation
+        /// </summary>
+        private void UpdateDeckCounts(int drawCount, int discardCount)
+        {
+            if (drawPileCountText != null)
+            {
+                drawPileCountText.text = drawCount.ToString();
+                drawPileCountText.transform.DOKill();
+                drawPileCountText.transform.localScale = Vector3.one;
+                drawPileCountText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
+            }
+            
+            if (discardPileCountText != null)
+            {
+                discardPileCountText.text = discardCount.ToString();
+                discardPileCountText.transform.DOKill();
+                discardPileCountText.transform.localScale = Vector3.one;
+                discardPileCountText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
+            }
+        }
 
         private void UpdateQuota(long gained, long target, int penalty)
         {
@@ -284,7 +321,7 @@ namespace ApprovalMonster.UI
                 if (remaining > 0)
                 {
                     // "未達だと…{penalty}病む"
-                    penaltyRiskText.text = $"未達だと…\n{penalty} ポイント病む";
+                    penaltyRiskText.text = $"<size=50%>足りないと…</size>\n{penalty} <size=50%>病む</size>";
                     
                     if (penaltyRiskContainer != null)
                     {
