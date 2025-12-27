@@ -19,6 +19,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6600d5104e2b5d146b9411558d97ff0e, type: 2}
   stageName: "\u30B5\u30AD\u30E5\u30D0\u30B9_Score"
   stageDescription: "\u30B9\u30B3\u30A2\u30A2\u30BF\u30C3\u30AF\uFF01"
+  startCutInTitle: "\u30B9\u30B3\u30A2\u30A2\u30BF\u30C3\u30AF\uFF01"
+  startCutInMessage: 
   quotaScore: 100
   maxTurnCount: 50
   initialDeck:

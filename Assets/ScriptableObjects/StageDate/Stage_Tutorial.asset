@@ -18,6 +18,8 @@ MonoBehaviour:
   requiredStages: []
   stageName: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB"
   stageDescription: "500\u30A4\u30F3\u30D7\u7A3C\u3054\u3046\uFF01"
+  startCutInTitle: "500\u30A4\u30F3\u30D7\u7A3C\u3054\u3046\uFF01"
+  startCutInMessage: 
   quotaScore: 100
   maxTurnCount: 10
   initialDeck:

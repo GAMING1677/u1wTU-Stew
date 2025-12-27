@@ -88,12 +88,10 @@ namespace ApprovalMonster.UI
                     if (wasCleared)
                     {
                         resultLabel.text = "ステージクリア！";
-                        resultLabel.color = Color.green;
                     }
                     else
                     {
                         resultLabel.text = "ゲームオーバー";
-                        resultLabel.color = Color.red;
                     }
                     
                     Debug.Log($"[ResultManager] Displaying clear status: {(wasCleared ? "CLEARED" : "FAILED")}");

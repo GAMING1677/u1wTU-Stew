@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9174252136394654980
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4911506002319563826}
+  - component: {fileID: 2322924870283627258}
+  - component: {fileID: 4065629669428021975}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4911506002319563826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9174252136394654980}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 609, y: 241, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2322924870283627258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9174252136394654980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3769c0ddeb26714dbeb2ecd40c8dc26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApprovalMonster.UI.UIManager
+  cardPrefab: {fileID: 1621553481172379671, guid: 031b171cf6210de4cb047c2d4028de8f, type: 3}
+  followersText: {fileID: 0}
+  mentalText: {fileID: 0}
+  motivationText: {fileID: 0}
+  impressionText: {fileID: 0}
+  turnText: {fileID: 0}
+  drawPileCountText: {fileID: 0}
+  discardPileCountText: {fileID: 0}
+  followerGainUI: {fileID: 0}
+  impressionGainUI: {fileID: 0}
+  mentalFillImage: {fileID: 0}
+  motivationFillImage: {fileID: 0}
+  endTurnButton: {fileID: 0}
+  draftUI: {fileID: 0}
+  handContainer: {fileID: 0}
+  defaultCardSpacing: 20
+  minCardSpacing: -100
+  maxRotationAngle: -10
+  arcHeight: 50
+  quotaText: {fileID: 0}
+  penaltyRiskContainer: {fileID: 0}
+  penaltyRiskText: {fileID: 0}
+  clearGoalText: {fileID: 0}
+  postPrefab: {fileID: 5759947140164503255, guid: 01dee82b3b0f87948b85d58dc25e6099, type: 3}
+  timelineContainer: {fileID: 0}
+  maxPosts: 5
+  cutInUI: {fileID: 0}
+  characterAnimator: {fileID: 0}
+  endTurnButtonPulse: {fileID: 0}
+--- !u!114 &4065629669428021975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9174252136394654980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96137a0a32b94b469e9398d53f13913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.MonsterModeCutInUI
+  targetObject: {fileID: 0}
+  canvasGroup: {fileID: 0}
+  backgroundImage: {fileID: 0}
+  characterImage: {fileID: 0}
+  titleText: {fileID: 0}
+  messageText: {fileID: 0}
+  backgroundSlideInDuration: 0.5
+  characterSlideInDelay: 0.15
+  characterSlideInDuration: 0.4
+  inertiaDuration: 1.5
+  inertiaDistance: 20
+  slideOutDuration: 0.4
+  clickDelay: 0.5
+  audioSource: {fileID: 0}
+  showSound: {fileID: 0}
+  clickSound: {fileID: 0}

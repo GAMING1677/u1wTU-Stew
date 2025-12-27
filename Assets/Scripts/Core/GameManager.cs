@@ -157,7 +157,40 @@ namespace ApprovalMonster.Core
             resourceManager.onMentalChanged.AddListener(OnMentalChanged);
             resourceManager.onImpressionsChanged.AddListener(OnImpressionsChanged);
             
-            turnManager.StartGame();
+            // ★ NEW: ステージ開始カットインを表示してから実際にゲームを開始
+            ShowStageStartCutIn();
+        }
+        
+        /// <summary>
+        /// ステージ開始カットインを表示し、クリック後にゲームを開始
+        /// </summary>
+        private void ShowStageStartCutIn()
+        {
+            // ステージにカットインタイトルが設定されているか確認
+            if (currentStage != null && !string.IsNullOrEmpty(currentStage.startCutInTitle))
+            {
+                var uiManager = FindObjectOfType<UI.UIManager>();
+                if (uiManager != null)
+                {
+                    Debug.Log($"[GameManager] Showing stage start cut-in: {currentStage.startCutInTitle}");
+                    uiManager.ShowCutIn(currentStage.startCutInTitle, currentStage.startCutInMessage, () =>
+                    {
+                        Debug.Log("[GameManager] Stage start cut-in dismissed, starting game");
+                        turnManager.StartGame();
+                    });
+                }
+                else
+                {
+                    Debug.LogWarning("[GameManager] UIManager not found, starting game directly");
+                    turnManager.StartGame();
+                }
+            }
+            else
+            {
+                // カットインが設定されていない場合は直接開始
+                Debug.Log("[GameManager] No stage start cut-in configured, starting game directly");
+                turnManager.StartGame();
+            }
         }
         
         private void OnImpressionsChanged(long total)

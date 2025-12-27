@@ -22,6 +22,14 @@ namespace ApprovalMonster.Data
         [TextArea(2, 4)]
         public string stageDescription = "がんばれ！";
         
+        [Header("Stage Start Cut-in")]
+        [Tooltip("ゲーム開始時に表示するカットインのタイトル")]
+        public string startCutInTitle = "STAGE START";
+        
+        [Tooltip("ゲーム開始時に表示するカットインのメッセージ")]
+        [TextArea(2, 4)]
+        public string startCutInMessage = "";
+        
         [Tooltip("ゲーム中のターン毎目標スコア（ペナルティ用、クリア条件ではない）")]
         public long quotaScore;
         
