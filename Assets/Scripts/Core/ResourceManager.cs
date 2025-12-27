@@ -31,6 +31,10 @@ namespace ApprovalMonster.Core
         public UnityEvent<int, int> onMotivationChanged; // current, max
         public UnityEvent<long> onImpressionsChanged;
         public UnityEvent onMonsterModeTriggered;
+        
+        // Gain events for UI notification
+        public UnityEvent<int> onFollowerGained;
+        public UnityEvent<long, float> onImpressionGained; // amount, rate
 
         private void Start()
         {
@@ -71,6 +75,12 @@ namespace ApprovalMonster.Core
             currentFollowers += amount;
             if (currentFollowers < 0) currentFollowers = 0;
             onFollowersChanged?.Invoke(currentFollowers);
+            
+            // Notify gain if positive
+            if (amount > 0)
+            {
+                onFollowerGained?.Invoke(amount);
+            }
         }
 
         public long AddImpression(float rate)
@@ -82,6 +92,12 @@ namespace ApprovalMonster.Core
             long gained = (long)(currentFollowers * finalRate);
             totalImpressions += gained;
             onImpressionsChanged?.Invoke(totalImpressions);
+            
+            // Notify gain if positive
+            if (gained > 0)
+            {
+                onImpressionGained?.Invoke(gained, finalRate);
+            }
             
             return gained;
         }

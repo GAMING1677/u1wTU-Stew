@@ -19,7 +19,7 @@ MonoBehaviour:
   turnDrawCount: 3
   lastDraftTurn: 10
   maxTurnCount: 50
-  monsterThreshold: 90
+  monsterThreshold: 50
   monsterDraftCardCount: 3
   monsterModeMultiplier: 1
   monsterPenaltyMultiplier: 2
