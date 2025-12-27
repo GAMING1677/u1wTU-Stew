@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Sacu_d2_follower
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u4EBA\u304C\u4EBA\u3092\u547C\u3076"
+  cardName: "\u4EBA\u985E\u306E\u9AD8\u307F\u3078"
   cardImage: {fileID: 0}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C4\u4E07\u4EBA\u5897\u3048\u308B"
-  flavorText: 
+  cardTag: 
+  flavorText: "\u306A\u3093\u304B\u7159\u3044\u305E"
   postComments:
-  - "\u306A\u3093\u304B\u6025\u306B\u30D5\u30A9\u30ED\u30EF\u30FC\u5897\u3048\u305F\uFF01"
+  - "\u6E7E\u5CB8\u306E\u666F\u8272\u3081\u3063\u3061\u3083\u7DBA\u9E97\uFF01"
+  - "\u9AD8\u5C64\u3060\u3068\u708A\u98EF\u5668\u306E\u304A\u7C73\u304A\u3044\u3057\u304F\u306A\u304F\u306A\u308B\u3093\u3060\u3088\u306D"
+  - "\u6D17\u6FEF\u7269\u3092\u5916\u306B\u5E72\u305B\u306A\u3044\u306E\u5730\u5473\u306B\u4E0D\u4FBF\u3060\u306A\u3041"
   motivationCost: 1
   mentalCost: 3
   followerGain: 40000

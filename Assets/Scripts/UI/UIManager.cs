@@ -22,6 +22,10 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI turnText;
         [SerializeField] private TextMeshProUGUI drawPileCountText;
         [SerializeField] private TextMeshProUGUI discardPileCountText;
+
+        [Header("Gain Effects - Static")]
+        [SerializeField] private GainEffectUI followerGainUI;
+        [SerializeField] private GainEffectUI impressionGainUI;
         
         [Header("Fill Images")]
         [SerializeField] private Image mentalFillImage;
@@ -120,7 +124,7 @@ namespace ApprovalMonster.UI
                 gm.resourceManager.onFollowersChanged.RemoveListener(UpdateFollowers);
                 gm.resourceManager.onMentalChanged.RemoveListener(UpdateMental);
                 gm.resourceManager.onMotivationChanged.RemoveListener(UpdateMotivation);
-                gm.resourceManager.onImpressionsChanged.RemoveListener(UpdateImpressions);
+                gm.resourceManager.onImpressionsChanged.RemoveListener(UpdateImpression);
                 gm.deckManager.OnCardDrawn -= OnCardDrawn;
                 gm.deckManager.OnCardDiscarded -= OnCardDiscarded;
                 gm.deckManager.OnReset -= OnReset;
@@ -129,8 +133,12 @@ namespace ApprovalMonster.UI
                 gm.resourceManager.onFollowersChanged.AddListener(UpdateFollowers);
                 gm.resourceManager.onMentalChanged.AddListener(UpdateMental);
                 gm.resourceManager.onMotivationChanged.AddListener(UpdateMotivation);
-                gm.resourceManager.onImpressionsChanged.AddListener(UpdateImpressions);
+                gm.resourceManager.onImpressionsChanged.AddListener(UpdateImpression);
                 gm.onQuotaUpdate.AddListener(UpdateQuota);
+                
+                // Gain Effects
+                gm.resourceManager.onFollowerGained.AddListener(ShowFollowerGain);
+                gm.resourceManager.onImpressionGained.AddListener(ShowImpressionGain);
                 
                 gm.deckManager.OnCardDrawn += OnCardDrawn;
                 gm.deckManager.OnCardDiscarded += OnCardDiscarded;
@@ -180,7 +188,11 @@ namespace ApprovalMonster.UI
                  gm.resourceManager.onFollowersChanged.RemoveListener(UpdateFollowers);
                  gm.resourceManager.onMentalChanged.RemoveListener(UpdateMental);
                  gm.resourceManager.onMotivationChanged.RemoveListener(UpdateMotivation);
-                 gm.resourceManager.onImpressionsChanged.RemoveListener(UpdateImpressions);
+                 gm.resourceManager.onImpressionsChanged.RemoveListener(UpdateImpression);
+                 
+                 // Gain Effects removal
+                 gm.resourceManager.onFollowerGained.RemoveListener(ShowFollowerGain);
+                 gm.resourceManager.onImpressionGained.RemoveListener(ShowImpressionGain);
                  
                  gm.deckManager.OnCardDrawn -= OnCardDrawn;
                  gm.deckManager.OnCardDiscarded -= OnCardDiscarded;
@@ -358,12 +370,53 @@ namespace ApprovalMonster.UI
             }
         }
 
-        private void UpdateImpressions(long val)
+        private void UpdateImpression(long val)
         {
             impressionText.text = $"{val:N0}";
+            // Slightly smaller punch for frequent updates
             impressionText.transform.DOKill();
             impressionText.transform.localScale = Vector3.one;
-            impressionText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
+            impressionText.transform.DOPunchScale(Vector3.one * 0.1f, 0.2f);
+        }
+
+        private void ShowFollowerGain(int amount)
+        {
+            if (followerGainUI != null)
+            {
+                // Green for gain
+                followerGainUI.PlayEffect($"+{FormatNumber(amount)}", new Color(0.2f, 1f, 0.2f)); 
+            }
+        }
+
+        private void ShowImpressionGain(long amount, float rate)
+        {
+            if (impressionGainUI != null)
+            {
+                // Yellow/Orange for impressions
+                // Display: Amount (Main), Rate (Sub)
+                string mainText = $"+{FormatNumber(amount)}";
+                string subText = $"{rate*100:F0}%"; // No parentheses
+                impressionGainUI.PlayEffect(mainText, new Color(1f, 0.8f, 0.2f), subText);
+            }
+        }
+
+        /// <summary>
+        /// Formats a number with K/M suffixes.
+        /// < 1000: Raw number (e.g. 999)
+        /// 1000 - 999999: 1.2K
+        /// >= 1000000: 1.2M
+        /// </summary>
+        private string FormatNumber(long num)
+        {
+            if (num >= 1000000)
+            {
+                return (num / 1000000f).ToString("0.##") + "M";
+            }
+            if (num >= 1000)
+            {
+                return (num / 1000f).ToString("0.##") + "K";
+            }
+            return num.ToString("N0");
         }
         
         private void UpdateTurnDisplay(int turn)
