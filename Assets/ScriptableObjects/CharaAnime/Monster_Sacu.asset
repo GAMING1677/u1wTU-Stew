@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Monster_Sacu
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CharacterProfile
   idleFrames:
-  - {fileID: -7736216208031527456, guid: e189ad8578618fa428a2c951e16c970f, type: 3}
-  - {fileID: 2122881965857781813, guid: efc7ab4894cbe9c4cb7f6545001c6fa2, type: 3}
-  - {fileID: -3197696509806275630, guid: d515c3068997d62479daab473c13aee1, type: 3}
-  - {fileID: 2122881965857781813, guid: efc7ab4894cbe9c4cb7f6545001c6fa2, type: 3}
-  - {fileID: -7736216208031527456, guid: e189ad8578618fa428a2c951e16c970f, type: 3}
+  - {fileID: -7736216208031527456, guid: ad8715dd5aaa48c4886f8e5f79471203, type: 3}
+  - {fileID: 2122881965857781813, guid: 882876042dd63ac499fc21abc6b60954, type: 3}
+  - {fileID: -3197696509806275630, guid: 935cc36f1f439124c878dde21fedb003, type: 3}
+  - {fileID: 2122881965857781813, guid: 882876042dd63ac499fc21abc6b60954, type: 3}
+  - {fileID: -7736216208031527456, guid: ad8715dd5aaa48c4886f8e5f79471203, type: 3}
   frameRate: 0.2
   minIdleWait: 0.5
   maxIdleWait: 2

@@ -211,45 +211,18 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void SwitchToMonsterProfile()
         {
-            Debug.Log("[UIManager] ===== SwitchToMonsterProfile CALLED =====");
-            Debug.Log($"[UIManager] GameManager.Instance: {GameManager.Instance != null}");
+            Debug.Log("[UIManager] SwitchToMonsterProfile called");
             
-            if (GameManager.Instance != null)
+            if (GameManager.Instance?.currentStage?.monsterProfile != null && characterAnimator != null)
             {
-                Debug.Log($"[UIManager] currentStage: {GameManager.Instance.currentStage != null}");
-                
-                if (GameManager.Instance.currentStage != null)
-                {
-                    Debug.Log($"[UIManager] monsterProfile: {GameManager.Instance.currentStage.monsterProfile != null}");
-                    
-                    if (GameManager.Instance.currentStage.monsterProfile != null)
-                    {
-                        Debug.Log($"[UIManager] monsterProfile name: {GameManager.Instance.currentStage.monsterProfile.name}");
-                        Debug.Log($"[UIManager] characterAnimator: {characterAnimator != null}");
-                        
-                        Debug.Log("[UIManager] Calling SetupCharacter...");
-                        SetupCharacter(GameManager.Instance.currentStage.monsterProfile);
-                        Debug.Log("[UIManager] SetupCharacter completed - Profile switched, no reaction played");
-                        
-                        // Note: We don't play a reaction here because turn-end reaction will be shown
-                        // The character will now use the monster profile's idle animation
-                    }
-                    else
-                    {
-                        Debug.LogError("[UIManager] monsterProfile is NULL! Cannot switch profile.");
-                    }
-                }
-                else
-                {
-                    Debug.LogError("[UIManager] currentStage is NULL! Cannot switch profile.");
-                }
+                // フラッシュエフェクト付きでプロフィール切り替え（durationはCharacterAnimatorのInspector設定を使用）
+                characterAnimator.SetProfileWithFlash(GameManager.Instance.currentStage.monsterProfile);
+                Debug.Log("[UIManager] SetProfileWithFlash initiated");
             }
             else
             {
-                Debug.LogError("[UIManager] GameManager.Instance is NULL! Cannot switch profile.");
+                Debug.LogError("[UIManager] Cannot switch to monster profile - missing references");
             }
-            
-            Debug.Log("[UIManager] ===== SwitchToMonsterProfile COMPLETED =====");
         }
                 
         private void OnReset()
