@@ -61,6 +61,13 @@ namespace ApprovalMonster.Core
 
         public void GoToTitle()
         {
+             // タイトル画面に戻る際、メインテーマBGMに切り替え
+             if (AudioManager.Instance != null)
+             {
+                 AudioManager.Instance.PlayMainTheme();
+                 Debug.Log("[SceneNavigator] Restored main theme BGM when returning to title");
+             }
+             
              StartCoroutine(TransitionRoutine(titlePanel));
         }
         

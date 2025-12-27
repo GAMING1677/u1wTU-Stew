@@ -33,5 +33,8 @@ namespace ApprovalMonster.Data
         
         [Tooltip("クリック時のサウンド")]
         public AudioClip clickSound;
+        
+        [Tooltip("モンスターモード中のBGM")]
+        public AudioClip monsterBGM;
     }
 }

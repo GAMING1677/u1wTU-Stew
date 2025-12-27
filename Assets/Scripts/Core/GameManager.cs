@@ -851,6 +851,16 @@ namespace ApprovalMonster.Core
                 deckManager.PlayCard(card);
             }
             
+            // Play card play SE (モンスターカードか通常カードか判定)
+            if (resourceManager.isMonsterMode && currentStage != null && currentStage.monsterDeck != null && currentStage.monsterDeck.Contains(card))
+            {
+                AudioManager.Instance?.PlaySE(Data.SEType.MonsterCardPlay);
+            }
+            else
+            {
+                AudioManager.Instance?.PlaySE(Data.SEType.CardPlay);
+            }
+            
             // Show Happy reaction on card play
             FindObjectOfType<UI.UIManager>()?.ShowCharacterReaction(UI.CharacterAnimator.ReactionType.Happy_1);
             
@@ -905,6 +915,16 @@ namespace ApprovalMonster.Core
             int healAmount = Mathf.CeilToInt(resourceManager.currentMental / 2f);
             resourceManager.HealMental(healAmount);
             Debug.Log($"[GameManager] Monster Mode Activated! Healed {healAmount} mental to {resourceManager.currentMental}");
+            
+            // Switch BGM to monster mode BGM
+            if (currentStage != null && currentStage.monsterModePreset != null && currentStage.monsterModePreset.monsterBGM != null)
+            {
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayBGM(currentStage.monsterModePreset.monsterBGM);
+                    Debug.Log($"[GameManager] Switched to monster BGM: {currentStage.monsterModePreset.monsterBGM.name}");
+                }
+            }
             
             if (monsterModeCutInUI != null && currentStage != null)
             {

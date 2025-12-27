@@ -519,6 +519,7 @@ namespace ApprovalMonster.UI
         
         private void OnEndTurnButtonClicked()
         {
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
             Debug.Log("[UIManager] End Turn button clicked.");
             var gm = GameManager.Instance;
             if (gm != null && gm.turnManager != null)
@@ -605,6 +606,14 @@ namespace ApprovalMonster.UI
         }
               public void OnCardDrawn(CardData data)
         {
+            // Play card draw SE
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.CardDraw);
+            
+            StartCoroutine(DrawCardAnimated(data));
+        }
+
+        private System.Collections.IEnumerator DrawCardAnimated(CardData data)
+        {
             Debug.Log($"[UIManager] OnCardDrawn called for {data.cardName}");
             var card = Instantiate(cardPrefab, handContainer);
             if (card == null) Debug.LogError("[UIManager] Failed to instantiate cardPrefab!");
@@ -619,6 +628,8 @@ namespace ApprovalMonster.UI
             
             // Update card layout
             LayoutCards();
+            
+            yield return null;
         }
 
         private void OnCardDiscarded(CardData data)

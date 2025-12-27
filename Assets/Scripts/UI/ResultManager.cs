@@ -113,6 +113,7 @@ namespace ApprovalMonster.UI
 
         private void OnReturnToTitle()
         {
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
             SceneNavigator.Instance.GoToTitle();
         }
     }

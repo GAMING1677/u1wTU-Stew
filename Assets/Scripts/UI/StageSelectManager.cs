@@ -154,22 +154,26 @@ namespace ApprovalMonster.UI
         /// <param name="stage">選択されたステージ</param>
         private void OnStageSelected(StageData stage)
         {
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
             Debug.Log($"[StageSelectManager] Stage selected: {stage.stageName}");
 
             // StageManagerにステージを選択させる
             if (StageManager.Instance != null)
             {
                 StageManager.Instance.SelectStage(stage);
-            }
-
-            // ゲーム画面に遷移
-            if (SceneNavigator.Instance != null)
-            {
-                SceneNavigator.Instance.GoToMain();
+                // ゲーム画面に遷移
+                if (SceneNavigator.Instance != null)
+                {
+                    SceneNavigator.Instance.GoToMain();
+                }
+                else
+                {
+                    Debug.LogError("[StageSelectManager] SceneNavigator not found!");
+                }
             }
             else
             {
-                Debug.LogError("[StageSelectManager] SceneNavigator not found!");
+                Debug.LogError("[StageSelectManager] StageManager.Instance is null!");
             }
         }
 
@@ -178,7 +182,8 @@ namespace ApprovalMonster.UI
         /// </summary>
         private void OnBackButtonClicked()
         {
-            Debug.Log("[StageSelectManager] Back button clicked. Returning to title.");
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
+            Debug.Log("[StageSelectManager] Back button clicked");
             
             if (SceneNavigator.Instance != null)
             {

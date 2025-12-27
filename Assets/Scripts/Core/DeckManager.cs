@@ -61,6 +61,10 @@ namespace ApprovalMonster.Core
                 drawPile[i] = drawPile[randomIndex];
                 drawPile[randomIndex] = temp;
             }
+            
+            // Play shuffle SE
+            AudioManager.Instance?.PlaySE(Data.SEType.DeckShuffle);
+            
             OnDeckShuffled?.Invoke();
         }
 

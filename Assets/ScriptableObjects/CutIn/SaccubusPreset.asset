@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f3c27b6941ab8547827ce700d486cfe, type: 3}
-  m_Name: SaccubusCutIn
+  m_Name: SaccubusPreset
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.MonsterModePreset
   backgroundImage: {fileID: 0}
   characterImage: {fileID: 688533374085423675, guid: b21a35b2ac91ea34fb44a1e9b55ddba8, type: 3}

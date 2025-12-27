@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098bb080b8d157a458d508bec4738e66, type: 3}
+  m_Name: AudioDatabase
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.AudioDatabase
+  mainThemeBGM: {fileID: 8300000, guid: 4c66472bf39b6ff4b86399d33c856599, type: 3}
+  seClips:
+  - type: 0
+    clip: {fileID: 8300000, guid: 15c5a75aaafe4a6488a6a73e7427f30e, type: 3}
+  - type: 1
+    clip: {fileID: 8300000, guid: 7c91366d118f09b44a70c18dc126ae2c, type: 3}
+  - type: 2
+    clip: {fileID: 8300000, guid: 290da2668322d2d469d4c7cb954f359e, type: 3}
+  - type: 3
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
+  - type: 0
+    clip: {fileID: 0}
