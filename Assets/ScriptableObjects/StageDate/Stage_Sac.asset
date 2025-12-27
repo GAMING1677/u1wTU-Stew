@@ -42,3 +42,5 @@ MonoBehaviour:
   monsterModePreset: {fileID: 11400000, guid: 10a7b9b7d7c0e474e9d720a113ccb2d1, type: 2}
   background: {fileID: 0}
   themeColor: {r: 1, g: 1, b: 1, a: 1}
+  normalProfile: {fileID: 11400000, guid: bbf5041c48e695243b3a8e6db9f21938, type: 2}
+  monsterProfile: {fileID: 11400000, guid: efa6a0370fe82804f8ae1d45d9b59723, type: 2}
