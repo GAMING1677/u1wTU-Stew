@@ -65,6 +65,11 @@ namespace ApprovalMonster.UI
         [Header("Character")]
         [SerializeField] private CharacterAnimator characterAnimator;
 
+        [Header("End Turn Button Pulse")]
+        [SerializeField] private ButtonPulse endTurnButtonPulse;
+        
+        private bool isSetup = false;
+
         private List<CardView> activeCards = new List<CardView>();
 
         private void Awake()
@@ -131,13 +136,14 @@ namespace ApprovalMonster.UI
                 gm.deckManager.OnCardDrawn -= OnCardDrawn;
                 gm.deckManager.OnCardDiscarded -= OnCardDiscarded;
                 gm.deckManager.OnReset -= OnReset;
-                gm.onQuotaUpdate.RemoveListener(UpdateQuota);
+                gm.onQuotaUpdate.RemoveListener(UpdateQuotaUI);
 
                 gm.resourceManager.onFollowersChanged.AddListener(UpdateFollowers);
                 gm.resourceManager.onMentalChanged.AddListener(UpdateMental);
                 gm.resourceManager.onMotivationChanged.AddListener(UpdateMotivation);
                 gm.resourceManager.onImpressionsChanged.AddListener(UpdateImpression);
-                gm.onQuotaUpdate.AddListener(UpdateQuota);
+                
+                gm.onQuotaUpdate.AddListener(UpdateQuotaUI);
                 
                 // Gain Effects
                 gm.resourceManager.onFollowerGained.AddListener(ShowFollowerGain);
@@ -147,6 +153,9 @@ namespace ApprovalMonster.UI
                 gm.deckManager.OnCardDiscarded += OnCardDiscarded;
                 gm.deckManager.OnReset += OnReset;
                 gm.deckManager.OnDeckCountChanged += UpdateDeckCounts;
+                
+                // Initialize quota display
+                UpdateQuotaUI(gm.resourceManager.totalImpressions, gm.currentStage.quotaScore);
                 
                 // Subscribe to turn events
                 gm.turnManager.OnTurnChanged.RemoveListener(UpdateTurnDisplay);
@@ -227,11 +236,24 @@ namespace ApprovalMonster.UI
                 
         private void OnReset()
         {
-            foreach(var card in activeCards)
+            Debug.Log("[UIManager] OnReset called - clearing cards and resetting character");
+            
+            // Clear all active cards
+            foreach (var card in activeCards)
             {
-                if(card != null) Destroy(card.gameObject);
+                if (card != null)
+                {
+                    Destroy(card.gameObject);
+                }
             }
             activeCards.Clear();
+            
+            // キャラクターを初期状態に戻す（アニメーション再開のため重要）
+            if (GameManager.Instance?.currentStage?.normalProfile != null && characterAnimator != null)
+            {
+                Debug.Log("[UIManager] Resetting character to normal profile");
+                SetupCharacter(GameManager.Instance.currentStage.normalProfile);
+            }
         }
         
         private void LayoutCards()
@@ -319,7 +341,7 @@ namespace ApprovalMonster.UI
 
         private void UpdateFollowers(int val)
         {
-            followersText.text = $"{val:N0} ";
+            followersText.text = $"{FormatNumber(val)} ";
             followersText.transform.DOKill();
             followersText.transform.localScale = Vector3.one;
             followersText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
@@ -345,11 +367,21 @@ namespace ApprovalMonster.UI
                 motivationFillImage.DOKill();
                 motivationFillImage.DOFillAmount(fillAmount, 0.3f);
             }
+            
+            // モチベーションがゼロになったらボタンをパルス
+            if (current <= 0 && endTurnButtonPulse != null)
+            {
+                endTurnButtonPulse.StartPulse();
+            }
+            else if (current > 0 && endTurnButtonPulse != null)
+            {
+                endTurnButtonPulse.StopPulse();
+            }
         }
 
         private void UpdateImpression(long val)
         {
-            impressionText.text = $"{val:N0}";
+            impressionText.text = FormatNumber(val);
             // Slightly smaller punch for frequent updates
             impressionText.transform.DOKill();
             impressionText.transform.localScale = Vector3.one;
@@ -360,8 +392,7 @@ namespace ApprovalMonster.UI
         {
             if (followerGainUI != null)
             {
-                // Green for gain
-                followerGainUI.PlayEffect($"+{FormatNumber(amount)}", new Color(0.2f, 1f, 0.2f)); 
+                followerGainUI.PlayEffect($"+{FormatNumber(amount)}"); 
             }
         }
 
@@ -369,11 +400,15 @@ namespace ApprovalMonster.UI
         {
             if (impressionGainUI != null)
             {
-                // Yellow/Orange for impressions
-                // Display: Amount (Main), Rate (Sub)
                 string mainText = $"+{FormatNumber(amount)}";
-                string subText = $"{rate*100:F0}%"; // No parentheses
-                impressionGainUI.PlayEffect(mainText, new Color(1f, 0.8f, 0.2f), subText);
+                
+                // %表示に変換（1000%以上はカンマ区切り）
+                int ratePercent = Mathf.RoundToInt(rate * 100);
+                string subText = ratePercent >= 1000 
+                    ? $"{ratePercent:N0}%" 
+                    : $"{ratePercent}%";
+                
+                impressionGainUI.PlayEffect(mainText, subText);
             }
         }
 
@@ -428,22 +463,21 @@ namespace ApprovalMonster.UI
             }
         }
 
-        private void UpdateQuota(long gained, long target)
+        public void UpdateQuotaUI(long currentImpression, long quota)
         {
-            long remaining = System.Math.Max(0, target - gained);
-
+            long remaining = quota - currentImpression;
+            
             if (quotaText != null)
             {
                 if (remaining > 0)
                 {
-                    // "{xxx}"
-                    quotaText.text = $" <size=50%>ノルマまで…</size>\n<align=right>{remaining:N0}</align>";
-                    quotaText.color = Color.white; 
+                    // 残り数値のみ表示（K/M単位）
+                    quotaText.text = FormatNumber(remaining);
                 }
                 else
                 {
-                    quotaText.text = "ノルマ達成！";
-                    quotaText.color = Color.green;
+                    // 達成時は「OK」と表示（色変更なし）
+                    quotaText.text = "OK";
                 }
             }
 
@@ -458,8 +492,8 @@ namespace ApprovalMonster.UI
                         penalty = GameManager.Instance.CalculateQuotaPenalty(GameManager.Instance.turnManager.CurrentTurnCount);
                     }
                     
-                    // "未達だと…{penalty}病む"
-                    penaltyRiskText.text = $"<size=50%>足りないと…</size>\n{penalty} <size=50%>病む</size>";
+                    // 数字のみ表示
+                    penaltyRiskText.text = penalty.ToString();
                     
                     // Show entire container (includes background)
                     if (penaltyRiskContainer != null)

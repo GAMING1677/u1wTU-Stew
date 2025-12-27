@@ -43,13 +43,9 @@ namespace ApprovalMonster.UI
         /// <summary>
         /// 演出を再生する
         /// </summary>
-        /// <summary>
-        /// 演出を再生する
-        /// </summary>
         /// <param name="text">メインテキスト（獲得数）</param>
-        /// <param name="color">テキスト色</param>
         /// <param name="subMessage">サブテキスト（率など） - オプション</param>
-        public void PlayEffect(string text, Color color, string subMessage = null)
+        public void PlayEffect(string text, string subMessage = null)
         {
             if (!isInitialized && rectTransform != null)
             {
@@ -67,11 +63,10 @@ namespace ApprovalMonster.UI
             rectTransform.anchoredPosition = originalPosition;
             canvasGroup.alpha = 1f;
 
-            // テキスト設定
+            // テキスト設定（色はInspectorで設定）
             if (amountText != null)
             {
                 amountText.text = text;
-                amountText.color = color;
             }
 
             // サブテキスト設定（あれば）
@@ -81,7 +76,6 @@ namespace ApprovalMonster.UI
                 {
                     subText.gameObject.SetActive(true);
                     subText.text = subMessage;
-                    subText.color = color; // メインと同じ色にするか、別途指定するか検討（当面同じ）
                 }
                 else
                 {
