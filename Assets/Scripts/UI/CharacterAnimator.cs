@@ -11,6 +11,11 @@ namespace ApprovalMonster.UI
     {
         [SerializeField] private Image targetImage;
         
+        [Header("Flash Effect Curves")]
+        [SerializeField] private AnimationCurve flashUpCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        [SerializeField] private AnimationCurve flashDownCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
+        [SerializeField] private float flashDuration = 0.6f;
+        
         private CharacterProfile currentProfile;
         private Coroutine idleCoroutine;
         private bool isReacting = false;
@@ -20,6 +25,95 @@ namespace ApprovalMonster.UI
         {
             if (targetImage == null)
                 targetImage = GetComponent<Image>();
+        }
+        
+        /// <summary>
+        /// フラッシュエフェクト付きでプロフィールを変更（UIFlashシェーダー使用）
+        /// </summary>
+        public void SetProfileWithFlash(CharacterProfile profile, float? customDuration = null)
+        {
+            float duration = customDuration ?? flashDuration;
+            StartCoroutine(SetProfileWithFlashCo(profile, duration));
+        }
+        
+        private IEnumerator SetProfileWithFlashCo(CharacterProfile profile, float duration)
+        {
+            Debug.Log($"[CharacterAnimator] SetProfileWithFlash START: {profile?.name}, duration: {duration}");
+            
+            StopIdle();
+            
+            if (targetImage != null && profile != null)
+            {
+                Material flashMat = targetImage.material;
+                
+                // シェーダーに_FlashIntensityプロパティがあるか確認
+                if (flashMat != null && flashMat.HasProperty("_FlashIntensity"))
+                {
+                    Debug.Log("[CharacterAnimator] Using flash shader");
+                    
+                    // Phase 1: フラッシュ増加 (0 → 3)
+                    float elapsed = 0f;
+                    float flashUpTime = duration * 0.3f;
+                    
+                    while (elapsed < flashUpTime)
+                    {
+                        float t = elapsed / flashUpTime; // 0~1の正規化された時間
+                        float curveValue = flashUpCurve.Evaluate(t); // カーブから値を取得
+                        float intensity = curveValue * 3f; // 0~3にスケール
+                        flashMat.SetFloat("_FlashIntensity", intensity);
+                        elapsed += Time.deltaTime;
+                        yield return null;
+                    }
+                    
+                    flashMat.SetFloat("_FlashIntensity", 3f);
+                    Debug.Log("[CharacterAnimator] Phase 1 complete (flash max)");
+                    
+                    // Phase 2: スプライト変更
+                    currentProfile = profile;
+                    if (profile.idleFrames != null && profile.idleFrames.Count > 0)
+                    {
+                        targetImage.sprite = profile.idleFrames[0];
+                        Debug.Log($"[CharacterAnimator] Sprite changed to: {profile.idleFrames[0].name}");
+                    }
+                    
+                    // Phase 3: フラッシュ減少 (3 → 0)
+                    elapsed = 0f;
+                    float flashDownTime = duration * 0.7f;
+                    
+                    while (elapsed < flashDownTime)
+                    {
+                        float t = elapsed / flashDownTime; // 0~1の正規化された時間
+                        float curveValue = flashDownCurve.Evaluate(t); // カーブから値を取得
+                        float intensity = curveValue * 3f; // カーブは1→0なので、3→0になる
+                        flashMat.SetFloat("_FlashIntensity", intensity);
+                        elapsed += Time.deltaTime;
+                        yield return null;
+                    }
+                    
+                    flashMat.SetFloat("_FlashIntensity", 0f);
+                    Debug.Log("[CharacterAnimator] Phase 3 complete (flash end)");
+                }
+                else
+                {
+                    // シェーダーがない、またはプロパティがない場合はフォールバック
+                    Debug.LogWarning("[CharacterAnimator] Flash shader not available, using instant switch");
+                    SetProfile(profile);
+                    yield break;
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[CharacterAnimator] targetImage or profile is null");
+                yield break;
+            }
+            
+            // idleアニメ再生
+            if (gameObject.activeInHierarchy)
+            {
+                StartIdle();
+            }
+            
+            Debug.Log("[CharacterAnimator] SetProfileWithFlash COMPLETE");
         }
         
         public void SetProfile(CharacterProfile profile)

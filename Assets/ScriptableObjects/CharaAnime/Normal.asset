@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: Normal
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CharacterProfile
   idleFrames:
-  - {fileID: -3275938841986514438, guid: f8eeb6d6ea851bf4eba2162ad6348bcc, type: 3}
-  - {fileID: -4923841174517841142, guid: 73db3377ac686eb47ac5759bc89be687, type: 3}
-  - {fileID: -4451973480304037569, guid: bb9822238a28680478db19c5cd491173, type: 3}
-  - {fileID: -4923841174517841142, guid: 73db3377ac686eb47ac5759bc89be687, type: 3}
-  - {fileID: -3275938841986514438, guid: f8eeb6d6ea851bf4eba2162ad6348bcc, type: 3}
+  - {fileID: 21300000, guid: 5be95b4a4b18200469d167426575fc7e, type: 3}
+  - {fileID: 21300000, guid: 468af912386ba2749889481b15bd2e79, type: 3}
+  - {fileID: 21300000, guid: 75c3fb14d5cdca1438029b3b115f664f, type: 3}
+  - {fileID: 21300000, guid: 468af912386ba2749889481b15bd2e79, type: 3}
+  - {fileID: 21300000, guid: 5be95b4a4b18200469d167426575fc7e, type: 3}
   frameRate: 0.1
   minIdleWait: 0.5
   maxIdleWait: 3
-  reactionHappy_1: {fileID: 2957179588885175767, guid: ed314649558aeb741adcf5af24eb6e23, type: 3}
-  reactionHappy_2: {fileID: -3124332568782521205, guid: b1a8040b76451774d953c728e783075d, type: 3}
-  reactionHappy_3: {fileID: 7133995067686799515, guid: a876f6afe04a5934cbfa250ec4b2b15c, type: 3}
-  reactionSad_1: {fileID: -6693629518274131231, guid: e7791f7542f316e4199ec238ad6c1373, type: 3}
-  reactionSad_2: {fileID: 3629104973940547137, guid: fd908a97a0a99fc46b387b285242068f, type: 3}
+  reactionHappy_1: {fileID: 21300000, guid: 4ac75c04b22cdc8458575e32449556a9, type: 3}
+  reactionHappy_2: {fileID: 21300000, guid: 20765fe58c17d1f4b9eb24ed2cdedeb1, type: 3}
+  reactionHappy_3: {fileID: 21300000, guid: 3dd64f006e2662d45a63aea63d5372bc, type: 3}
+  reactionSad_1: {fileID: 21300000, guid: fadac5d7fb029d24683f9565ecd91e46, type: 3}
+  reactionSad_2: {fileID: 21300000, guid: 4eafda2746bbe49459132b2bcdc564f6, type: 3}
   reactionDuration: 1
