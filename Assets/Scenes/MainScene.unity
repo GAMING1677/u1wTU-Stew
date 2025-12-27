@@ -4245,7 +4245,6 @@ GameObject:
   - component: {fileID: 581304073}
   - component: {fileID: 581304072}
   - component: {fileID: 581304071}
-  - component: {fileID: 581304069}
   m_Layer: 0
   m_Name: DraftPanel
   m_TagString: Untagged
@@ -4253,24 +4252,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &581304069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 581304068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e7f13d5ce8e2064d8277c9a6e40d305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.DraftUI
-  canvasGroup: {fileID: 581304071}
-  titleText: {fileID: 1507666412}
-  cardOptionsContainer: {fileID: 1904792448}
-  cardViewPrefab: {fileID: 1621553481172379671, guid: 031b171cf6210de4cb047c2d4028de8f, type: 3}
-  fadeInDuration: 0.3
-  fadeOutDuration: 0.2
 --- !u!224 &581304070
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5117,8 +5098,8 @@ RectTransform:
   - {fileID: 1109154664}
   - {fileID: 1553979974}
   - {fileID: 895301225}
-  - {fileID: 581304070}
   - {fileID: 1307431910}
+  - {fileID: 581304070}
   - {fileID: 1391963675}
   m_Father: {fileID: 1372415956}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8150,6 +8131,7 @@ MonoBehaviour:
   isGameActive: 0
   isWaitingForMonsterDraft: 0
   hasPerformedMonsterDraft: 0
+  shouldTriggerMonsterModeAfterCutIn: 0
   onQuotaUpdate:
     m_PersistentCalls:
       m_Calls: []
@@ -10538,7 +10520,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3769c0ddeb26714dbeb2ecd40c8dc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ApprovalMonster.UI.UIManager
-  handContainer: {fileID: 384800920}
   cardPrefab: {fileID: 1621553481172379671, guid: 031b171cf6210de4cb047c2d4028de8f, type: 3}
   followersText: {fileID: 1170953844}
   mentalText: {fileID: 43755279}
@@ -10550,7 +10531,8 @@ MonoBehaviour:
   mentalFillImage: {fileID: 2034688129}
   motivationFillImage: {fileID: 1294747413}
   endTurnButton: {fileID: 25495974}
-  draftUI: {fileID: 581304069}
+  draftUI: {fileID: 1952715833}
+  handContainer: {fileID: 384800920}
   defaultCardSpacing: 20
   minCardSpacing: -100
   maxRotationAngle: -10
@@ -11983,6 +11965,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1908956885}
   m_CullTransparentMesh: 1
+--- !u!1 &1952715832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1952715834}
+  - component: {fileID: 1952715833}
+  m_Layer: 0
+  m_Name: DraftUImanager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1952715833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952715832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e7f13d5ce8e2064d8277c9a6e40d305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.DraftUI
+  canvasGroup: {fileID: 581304071}
+  titleText: {fileID: 1507666412}
+  cardOptionsContainer: {fileID: 1904792448}
+  cardViewPrefab: {fileID: 1621553481172379671, guid: 031b171cf6210de4cb047c2d4028de8f, type: 3}
+  fadeInDuration: 0.3
+  fadeOutDuration: 0.2
+--- !u!4 &1952715834
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952715832}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 515.3054, y: 212.86476, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1959322818
 GameObject:
   m_ObjectHideFlags: 0
@@ -13586,4 +13618,5 @@ SceneRoots:
   - {fileID: 390290603}
   - {fileID: 1372415956}
   - {fileID: 1571167610}
+  - {fileID: 1952715834}
   - {fileID: 1429693657}

@@ -25,19 +25,21 @@ namespace ApprovalMonster.UI
 
         private List<CardView> activeCardViews = new List<CardView>();
         private CardData selectedCard;
+        
+        /// <summary>
+        /// DraftPanel (the actual UI GameObject referenced by canvasGroup)
+        /// </summary>
+        public GameObject DraftPanel => canvasGroup != null ? canvasGroup.gameObject : null;
 
-        private void Awake()
-        {
-            // 初期状態は非表示
-            canvasGroup.alpha = 0f;
-            gameObject.SetActive(false);
-        }
+        // Removed: Awake() - visibility is now controlled by UIManager
 
         /// <summary>
         /// ドラフト候補カードを表示
         /// </summary>
         public void ShowDraftOptions(List<CardData> options, bool isMonsterDraft = false)
         {
+            Debug.Log($"[DraftUI] ===== ShowDraftOptions CALLED ===== isMonsterDraft={isMonsterDraft}, gameObject.activeSelf={gameObject.activeSelf}");
+            
             if (options == null || options.Count == 0)
             {
                 Debug.LogWarning("[DraftUI] No draft options provided!");
@@ -68,14 +70,24 @@ namespace ApprovalMonster.UI
             // 既存のカードビューをクリア
             ClearCardViews();
 
-            // UIを表示
-            gameObject.SetActive(true);
+            // Show DraftPanel and fade in
+            canvasGroup.gameObject.SetActive(true);
+            canvasGroup.alpha = 0f;
+            canvasGroup.blocksRaycasts = true;
+            Debug.Log($"[DraftUI] DraftPanel shown, alpha reset to 0, starting fade in");
             canvasGroup.DOFade(1f, fadeInDuration);
 
             // カードビューを生成
+            Debug.Log($"[DraftUI] Starting card generation. cardOptionsContainer null? {cardOptionsContainer == null}");
+            Debug.Log($"[DraftUI] cardViewPrefab null? {cardViewPrefab == null}");
+            Debug.Log($"[DraftUI] Options count: {options.Count}");
+            
             foreach (var cardData in options)
             {
+                Debug.Log($"[DraftUI] Instantiating card: {cardData.cardName}");
                 var cardView = Instantiate(cardViewPrefab, cardOptionsContainer);
+                Debug.Log($"[DraftUI] Card instantiated: {cardView != null}, active: {cardView?.gameObject.activeSelf}");
+                
                 cardView.Setup(cardData, showTag: true); // Show tag/rarity in draft
                 
                 
@@ -100,7 +112,7 @@ namespace ApprovalMonster.UI
                 cardView.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetDelay(0.1f * activeCardViews.Count);
             }
 
-            Debug.Log($"[DraftUI] Showing {options.Count} draft options");
+            Debug.Log($"[DraftUI] Showing {options.Count} draft options, gameObject.activeSelf={gameObject.activeSelf}, activeCardViews.Count={activeCardViews.Count}");
         }
 
         /// <summary>
@@ -132,19 +144,38 @@ namespace ApprovalMonster.UI
             }
 
             // 少し待ってからUIを閉じる
+            Debug.Log($"[DraftUI] Starting delayed callback for card: {card.cardName}");
             DOVirtual.DelayedCall(0.5f, () =>
             {
-                HideDraftUI();
-                
-                // モンスタードラフトか通常ドラフトかで分岐
-                if (titleText.text.Contains("モンスター"))
+                Debug.Log($"[DraftUI] Delayed callback executed. selectedCard: {selectedCard?.cardName ?? "NULL"}");
+                // Fade out animation
+                HideDraftUI(() =>
                 {
-                    Core.GameManager.Instance.OnMonsterDraftComplete(selectedCard);
-                }
-                else
-                {
-                    Core.GameManager.Instance.OnDraftComplete(selectedCard);
-                }
+                    Debug.Log("[DraftUI] HideDraftUI callback executed");
+                    // After fade complete, hide DraftPanel (not this script's empty gameObject)
+                    canvasGroup.gameObject.SetActive(false);
+                    
+                    // Restore hand container
+                    var uiManager = FindObjectOfType<UIManager>();
+                    if (uiManager != null && uiManager.handContainer != null)
+                    {
+                        uiManager.handContainer.gameObject.SetActive(true);
+                        Debug.Log("[DraftUI] Hand container restored");
+                    }
+                    
+                    // モンスタードラフトか通常ドラフトかで分岐
+                    Debug.Log($"[DraftUI] Calling GameManager. isMonsterDraft: {titleText.text.Contains("モンスター")}");
+                    if (titleText.text.Contains("モンスター"))
+                    {
+                        Debug.Log($"[DraftUI] Calling OnMonsterDraftComplete with {selectedCard?.cardName}");
+                        Core.GameManager.Instance.OnMonsterDraftComplete(selectedCard);
+                    }
+                    else
+                    {
+                        Debug.Log($"[DraftUI] Calling OnDraftComplete with {selectedCard?.cardName}");
+                        Core.GameManager.Instance.OnDraftComplete(selectedCard);
+                    }
+                });
             });
         }
 
@@ -152,12 +183,19 @@ namespace ApprovalMonster.UI
         /// <summary>
         /// ドラフトUIを非表示
         /// </summary>
-        public void HideDraftUI()
+        public void HideDraftUI(System.Action onComplete = null)
         {
+            Debug.Log("[DraftUI] ===== HideDraftUI CALLED =====");
             canvasGroup.DOFade(0f, fadeOutDuration).OnComplete(() =>
             {
-                gameObject.SetActive(false);
+                Debug.Log("[DraftUI] Fade complete, disabling raycasts");
+                canvasGroup.blocksRaycasts = false;
                 ClearCardViews();
+                
+                // IMPORTANT: Invoke callback BEFORE clearing selectedCard
+                // Otherwise the callback receives null
+                onComplete?.Invoke();
+                
                 selectedCard = null;
             });
         }

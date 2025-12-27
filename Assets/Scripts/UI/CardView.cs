@@ -268,16 +268,7 @@ namespace ApprovalMonster.UI
             transform.DOKill();
             var tween = transform.DOLocalMoveY(targetLocalY, hoverDuration)
                 .SetEase(Ease.OutQuad)
-                .SetUpdate(true)
-                .OnStart(() => {
-                    Debug.Log($"[CardView] Animation STARTED. Starting localY: {transform.localPosition.y}");
-                })
-                .OnUpdate(() => {
-                    Debug.Log($"[CardView] Animation UPDATE. Current localY: {transform.localPosition.y}");
-                })
-                .OnComplete(() => {
-                    Debug.Log($"[CardView] Animation COMPLETE. Final localPosition: {transform.localPosition}");
-                });
+                .SetUpdate(true);
             
             Debug.Log($"[CardView] Tween created: {tween != null}, Moving from {currentLocalY} to {targetLocalY}");
             
