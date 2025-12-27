@@ -394,7 +394,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &27866523
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2825,6 +2825,7 @@ GameObject:
   - component: {fileID: 409949759}
   - component: {fileID: 409949761}
   - component: {fileID: 409949760}
+  - component: {fileID: 409949762}
   m_Layer: 0
   m_Name: CharaImage
   m_TagString: Untagged
@@ -2844,12 +2845,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 622517473}
+  m_Father: {fileID: 2129740929}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 13.7162, y: -123}
-  m_SizeDelta: {x: 378.9399, y: 974.026}
+  m_AnchoredPosition: {x: 64.487564, y: -42.497}
+  m_SizeDelta: {x: 325.3972, y: 535}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &409949760
 MonoBehaviour:
@@ -2871,7 +2872,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -6120642578306891525, guid: bbf0a22d500dcac4ab0727146b0740e3, type: 3}
+  m_Sprite: {fileID: 3629104973940547137, guid: fd908a97a0a99fc46b387b285242068f, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2889,6 +2890,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 409949758}
   m_CullTransparentMesh: 1
+--- !u!114 &409949762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 409949758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7dfaa13aecbfc94c9452741b86984e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.CharacterAnimator
+  targetImage: {fileID: 0}
 --- !u!1 &426934569
 GameObject:
   m_ObjectHideFlags: 0
@@ -4842,82 +4856,6 @@ RectTransform:
   m_AnchoredPosition: {x: 20, y: 10}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &622517472
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 622517473}
-  - component: {fileID: 622517475}
-  - component: {fileID: 622517474}
-  m_Layer: 0
-  m_Name: CharaBack
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &622517473
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 622517472}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 409949759}
-  m_Father: {fileID: 2129740929}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 24, y: -30.5531}
-  m_SizeDelta: {x: 304.7765, y: 491.8099}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &622517474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 622517472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.6320754, g: 0.93569225, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &622517475
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 622517472}
-  m_CullTransparentMesh: 1
 --- !u!1 &625152317
 GameObject:
   m_ObjectHideFlags: 0
@@ -8396,7 +8334,7 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   gameOverPreset: {fileID: 11400000, guid: 804b8ab4ea65b6b4cb88828c9a83b5ea, type: 2}
   stageClearPreset: {fileID: 11400000, guid: bae6ebf29dc27834ab6f3d91062b1e94, type: 2}
-  monsterModePreset: {fileID: 11400000, guid: 34cad3ebf3bc2924da22ecb15a98cdb7, type: 2}
+  monsterModePreset: {fileID: 0}
 --- !u!224 &1307431910
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10624,6 +10562,7 @@ MonoBehaviour:
   timelineContainer: {fileID: 1109154664}
   maxPosts: 5
   cutInUI: {fileID: 1307431909}
+  characterAnimator: {fileID: 409949762}
 --- !u!4 &1571167610
 Transform:
   m_ObjectHideFlags: 0
@@ -13589,7 +13528,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 622517473}
+  - {fileID: 409949759}
   - {fileID: 913783707}
   - {fileID: 1028263552}
   - {fileID: 1066409166}
