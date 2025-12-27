@@ -48,6 +48,7 @@ namespace ApprovalMonster.UI
         
         [Header("Quota")]
         [SerializeField] private TextMeshProUGUI quotaText; // Displays "Remaining: XXX"
+        [SerializeField] private GameObject penaltyRiskContainer; // Container for penalty risk (includes background)
         [SerializeField] private TextMeshProUGUI penaltyRiskText; // Displays "Penalty Risk: XX Mental"
         
         [Header("Clear Goal")]
@@ -486,11 +487,20 @@ namespace ApprovalMonster.UI
                     
                     // "未達だと…{penalty}病む"
                     penaltyRiskText.text = $"<size=50%>足りないと…</size>\n{penalty} <size=50%>病む</size>";
-                    penaltyRiskText.gameObject.SetActive(true);
+                    
+                    // Show entire container (includes background)
+                    if (penaltyRiskContainer != null)
+                    {
+                        penaltyRiskContainer.SetActive(true);
+                    }
                 }
                 else
                 {
-                    penaltyRiskText.gameObject.SetActive(false);
+                    // Hide entire container (includes background)
+                    if (penaltyRiskContainer != null)
+                    {
+                        penaltyRiskContainer.SetActive(false);
+                    }
                 }
             }
         }

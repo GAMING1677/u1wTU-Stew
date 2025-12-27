@@ -678,7 +678,7 @@ namespace ApprovalMonster.Core
                 var uiManager = FindObjectOfType<UI.UIManager>();
                 if (uiManager != null)
                 {
-                    uiManager.ShowCutIn("やる気が足りない", "");
+                    uiManager.ShowCutIn("やる気が足りない", "なんか面倒だからいいや…");
                 }
                 
                 return;
