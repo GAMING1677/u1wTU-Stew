@@ -62,6 +62,47 @@ namespace ApprovalMonster.UI
             {
                 Debug.LogWarning("[ResultManager] scoreText is not assigned!");
             }
+            
+            // クリア状態を表示
+            if (resultLabel != null)
+            {
+                bool wasCleared = false;
+                bool isScoreAttackMode = false;
+                
+                if (SceneNavigator.Instance != null)
+                {
+                    wasCleared = SceneNavigator.Instance.WasStageCleared;
+                    isScoreAttackMode = SceneNavigator.Instance.IsScoreAttackMode;
+                }
+                
+                // スコアアタックモードの場合は非表示
+                if (isScoreAttackMode)
+                {
+                    resultLabel.gameObject.SetActive(false);
+                    Debug.Log("[ResultManager] Score attack mode - hiding result label");
+                }
+                else
+                {
+                    resultLabel.gameObject.SetActive(true);
+                    
+                    if (wasCleared)
+                    {
+                        resultLabel.text = "ステージクリア！";
+                        resultLabel.color = Color.green;
+                    }
+                    else
+                    {
+                        resultLabel.text = "ゲームオーバー";
+                        resultLabel.color = Color.red;
+                    }
+                    
+                    Debug.Log($"[ResultManager] Displaying clear status: {(wasCleared ? "CLEARED" : "FAILED")}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[ResultManager] resultLabel is not assigned!");
+            }
 
             if (titleButton != null)
             {

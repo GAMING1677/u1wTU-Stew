@@ -80,7 +80,7 @@ namespace ApprovalMonster.Core
                     turnCount++;
                     
                     // Get max turn count from settings
-                    int maxTurns = GameManager.Instance?.gameSettings?.maxTurnCount ?? 20;
+                    int maxTurns = GameManager.Instance?.currentStage?.maxTurnCount ?? 20;
                     
                     // Turn limit checked
                     if (turnCount > maxTurns)

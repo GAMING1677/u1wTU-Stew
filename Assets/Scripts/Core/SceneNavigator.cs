@@ -24,6 +24,8 @@ namespace ApprovalMonster.Core
         [SerializeField] private float fadeDuration = 0.5f;
 
         public long LastGameScore { get; set; }
+        public bool WasStageCleared { get; set; }
+        public bool IsScoreAttackMode { get; set; } // clearConditionがnullまたはhasScoreGoal=false
 
         private void Awake()
         {
@@ -100,6 +102,19 @@ namespace ApprovalMonster.Core
                 // Reset Game
                 GameManager.Instance.ResetGame();
                 GameManager.Instance.StartGame();
+            }
+            else if (targetPanel == stageSelectPanel)
+            {
+                // ステージセレクトに遷移する際、アンロック状態を更新
+                var stageSelectManager = FindObjectOfType<UI.StageSelectManager>();
+                if (stageSelectManager != null)
+                {
+                    stageSelectManager.RefreshUnlockStates();
+                }
+                else
+                {
+                    Debug.LogWarning("[SceneNavigator] StageSelectManager not found!");
+                }
             }
 
             if (fadePanel != null)
