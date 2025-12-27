@@ -12,7 +12,6 @@ namespace ApprovalMonster.UI
     public class UIManager : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private Transform handContainer;
         [SerializeField] private CardView cardPrefab;
 
         [Header("HUD")]
@@ -33,6 +32,7 @@ namespace ApprovalMonster.UI
         
         [Header("Draft")]
         [SerializeField] private DraftUI draftUI;
+        [SerializeField] public Transform handContainer; // Public for DraftUI access
         
         [Header("Card Layout")]
         [SerializeField] private float defaultCardSpacing = 20f;
@@ -67,9 +67,17 @@ namespace ApprovalMonster.UI
 
         public void SetupCharacter(CharacterProfile profile)
         {
+            Debug.Log($"[UIManager] SetupCharacter called with profile: {(profile != null ? profile.name : "NULL")}");
+            
             if (characterAnimator != null)
             {
+                Debug.Log("[UIManager] Calling characterAnimator.SetProfile...");
                 characterAnimator.SetProfile(profile);
+                Debug.Log("[UIManager] characterAnimator.SetProfile completed");
+            }
+            else
+            {
+                Debug.LogError("[UIManager] characterAnimator is NULL! Cannot set profile.");
             }
         }
         
@@ -137,9 +145,8 @@ namespace ApprovalMonster.UI
                 gm.turnManager.OnDraftStart.RemoveListener(OnDraftStart);
                 gm.turnManager.OnDraftStart.AddListener(OnDraftStart);
                 
-                // Subscribe to monster mode event
-                gm.resourceManager.onMonsterModeTriggered.RemoveListener(OnMonsterModeTriggered);
-                gm.resourceManager.onMonsterModeTriggered.AddListener(OnMonsterModeTriggered);
+                // Monster mode profile switch is now called manually from GameManager.OnMonsterDraftComplete
+                // (Event subscription removed to fix timing issue - profile should switch AFTER draft, not immediately)
             }
             else
             {
@@ -183,16 +190,52 @@ namespace ApprovalMonster.UI
              }
         }
         
-        private void OnMonsterModeTriggered()
+        /// <summary>
+        /// モンスタープロフィールに切り替え（モンスタードラフト完了後に手動で呼ばれる）
+        /// </summary>
+        public void SwitchToMonsterProfile()
         {
-            Debug.Log("[UIManager] Monster Mode Triggered! Switching Profile...");
-            if (GameManager.Instance != null && GameManager.Instance.currentStage != null)
+            Debug.Log("[UIManager] ===== SwitchToMonsterProfile CALLED =====");
+            Debug.Log($"[UIManager] GameManager.Instance: {GameManager.Instance != null}");
+            
+            if (GameManager.Instance != null)
             {
-                SetupCharacter(GameManager.Instance.currentStage.monsterProfile);
-                ShowCharacterReaction(CharacterAnimator.ReactionType.Sad_2);
+                Debug.Log($"[UIManager] currentStage: {GameManager.Instance.currentStage != null}");
+                
+                if (GameManager.Instance.currentStage != null)
+                {
+                    Debug.Log($"[UIManager] monsterProfile: {GameManager.Instance.currentStage.monsterProfile != null}");
+                    
+                    if (GameManager.Instance.currentStage.monsterProfile != null)
+                    {
+                        Debug.Log($"[UIManager] monsterProfile name: {GameManager.Instance.currentStage.monsterProfile.name}");
+                        Debug.Log($"[UIManager] characterAnimator: {characterAnimator != null}");
+                        
+                        Debug.Log("[UIManager] Calling SetupCharacter...");
+                        SetupCharacter(GameManager.Instance.currentStage.monsterProfile);
+                        Debug.Log("[UIManager] SetupCharacter completed - Profile switched, no reaction played");
+                        
+                        // Note: We don't play a reaction here because turn-end reaction will be shown
+                        // The character will now use the monster profile's idle animation
+                    }
+                    else
+                    {
+                        Debug.LogError("[UIManager] monsterProfile is NULL! Cannot switch profile.");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("[UIManager] currentStage is NULL! Cannot switch profile.");
+                }
             }
+            else
+            {
+                Debug.LogError("[UIManager] GameManager.Instance is NULL! Cannot switch profile.");
+            }
+            
+            Debug.Log("[UIManager] ===== SwitchToMonsterProfile COMPLETED =====");
         }
-        
+                
         private void OnReset()
         {
             foreach(var card in activeCards)
@@ -492,10 +535,24 @@ namespace ApprovalMonster.UI
                 Debug.LogError("[UIManager] DraftUI is not assigned!");
             }
         }
-
-
-
-        public void OnCardDrawn(CardData data)
+        
+        /// <summary>
+        /// 通常ドラフトを表示
+        /// </summary>
+        public void ShowNormalDraft(List<CardData> options)
+        {
+            Debug.Log("[UIManager] Showing Normal Draft");
+            
+            if (draftUI != null)
+            {
+                draftUI.ShowDraftOptions(options, isMonsterDraft: false);
+            }
+            else
+            {
+                Debug.LogError("[UIManager] DraftUI is not assigned!");
+            }
+        }
+              public void OnCardDrawn(CardData data)
         {
             Debug.Log($"[UIManager] OnCardDrawn called for {data.cardName}");
             var card = Instantiate(cardPrefab, handContainer);

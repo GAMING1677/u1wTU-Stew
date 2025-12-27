@@ -100,6 +100,10 @@ namespace ApprovalMonster.Core
                 Debug.Log("[ResourceManager] Mental <= 0, would trigger GameOver");
                 // Trigger Game Over logic handled by GameManager usually
             }
+            // REMOVED: Automatic monster mode triggering
+            // GameManager now handles monster mode detection and triggering manually
+            // This prevents immediate flag setting and allows proper sequencing with cut-ins
+            /*
             else if (!hasTriggeredMonsterMode && currentMental <= settings.monsterThreshold)
             {
                 Debug.Log($"[ResourceManager] *** MONSTER MODE CONDITIONS MET *** currentMental({currentMental}) <= threshold({settings.monsterThreshold}), hasTriggered={hasTriggeredMonsterMode}");
@@ -118,9 +122,10 @@ namespace ApprovalMonster.Core
                 onMonsterModeTriggered?.Invoke();
                 Debug.Log("[ResourceManager] onMonsterModeTriggered event invoked");
             }
+            */
             else
             {
-                Debug.Log($"[ResourceManager] Monster mode NOT triggered. Reasons: hasTriggered={hasTriggeredMonsterMode}, mental({currentMental}) > threshold({settings.monsterThreshold})? {currentMental > settings.monsterThreshold}");
+                Debug.Log($"[ResourceManager] Monster mode handled by GameManager. mental={currentMental}, threshold={settings.monsterThreshold}");
             }
             
             onMentalChanged?.Invoke(currentMental, settings.maxMental);

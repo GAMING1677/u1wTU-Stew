@@ -30,6 +30,8 @@ namespace ApprovalMonster.Core
         [SerializeField] private bool isGameActive = false;
         [SerializeField] private bool isWaitingForMonsterDraft = false;
         [SerializeField] private bool hasPerformedMonsterDraft = false;
+        [SerializeField] private bool shouldTriggerMonsterModeAfterCutIn = false; // Defer monster mode
+        [SerializeField] private bool isMonsterModeFromTurnEnd = false; // Track if monster mode was from turn end
         
         // Persistent modifiers
         // Persistent modifiers
@@ -130,14 +132,17 @@ namespace ApprovalMonster.Core
             }
             
             
-            // Subscribe to monster mode event (モンスターモード発動時のイベントリスナー)
-            resourceManager.onMonsterModeTriggered.AddListener(OnMonsterModeTriggered);
-            Debug.Log("[GameManager] Monster mode event listener registered");
+            // REMOVED: Monster mode event registration
+            // Event fires immediately, preventing deferred trigger
+            // OnMonsterModeTriggered will be called manually when needed
+            // resourceManager.onMonsterModeTriggered.AddListener(OnMonsterModeTriggered);
+            Debug.Log("[GameManager] Monster mode will be triggered manually (not via event)");
             
             // Prevent duplicate listeners - only remove GameManager's own listeners
             turnManager.OnTurnStart.RemoveListener(OnTurnStart);
             turnManager.OnTurnEnd.RemoveListener(OnTurnEnd);
-            turnManager.OnDraftStart.RemoveListener(OnDraftStart);
+            // REMOVED: OnDraftStart - handled entirely by UIManager
+            // turnManager.OnDraftStart.RemoveListener(OnDraftStart);
             
             // Remove GameManager's resource listeners (not all listeners!)
             resourceManager.onMentalChanged.RemoveListener(OnMentalChanged);
@@ -146,7 +151,8 @@ namespace ApprovalMonster.Core
             // Hook up events
             turnManager.OnTurnStart.AddListener(OnTurnStart);
             turnManager.OnTurnEnd.AddListener(OnTurnEnd);
-            turnManager.OnDraftStart.AddListener(OnDraftStart);
+            // REMOVED: OnDraftStart - handled entirely by UIManager
+            // turnManager.OnDraftStart.AddListener(OnDraftStart);
             
             resourceManager.onMentalChanged.AddListener(OnMentalChanged);
             resourceManager.onImpressionsChanged.AddListener(OnImpressionsChanged);
@@ -319,7 +325,21 @@ namespace ApprovalMonster.Core
             {
                 int penalty = CalculateQuotaPenalty(turnManager.CurrentTurnCount);
                 Debug.Log($"[GameManager] Quota Failed! Turn {turnManager.CurrentTurnCount}, Penalty: {penalty} Mental Damage");
+                
+                // Check mental before damage
+                int mentalBefore = resourceManager.currentMental;
+                int threshold = gameSettings != null ? gameSettings.monsterThreshold : 90;
+                
                 resourceManager.DamageMental(penalty);
+                
+                // Check if monster mode was just triggered
+                if (mentalBefore > threshold && 
+                    resourceManager.currentMental <= threshold &&
+                    !hasPerformedMonsterDraft)
+                {
+                    Debug.Log("[GameManager] Monster mode triggered - will be deferred until after turn result cut-in");
+                    shouldTriggerMonsterModeAfterCutIn = true;
+                }
                 
                 // Check if GameOver was triggered by DamageMental
                 if (!isGameActive)
@@ -386,12 +406,27 @@ namespace ApprovalMonster.Core
                 }
                 
                 FindObjectOfType<UI.UIManager>()?.ShowCutIn(title, message, () => {
-                    Debug.Log("[GameManager] CutIn dismissed - Stopping reaction and starting next turn");
+                    Debug.Log("[GameManager] CutIn dismissed");
                     
                     // Stop looping reaction
                     FindObjectOfType<UI.UIManager>()?.StopCharacterReaction();
                     
-                    turnManager.StartTurn();
+                    // Check if monster mode should be triggered now
+                    if (shouldTriggerMonsterModeAfterCutIn)
+                    {
+                        Debug.Log("[GameManager] Triggering deferred monster mode");
+                        shouldTriggerMonsterModeAfterCutIn = false;
+                        
+                        // Mark that this monster mode is from turn end (not mid-turn card play)
+                        isMonsterModeFromTurnEnd = true;
+                        isWaitingForMonsterDraft = true;
+                        OnMonsterModeTriggered();
+                        // Note: StartTurn will be called after monster draft completes
+                    }
+                    else
+                    {
+                        turnManager.StartTurn();
+                    }
                 });
             }
             else
@@ -452,35 +487,9 @@ namespace ApprovalMonster.Core
             onQuotaUpdate?.Invoke(gained, currentTurnQuota);
         }
 
-        private void OnDraftStart()
-        {
-            int currentTurn = turnManager.CurrentTurnCount;
-            int lastDraftTurn = gameSettings != null ? gameSettings.lastDraftTurn : 10;
-            
-            Debug.Log($"[GameManager] OnDraftStart - Turn={currentTurn}, lastDraftTurn={lastDraftTurn}, isMonsterMode={resourceManager.isMonsterMode}, hasPerformedMonsterDraft={hasPerformedMonsterDraft}");
-            
-            // Skip ALL drafts after lastDraftTurn
-            if (currentTurn > lastDraftTurn)
-            {
-                Debug.Log($"[GameManager] OnDraftStart -> Turn {currentTurn} > lastDraftTurn {lastDraftTurn}, skipping draft");
-                turnManager.CompleteDraft();
-                return;
-            }
-            
-            if (resourceManager.isMonsterMode && !hasPerformedMonsterDraft)
-            {
-                Debug.Log("[GameManager] OnDraftStart -> Starting Monster Draft");
-                // Monster draft logic
-                StartMonsterDraft();
-            }
-            else
-            {
-                Debug.Log("[GameManager] OnDraftStart -> Calling CompleteDraft (skipping regular draft)");
-                // Regular draft or skip
-                turnManager.CompleteDraft();
-                Debug.Log($"[GameManager] OnDraftStart -> After CompleteDraft, Phase is now: {turnManager.CurrentPhase}");
-            }
-        }
+        // REMOVED: OnDraftStart method
+        // Draft handling is now entirely managed by UIManager
+        // Monster draft is triggered manually from turn result cut-in callback
         
         public void OnDraftComplete(CardData selectedCard)
         {
@@ -548,7 +557,24 @@ namespace ApprovalMonster.Core
 
             // Mental cost (positive = hurt)
             if (card.mentalCost > 0)
+            {
+                int mentalBefore = resourceManager.currentMental;
+                int threshold = gameSettings != null ? gameSettings.monsterThreshold : 90;
+                
                 resourceManager.DamageMental(card.mentalCost);
+                
+                // Check if monster mode was triggered during card play
+                if (mentalBefore > threshold && 
+                    resourceManager.currentMental <= threshold &&
+                    !hasPerformedMonsterDraft)
+                {
+                    Debug.Log("[GameManager] Monster mode triggered during card play");
+                    // Mark that this is from card play, not turn end
+                    isMonsterModeFromTurnEnd = false;
+                    // Trigger immediately (no StartTurn after draft)
+                    OnMonsterModeTriggered();
+                }
+            }
             else if (card.mentalCost < 0)
                 resourceManager.HealMental(-card.mentalCost);
 
@@ -739,6 +765,15 @@ namespace ApprovalMonster.Core
                 Debug.Log($"[GameManager] currentStage.monsterModePreset null? {currentStage.monsterModePreset == null}");
             }
             
+            // Set monster mode state (since ResourceManager no longer does this)
+            resourceManager.isMonsterMode = true;
+            // Don't set hasTriggeredMonsterMode yet - wait until draft complete
+            
+            // Heal mental: currentMental / 2 (rounded up)
+            int healAmount = Mathf.CeilToInt(resourceManager.currentMental / 2f);
+            resourceManager.HealMental(healAmount);
+            Debug.Log($"[GameManager] Monster Mode Activated! Healed {healAmount} mental to {resourceManager.currentMental}");
+            
             if (monsterModeCutInUI != null && currentStage != null)
             {
                 // Show cut-in with stage-specific preset
@@ -770,7 +805,11 @@ namespace ApprovalMonster.Core
                 return;
             }
             
-            isWaitingForMonsterDraft = true;
+            // Only set this flag if from turn end - mid-turn doesn't need StartTurn
+            if (isMonsterModeFromTurnEnd)
+            {
+                isWaitingForMonsterDraft = true;
+            }
             
             var options = draftManager.GenerateMonsterDraftOptions(
                 currentStage.monsterDeck,
@@ -805,14 +844,33 @@ namespace ApprovalMonster.Core
             
             Debug.Log($"[GameManager] Monster card '{selectedCard.cardName}' added: 1 to hand, 1 to draw pile, 1 to discard pile");
             
+            // Switch to monster profile
+            var uiManager = FindObjectOfType<UI.UIManager>();
+            if (uiManager != null)
+            {
+                uiManager.SwitchToMonsterProfile();
+                Debug.Log("[GameManager] Switched to monster profile");
+            }
+            
+            // Check flag BEFORE clearing it
+            bool wasFromTurnEnd = isMonsterModeFromTurnEnd;
+            
+            // Clear flags
             isWaitingForMonsterDraft = false;
+            isMonsterModeFromTurnEnd = false;
             hasPerformedMonsterDraft = true;
             
-            // IMPORTANT: Complete draft to transition to PlayerAction phase
-            turnManager.CompleteDraft();
-            Debug.Log($"[GameManager] OnMonsterDraftComplete - Phase is now: {turnManager.CurrentPhase}");
-            
-            // Player must click End Turn button to proceed (no automatic turn end)
+            // If from turn end, start next turn now
+            // Otherwise (from card play), just return to normal game flow (continue in PlayerAction)
+            if (wasFromTurnEnd)
+            {
+                Debug.Log("[GameManager] Monster draft complete - starting next turn (from turn end)");
+                turnManager.StartTurn();
+            }
+            else
+            {
+                Debug.Log("[GameManager] Monster draft complete - continuing card play (mid-turn)");
+            }
         }
         
 
