@@ -288,34 +288,37 @@ namespace ApprovalMonster.UI
         
         private void PlayTweenEffect(ReactionType type)
         {
-            targetImage.transform.DOKill(true); // Complete active tweens
-            
-            // Reset transforms just in case
-            targetImage.transform.localScale = Vector3.one;
-            targetImage.transform.localRotation = Quaternion.identity;
+            RectTransform rt = targetImage.rectTransform;
             
             switch (type)
             {
                 case ReactionType.Happy_1:
                 case ReactionType.Happy_2:
-                    // Jump/Punch Scale
-                    targetImage.transform.DOPunchScale(Vector3.one * 0.2f, 0.5f, 10, 1);
-                    break;
-                
                 case ReactionType.Happy_3:
-                    // Big Jump / Rotate
-                    targetImage.transform.DOPunchScale(Vector3.one * 0.3f, 0.6f, 10, 1);
-                    targetImage.transform.DOPunchRotation(new Vector3(0, 0, 10f), 0.6f, 10, 1);
-                    break;
-
-                case ReactionType.Sad_1:
-                    // Shake
-                    targetImage.transform.DOShakePosition(0.5f, strength: 30f, vibrato: 20);
+                    // Pop animation
+                    rt.DOKill();
+                    rt.localScale = Vector3.one;
+                    rt.DOPunchScale(Vector3.one * 0.2f, currentProfile.reactionDuration, 5, 0.5f);
                     break;
                     
+                case ReactionType.Sad_1:
                 case ReactionType.Sad_2:
-                    // Small shake or punch rotation
-                    targetImage.transform.DOPunchRotation(new Vector3(0, 0, 15f), 0.5f);
+                    // ぶるぶる震えるアニメーション（小刻み振動）
+                    rt.DOKill();
+                    Vector2 originalPos = rt.anchoredPosition;
+                    
+                    // DOTweenでシェイクアニメーション
+                    rt.DOShakeAnchorPos(
+                        duration: currentProfile.reactionDuration,
+                        strength: 3f,  // 震えの強さ（ピクセル）
+                        vibrato: 30,   // 振動回数（高いほど細かく震える）
+                        randomness: 90,
+                        snapping: false,
+                        fadeOut: false
+                    ).OnComplete(() => {
+                        // 元の位置に戻す
+                        rt.anchoredPosition = originalPos;
+                    });
                     break;
             }
         }
