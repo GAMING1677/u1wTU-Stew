@@ -50,6 +50,9 @@ namespace ApprovalMonster.Core
             
             ApplyVolumes();
             
+            // Preload all audio clips to prevent lag on first play
+            PreloadAudioClips();
+            
             Debug.Log($"[AudioManager] Initialized. BGM: {bgmVolume}, SE: {seVolume}");
         }
         
@@ -167,6 +170,42 @@ namespace ApprovalMonster.Core
                     source.volume = seVolume;
                 }
             }
+        }
+        
+        /// <summary>
+        /// 全AudioClipを事前ロードして初回再生時のラグを防止
+        /// </summary>
+        private void PreloadAudioClips()
+        {
+            if (audioDatabase == null)
+            {
+                Debug.LogWarning("[AudioManager] Cannot preload: AudioDatabase is null");
+                return;
+            }
+            
+            int preloadCount = 0;
+            
+            // Preload BGM
+            if (audioDatabase.mainThemeBGM != null)
+            {
+                audioDatabase.mainThemeBGM.LoadAudioData();
+                preloadCount++;
+            }
+            
+            // Preload all SE
+            if (audioDatabase.seClips != null)
+            {
+                foreach (var se in audioDatabase.seClips)
+                {
+                    if (se.clip != null)
+                    {
+                        se.clip.LoadAudioData();
+                        preloadCount++;
+                    }
+                }
+            }
+            
+            Debug.Log($"[AudioManager] Preloaded {preloadCount} audio clips");
         }
         
         private void SaveVolumes()
