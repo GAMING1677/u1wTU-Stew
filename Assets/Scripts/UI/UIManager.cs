@@ -550,7 +550,9 @@ namespace ApprovalMonster.UI
             
             if (currentTurn > lastDraftTurn)
             {
-                Debug.Log($"[UIManager] OnDraftStart - Turn {currentTurn} > lastDraftTurn {lastDraftTurn}, not showing draft UI");
+                Debug.Log($"[UIManager] OnDraftStart - Turn {currentTurn} > lastDraftTurn {lastDraftTurn}, skipping draft");
+                // Complete draft immediately to proceed to PlayerAction
+                gm.turnManager.CompleteDraft();
                 return;
             }
             
@@ -561,6 +563,14 @@ namespace ApprovalMonster.UI
                     gm.currentStage.draftPool,
                     gm.resourceManager.totalImpressions
                 );
+                
+                // Check if options is empty
+                if (options == null || options.Count == 0)
+                {
+                    Debug.LogWarning("[UIManager] No draft options available, completing draft immediately");
+                    gm.turnManager.CompleteDraft();
+                    return;
+                }
                 
                 if (draftUI != null)
                 {

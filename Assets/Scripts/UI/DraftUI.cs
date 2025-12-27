@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using ApprovalMonster.Data;
+using ApprovalMonster.Core;
 using DG.Tweening;
 
 namespace ApprovalMonster.UI
@@ -56,6 +57,17 @@ namespace ApprovalMonster.UI
             {
                 titleText.text = "カードを選択してください";
                 titleText.color = Color.white;
+            }
+            
+            Debug.Log($"[DraftUI] ShowDraftOptions called. Count: {options?.Count ?? 0}, isMonsterDraft: {isMonsterDraft}");
+            
+            // Defensive check: if no options, complete draft immediately
+            if (options == null || options.Count == 0)
+            {
+                Debug.LogWarning("[DraftUI] No draft options provided! Completing draft immediately.");
+                // Call CompleteDraft to prevent freeze
+                GameManager.Instance?.turnManager?.CompleteDraft();
+                return;
             }
             
             if (cardViewPrefab == null)

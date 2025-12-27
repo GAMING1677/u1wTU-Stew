@@ -266,6 +266,15 @@ namespace ApprovalMonster.Core
             // 5. Reset flags
             hasPerformedMonsterDraft = false;
             isWaitingForMonsterDraft = false;
+            isMonsterModeFromTurnEnd = false; // Reset new monster mode flag
+            
+            // 6. Reset character profile to normal
+            var uiManager = FindObjectOfType<UI.UIManager>();
+            if (uiManager != null && currentStage != null && currentStage.normalProfile != null)
+            {
+                uiManager.SetupCharacter(currentStage.normalProfile);
+                Debug.Log("[GameManager] Reset character profile to normal");
+            }
             
             // NOTE: Don't start turn here - StartGame() will call turnManager.StartGame()
         }

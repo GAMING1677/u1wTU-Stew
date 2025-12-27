@@ -43,10 +43,35 @@ namespace ApprovalMonster.UI
         private float showTime;
         private string fullMessageText = ""; // Store message text for typewriter effect
         
+        // Store original positions for reset
+        private Vector2 originalBackgroundPosition;
+        private Vector2 originalCharacterPosition;
+        private bool positionsInitialized = false;
+        
         private void Awake()
         {
             if (canvasGroup == null)
                 canvasGroup = GetComponent<CanvasGroup>();
+            
+            // Store original positions for reset on subsequent uses
+            if (backgroundImage != null)
+            {
+                RectTransform bgRect = backgroundImage.GetComponent<RectTransform>();
+                if (bgRect != null)
+                {
+                    originalBackgroundPosition = bgRect.anchoredPosition;
+                    positionsInitialized = true;
+                }
+            }
+            
+            if (characterImage != null)
+            {
+                RectTransform charRect = characterImage.GetComponent<RectTransform>();
+                if (charRect != null)
+                {
+                    originalCharacterPosition = charRect.anchoredPosition;
+                }
+            }
             
             // Setup click detection on target object
             SetupClickDetection();
@@ -229,9 +254,16 @@ namespace ApprovalMonster.UI
             RectTransform bgRect = backgroundImage != null ? backgroundImage.GetComponent<RectTransform>() : null;
             RectTransform charRect = characterImage != null ? characterImage.GetComponent<RectTransform>() : null;
             
-            // Store original positions
-            Vector2 bgOriginalPos = bgRect != null ? bgRect.anchoredPosition : Vector2.zero;
-            Vector2 charOriginalPos = charRect != null ? charRect.anchoredPosition : Vector2.zero;
+            // Reset to original positions before animation (fixes position drift on 2nd+ use)
+            if (positionsInitialized)
+            {
+                if (bgRect != null) bgRect.anchoredPosition = originalBackgroundPosition;
+                if (charRect != null) charRect.anchoredPosition = originalCharacterPosition;
+            }
+            
+            // Use stored original positions for animation targets
+            Vector2 bgOriginalPos = positionsInitialized ? originalBackgroundPosition : (bgRect != null ? bgRect.anchoredPosition : Vector2.zero);
+            Vector2 charOriginalPos = positionsInitialized ? originalCharacterPosition : (charRect != null ? charRect.anchoredPosition : Vector2.zero);
             
             // Set initial off-screen positions (LEFT side)
             float screenWidth = Screen.width;
@@ -351,6 +383,21 @@ namespace ApprovalMonster.UI
         public void ForceHide()
         {
             DOTween.Kill(this);
+            
+            // Reset positions
+            if (positionsInitialized)
+            {
+                if (backgroundImage != null)
+                {
+                    RectTransform bgRect = backgroundImage.GetComponent<RectTransform>();
+                    if (bgRect != null) bgRect.anchoredPosition = originalBackgroundPosition;
+                }
+                if (characterImage != null)
+                {
+                    RectTransform charRect = characterImage.GetComponent<RectTransform>();
+                    if (charRect != null) charRect.anchoredPosition = originalCharacterPosition;
+                }
+            }
             
             // Deactivate target object
             if (targetObject != null)
