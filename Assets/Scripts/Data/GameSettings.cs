@@ -17,9 +17,6 @@ namespace ApprovalMonster.Data
         
         [Tooltip("ドラフトが行われる最後のターン（これ以降はドラフトをスキップ）")]
         public int lastDraftTurn = 10;
-        
-        [Tooltip("ゲームの最大ターン数")]
-        public int maxTurnCount = 20;
 
         [Header("Monster Mode")]
         [Tooltip("Mental threshold to trigger Monster Mode")]

@@ -194,7 +194,9 @@ namespace ApprovalMonster.Core
             if (SceneNavigator.Instance != null)
             {
                 SceneNavigator.Instance.LastGameScore = score;
-                Debug.Log($"[GameManager] Saved game over score: {score}");
+                SceneNavigator.Instance.WasStageCleared = false; // Game over = failed
+                SceneNavigator.Instance.IsScoreAttackMode = (currentStage == null || currentStage.clearCondition == null || !currentStage.clearCondition.hasScoreGoal);
+                Debug.Log($"[GameManager] Saved game over score: {score}, cleared=false");
             }
             
             // Navigate directly to result scene
@@ -209,17 +211,82 @@ namespace ApprovalMonster.Core
             }
         }
         
-        public void FinishStage()
+        /// <summary>
+        /// ステージクリア（スコア達成時）
+        /// </summary>
+        private void ClearStage()
         {
-            Debug.Log("[GameManager] FinishStage() called (Turn limit reached)!");
+            Debug.Log("[GameManager] ClearStage() called (Score goal achieved)!");
             isGameActive = false;
+            
+            // Save clear status
+            if (SaveDataManager.Instance != null && currentStage != null)
+            {
+                SaveDataManager.Instance.SaveStageClear(currentStage.stageName);
+                Debug.Log($"[GameManager] Stage '{currentStage.stageName}' marked as cleared");
+            }
             
             // Save Score
             long score = resourceManager.totalImpressions;
             if (SceneNavigator.Instance != null)
             {
                 SceneNavigator.Instance.LastGameScore = score;
-                Debug.Log($"[GameManager] Saved finish score: {score}");
+                SceneNavigator.Instance.WasStageCleared = true; // Score clear = success
+                SceneNavigator.Instance.IsScoreAttackMode = false; // Score goal exists
+                Debug.Log($"[GameManager] Saved clear score: {score}, cleared=true");
+            }
+            
+            // Navigate to result scene
+            if (SceneNavigator.Instance != null)
+            {
+                Debug.Log("[GameManager] Navigating to Result scene after score clear");
+                SceneNavigator.Instance.GoToResult();
+            }
+            else
+            {
+                Debug.LogError("[GameManager] SceneNavigator.Instance is null!");
+            }
+        }
+        
+        public void FinishStage()
+        {
+            Debug.Log("[GameManager] FinishStage() called (Turn limit reached)!");
+            isGameActive = false;
+            
+            // スコアゴールが設定されている場合は達成チェック
+            bool hasScoreGoal = (currentStage != null && 
+                                currentStage.clearCondition != null && 
+                                currentStage.clearCondition.hasScoreGoal);
+            bool scoreAchieved = false;
+            
+            if (hasScoreGoal)
+            {
+                scoreAchieved = resourceManager.totalImpressions >= currentStage.clearCondition.targetScore;
+                Debug.Log($"[GameManager] Score goal check: {resourceManager.totalImpressions} >= {currentStage.clearCondition.targetScore} = {scoreAchieved}");
+            }
+            
+            // クリア判定：スコアゴールがない、またはスコアゴール達成した場合のみクリア
+            bool wasCleared = !hasScoreGoal || scoreAchieved;
+            
+            // セーブ：クリアした場合のみ記録
+            if (wasCleared && SaveDataManager.Instance != null && currentStage != null)
+            {
+                SaveDataManager.Instance.SaveStageClear(currentStage.stageName);
+                Debug.Log($"[GameManager] Stage '{currentStage.stageName}' marked as cleared (turn limit, score achieved)");
+            }
+            else if (hasScoreGoal && !scoreAchieved)
+            {
+                Debug.Log($"[GameManager] Stage '{currentStage.stageName}' NOT cleared (turn limit, score NOT achieved)");
+            }
+            
+            // Save Score
+            long score = resourceManager.totalImpressions;
+            if (SceneNavigator.Instance != null)
+            {
+                SceneNavigator.Instance.LastGameScore = score;
+                SceneNavigator.Instance.WasStageCleared = wasCleared;
+                SceneNavigator.Instance.IsScoreAttackMode = !hasScoreGoal;
+                Debug.Log($"[GameManager] Saved finish score: {score}, cleared={wasCleared}, isScoreAttack={!hasScoreGoal}");
             }
             
             // Navigate directly to result scene
@@ -231,6 +298,52 @@ namespace ApprovalMonster.Core
             else
             {
                 Debug.LogError("[GameManager] SceneNavigator.Instance is null!");
+            }
+        }
+
+        /// <summary>
+        /// スコアベースのクリア条件をチェック
+        /// </summary>
+        private void CheckScoreClear()
+        {
+            // ゲーム非アクティブ時はチェックしない
+            if (!isGameActive)
+            {
+                Debug.Log("[GameManager] CheckScoreClear: Game not active, skipping");
+                return;
+            }
+            
+            // Debug: Current stage info
+            Debug.Log($"[GameManager] CheckScoreClear: currentStage={(currentStage != null ? currentStage.stageName : "NULL")}");
+            
+            // クリア条件がnullまたはhasScoreGoal=falseなら無制限プレイ
+            if (currentStage == null)
+            {
+                Debug.LogWarning("[GameManager] CheckScoreClear: currentStage is NULL!");
+                return;
+            }
+            
+            if (currentStage.clearCondition == null)
+            {
+                Debug.Log($"[GameManager] CheckScoreClear: Stage '{currentStage.stageName}' has no clearCondition (unlimited play)");
+                return;
+            }
+            
+            if (!currentStage.clearCondition.hasScoreGoal)
+            {
+                Debug.Log($"[GameManager] CheckScoreClear: Stage '{currentStage.stageName}' hasScoreGoal=false (unlimited play)");
+                return;
+            }
+            
+            // Score check
+            long currentScore = resourceManager.totalImpressions;
+            long targetScore = currentStage.clearCondition.targetScore;
+            Debug.Log($"[GameManager] CheckScoreClear: Stage '{currentStage.stageName}' score check: {currentScore} / {targetScore} (hasScoreGoal={currentStage.clearCondition.hasScoreGoal})");
+            
+            if (currentScore >= targetScore)
+            {
+                Debug.Log($"[GameManager] Score clear! {currentScore} >= {targetScore}");
+                ClearStage();
             }
         }
 
@@ -560,7 +673,14 @@ namespace ApprovalMonster.Core
             if (!resourceManager.UseMotivation(card.motivationCost))
             {
                 Debug.Log("Not enough motivation!");
-                // Show UI feedback
+                
+                // Show cut-in for insufficient motivation
+                var uiManager = FindObjectOfType<UI.UIManager>();
+                if (uiManager != null)
+                {
+                    uiManager.ShowCutIn("やる気が足りない", "");
+                }
+                
                 return;
             }
 
@@ -752,6 +872,9 @@ namespace ApprovalMonster.Core
                 long displayImpressions = gainedImpressions > 0 ? gainedImpressions : (long)(resourceManager.currentFollowers * 0.01f);
                 FindObjectOfType<UI.UIManager>()?.AddPost(comment, displayImpressions);
             }
+            
+            // スコアクリア条件をチェック（カードプレイ後）
+            CheckScoreClear();
             
             // Player must click End Turn button to proceed (no automatic turn end)
 

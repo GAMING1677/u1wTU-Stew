@@ -47,13 +47,20 @@ namespace ApprovalMonster.Core
             {
                 cleared.Add(stageName);
                 ES3.Save(KEY_CLEARED_STAGES, cleared);
+                Debug.Log($"[SaveDataManager] Stage '{stageName}' saved as cleared. Total cleared: {cleared.Count}");
+            }
+            else
+            {
+                Debug.Log($"[SaveDataManager] Stage '{stageName}' already in cleared list");
             }
         }
 
         public bool IsStageCleared(string stageName)
         {
              List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>());
-             return cleared.Contains(stageName);
+             bool isCleared = cleared.Contains(stageName);
+             Debug.Log($"[SaveDataManager] IsStageCleared('{stageName}') = {isCleared}");
+             return isCleared;
         }
 
         private void OnApplicationQuit()

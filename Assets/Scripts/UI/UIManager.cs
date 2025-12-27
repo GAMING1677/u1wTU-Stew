@@ -48,8 +48,10 @@ namespace ApprovalMonster.UI
         
         [Header("Quota")]
         [SerializeField] private TextMeshProUGUI quotaText; // Displays "Remaining: XXX"
-        [SerializeField] private GameObject penaltyRiskContainer; // Parent object containing text and image
-        [SerializeField] private TextMeshProUGUI penaltyRiskText; // Displays "Risk: YYY"
+        [SerializeField] private TextMeshProUGUI penaltyRiskText; // Displays "Penalty Risk: XX Mental"
+        
+        [Header("Clear Goal")]
+        [SerializeField] private TextMeshProUGUI clearGoalText; // Displays "目標：xxx,xxx" if hasScoreGoal
         
         [Header("Timeline")]
         [SerializeField] private GameObject postPrefab;
@@ -170,6 +172,7 @@ namespace ApprovalMonster.UI
              if (GameManager.Instance != null && GameManager.Instance.currentStage != null)
              {
                  SetupCharacter(GameManager.Instance.currentStage.normalProfile);
+                 SetupClearGoal(); // クリア目標の表示を設定
              }
              
              // Setup button listener
@@ -423,7 +426,7 @@ namespace ApprovalMonster.UI
         {
             if (turnText != null)
             {
-                int maxTurn = GameManager.Instance?.gameSettings?.maxTurnCount ?? 20;
+                int maxTurn = GameManager.Instance?.currentStage?.maxTurnCount ?? 20;
                 turnText.text = $"{turn}/{maxTurn}ターン";
                 turnText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
             }
@@ -483,26 +486,11 @@ namespace ApprovalMonster.UI
                     
                     // "未達だと…{penalty}病む"
                     penaltyRiskText.text = $"<size=50%>足りないと…</size>\n{penalty} <size=50%>病む</size>";
-                    
-                    if (penaltyRiskContainer != null)
-                    {
-                        penaltyRiskContainer.SetActive(true);
-                    }
-                    else
-                    {
-                        penaltyRiskText.gameObject.SetActive(true);
-                    }
+                    penaltyRiskText.gameObject.SetActive(true);
                 }
                 else
                 {
-                    if (penaltyRiskContainer != null)
-                    {
-                        penaltyRiskContainer.SetActive(false);
-                    }
-                    else
-                    {
-                        penaltyRiskText.gameObject.SetActive(false);
-                    }
+                    penaltyRiskText.gameObject.SetActive(false);
                 }
             }
         }
@@ -706,6 +694,41 @@ namespace ApprovalMonster.UI
             {
                 Debug.LogWarning("[UIManager] CutInUI is not assigned!");
                 onComplete?.Invoke();
+            }
+        }
+        
+        /// <summary>
+        /// クリア目標の表示を設定
+        /// スコアゴールがある場合のみ表示
+        /// </summary>
+        private void SetupClearGoal()
+        {
+            if (clearGoalText == null)
+            {
+                Debug.LogWarning("[UIManager] clearGoalText is not assigned");
+                return;
+            }
+            
+            var currentStage = GameManager.Instance?.currentStage;
+            if (currentStage == null)
+            {
+                Debug.LogWarning("[UIManager] currentStage is null");
+                clearGoalText.gameObject.SetActive(false);
+                return;
+            }
+            
+            // clearConditionがあり、hasScoreGoalがtrueの場合のみ表示
+            if (currentStage.clearCondition != null && currentStage.clearCondition.hasScoreGoal)
+            {
+                clearGoalText.gameObject.SetActive(true);
+                clearGoalText.text = $"目標：{currentStage.clearCondition.targetScore:N0}";
+                Debug.Log($"[UIManager] Clear goal displayed: {currentStage.clearCondition.targetScore:N0}");
+            }
+            else
+            {
+                // スコアアタックモードまたは条件なし
+                clearGoalText.gameObject.SetActive(false);
+                Debug.Log("[UIManager] Clear goal hidden (score attack mode or no clear condition)");
             }
         }
     }

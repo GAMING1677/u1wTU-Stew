@@ -105,10 +105,67 @@ namespace ApprovalMonster.Core
         /// <returns>アンロック済みならtrue</returns>
         public bool IsStageUnlocked(StageData stage)
         {
-            // TODO: セーブデータと連携してアンロック状態を確認する
-            // 例: return SaveDataManager.Instance.IsStageUnlocked(stage.stageName);
+            Debug.Log($"[StageManager] ===== IsStageUnlocked('{stage?.stageName}') START =====");
             
-            // 現在は全ステージがアンロック済みとして扱う
+            if (stage == null)
+            {
+                Debug.LogError("[StageManager] Stage is NULL, returning false");
+                return false;
+            }
+            
+            // requiredStagesをチェック
+            Debug.Log($"[StageManager] Stage '{stage.stageName}' requiredStages: {(stage.requiredStages != null ? stage.requiredStages.Count.ToString() : "NULL")}");
+            
+            if (stage.requiredStages != null && stage.requiredStages.Count > 0)
+            {
+                Debug.Log($"[StageManager] Checking {stage.requiredStages.Count} required stages for '{stage.stageName}':");
+                
+                for (int i = 0; i < stage.requiredStages.Count; i++)
+                {
+                    var requiredStage = stage.requiredStages[i];
+                    if (requiredStage == null)
+                    {
+                        Debug.LogWarning($"[StageManager]   Required stage [{i}] is NULL, skipping");
+                        continue;
+                    }
+                    
+                    Debug.Log($"[StageManager]   Required stage [{i}]: '{requiredStage.stageName}'");
+                }
+            }
+            else
+            {
+                Debug.Log($"[StageManager] Stage '{stage.stageName}' has no requiredStages, UNLOCKED");
+                return true;
+            }
+            
+            // SaveDataManagerをチェック
+            if (SaveDataManager.Instance == null)
+            {
+                Debug.LogWarning("[StageManager] SaveDataManager.Instance is NULL, defaulting to UNLOCKED");
+                return true;
+            }
+            
+            Debug.Log($"[StageManager] SaveDataManager found, checking clear status...");
+            
+            // 全ての必須ステージがクリアされているかチェック（AND条件）
+            foreach (var requiredStage in stage.requiredStages)
+            {
+                if (requiredStage == null) continue;
+                
+                bool isCleared = SaveDataManager.Instance.IsStageCleared(requiredStage.stageName);
+                Debug.Log($"[StageManager]   '{requiredStage.stageName}' cleared: {isCleared}");
+                
+                if (!isCleared)
+                {
+                    Debug.Log($"[StageManager] Stage '{stage.stageName}' LOCKED: required '{requiredStage.stageName}' not cleared");
+                    Debug.Log($"[StageManager] ===== IsStageUnlocked('{stage.stageName}') END: FALSE =====");
+                    return false;
+                }
+            }
+            
+            // 全ての必須ステージがクリア済み
+            Debug.Log($"[StageManager] Stage '{stage.stageName}' UNLOCKED: all required stages cleared");
+            Debug.Log($"[StageManager] ===== IsStageUnlocked('{stage.stageName}') END: TRUE =====");
             return true;
         }
 

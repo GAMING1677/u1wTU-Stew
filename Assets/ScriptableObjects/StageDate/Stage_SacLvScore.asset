@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32c8f3617824a64bb41f5a00b165acf, type: 3}
+  m_Name: Stage_SacLvScore
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.StageData
+  clearCondition:
+    hasScoreGoal: 0
+    targetScore: 1000000
+  requiredStages:
+  - {fileID: 11400000, guid: 6600d5104e2b5d146b9411558d97ff0e, type: 2}
+  stageName: "\u30B5\u30AD\u30E5\u30D0\u30B9_Score"
+  stageDescription: "\u30B9\u30B3\u30A2\u30A2\u30BF\u30C3\u30AF\uFF01"
+  quotaScore: 100
+  maxTurnCount: 50
+  initialDeck:
+  - {fileID: 11400000, guid: 60a555a89d5d295439fa15a1415ab100, type: 2}
+  - {fileID: 11400000, guid: 0bc2c86e2caf19143a2365abd734ef06, type: 2}
+  - {fileID: 11400000, guid: ea45d5f16d8eeaf438d7584d0fb0e7a1, type: 2}
+  - {fileID: 11400000, guid: e9734e7a9043c2d48821c18a9fcc059a, type: 2}
+  - {fileID: 11400000, guid: 77ebf3659eb242547975e8475b1bae6a, type: 2}
+  draftPool:
+  - {fileID: 11400000, guid: c3799ce8b905edd479d0dfff4a21ba0a, type: 2}
+  - {fileID: 11400000, guid: 76cf55e752b52c648b5df2c306f56ffb, type: 2}
+  - {fileID: 11400000, guid: 26c5bd662e84a824889caedf25a62c28, type: 2}
+  - {fileID: 11400000, guid: a78f5e8b27b9fd144a55265976298521, type: 2}
+  - {fileID: 11400000, guid: 36d4136e72960b74fb5e54cf8591b849, type: 2}
+  - {fileID: 11400000, guid: 2e79aee01dd3b8a478b8a761f25fd265, type: 2}
+  - {fileID: 11400000, guid: f2daa3b4944b0dd49888543f109fd064, type: 2}
+  - {fileID: 11400000, guid: a66ba1fa76372044f96c7427031444ea, type: 2}
+  - {fileID: 11400000, guid: dc947d4a133c81e40867a1656a682426, type: 2}
+  - {fileID: 11400000, guid: 967e2cb9164c49a4f903db37fb6ac024, type: 2}
+  - {fileID: 11400000, guid: 61f1b8065c94e51479b08017ad59cdb6, type: 2}
+  - {fileID: 11400000, guid: 6842498b8386e4e4fb369442a660761f, type: 2}
+  - {fileID: 11400000, guid: e03d69c8a634cd24f96142db1411e4e9, type: 2}
+  - {fileID: 11400000, guid: d5b36ae9134fc0443bea93191efecd72, type: 2}
+  monsterDeck:
+  - {fileID: 11400000, guid: 891d161a2b889ba41a1e9a6a9868c1a2, type: 2}
+  - {fileID: 11400000, guid: c33fef5c681dbd04f9c2fc68062207f2, type: 2}
+  - {fileID: 11400000, guid: 3ec7bc6cd92a03d48a785ef20516c1b4, type: 2}
+  monsterModePreset: {fileID: 11400000, guid: 10a7b9b7d7c0e474e9d720a113ccb2d1, type: 2}
+  background: {fileID: 0}
+  themeColor: {r: 1, g: 1, b: 1, a: 1}
+  normalProfile: {fileID: 11400000, guid: bbf5041c48e695243b3a8e6db9f21938, type: 2}
+  monsterProfile: {fileID: 11400000, guid: efa6a0370fe82804f8ae1d45d9b59723, type: 2}

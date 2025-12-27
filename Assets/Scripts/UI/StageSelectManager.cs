@@ -25,6 +25,9 @@ namespace ApprovalMonster.UI
             
             [Tooltip("このボタンに割り当てるステージ")]
             public StageData stage;
+            
+            [Tooltip("ステージの説明文を表示するテキスト")]
+            public TextMeshProUGUI descriptionText;
         }
 
         [Header("Stage Buttons")]
@@ -46,6 +49,16 @@ namespace ApprovalMonster.UI
                 backButton.onClick.AddListener(OnBackButtonClicked);
             }
         }
+        
+        /// <summary>
+        /// ステージのアンロック状態を再チェックして更新
+        /// リザルトから戻った際などに外部から呼び出される
+        /// </summary>
+        public void RefreshUnlockStates()
+        {
+            Debug.Log("[StageSelectManager] RefreshUnlockStates called - updating button states");
+            UpdateButtonStates();
+        }
 
         /// <summary>
         /// 各ボタンにクリックリスナーを設定
@@ -57,6 +70,8 @@ namespace ApprovalMonster.UI
                 Debug.LogWarning("[StageSelectManager] No stage buttons assigned!");
                 return;
             }
+            
+            Debug.Log($"[StageSelectManager] Setting up {stageButtons.Count} stage buttons...");
 
             for (int i = 0; i < stageButtons.Count; i++)
             {
@@ -75,19 +90,61 @@ namespace ApprovalMonster.UI
                 }
 
                 // アンロック状態をチェック
-                bool isUnlocked = true;
-                if (StageManager.Instance != null)
-                {
-                    isUnlocked = StageManager.Instance.IsStageUnlocked(stageButton.stage);
-                }
-                
+                bool isUnlocked = CheckUnlockState(stageButton.stage);
                 stageButton.button.interactable = isUnlocked;
+                
+                // 説明文を設定
+                if (stageButton.descriptionText != null)
+                {
+                    stageButton.descriptionText.text = stageButton.stage.stageDescription;
+                }
 
                 // クリック時の処理を設定（クロージャ対策）
                 StageData capturedStage = stageButton.stage;
                 stageButton.button.onClick.AddListener(() => OnStageSelected(capturedStage));
 
-                Debug.Log($"[StageSelectManager] Setup button for stage: {stageButton.stage.stageName} (Unlocked: {isUnlocked})");
+                Debug.Log($"[StageSelectManager] Setup button {i} for stage: {stageButton.stage.stageName} (Unlocked: {isUnlocked})");
+            }
+            
+            Debug.Log("[StageSelectManager] All buttons setup complete");
+        }
+        
+        /// <summary>
+        /// ボタンのアンロック状態のみを更新（リスナーは再設定しない）
+        /// </summary>
+        private void UpdateButtonStates()
+        {
+            if (stageButtons == null || stageButtons.Count == 0) return;
+            
+            Debug.Log($"[StageSelectManager] Updating {stageButtons.Count} button states...");
+
+            for (int i = 0; i < stageButtons.Count; i++)
+            {
+                var stageButton = stageButtons[i];
+                if (stageButton.button == null || stageButton.stage == null) continue;
+
+                bool isUnlocked = CheckUnlockState(stageButton.stage);
+                stageButton.button.interactable = isUnlocked;
+                
+                Debug.Log($"[StageSelectManager] Updated button {i}: '{stageButton.stage.stageName}' unlocked={isUnlocked}");
+            }
+            
+            Debug.Log("[StageSelectManager] Button states update complete");
+        }
+        
+        /// <summary>
+        /// ステージのアンロック状態をチェック
+        /// </summary>
+        private bool CheckUnlockState(StageData stage)
+        {
+            if (StageManager.Instance != null)
+            {
+                return StageManager.Instance.IsStageUnlocked(stage);
+            }
+            else
+            {
+                Debug.LogError("[StageSelectManager] StageManager.Instance is NULL!");
+                return true; // フォールバック
             }
         }
 

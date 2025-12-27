@@ -7,11 +7,26 @@ namespace ApprovalMonster.Data
     [CreateAssetMenu(fileName = "NewStage", menuName = "ApprovalMonster/StageData")]
     public class StageData : ScriptableObject
     {
+        [Header("Clear Conditions")]
+        [Tooltip("このステージのクリア条件（nullの場合は無制限プレイ）")]
+        public ClearCondition clearCondition;
+        
+        [Tooltip("このステージをアンロックするために必要なステージのリスト（全てクリア必須）")]
+        [ReorderableList]
+        public List<StageData> requiredStages = new List<StageData>();
+        
         [Header("Stage Settings")]
         public string stageName;
         
-        [Tooltip("Target Impression Score to clear the stage")]
+        [Tooltip("ステージの説明文（ステージセレクト画面で表示）")]
+        [TextArea(2, 4)]
+        public string stageDescription = "がんばれ！";
+        
+        [Tooltip("ゲーム中のターン毎目標スコア（ペナルティ用、クリア条件ではない）")]
         public long quotaScore;
+        
+        [Tooltip("ゲームの最大ターン数")]
+        public int maxTurnCount = 20;
 
         [Header("Decks")]
         public List<CardData> initialDeck;
