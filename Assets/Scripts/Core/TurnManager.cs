@@ -26,6 +26,16 @@ namespace ApprovalMonster.Core
         private int turnCount;
         public int CurrentTurnCount => turnCount;
 
+        /// <summary>
+        /// ゲーム状態をリセット（再プレイ時に呼び出す）
+        /// </summary>
+        public void ResetState()
+        {
+            Debug.Log("[TurnManager] ResetState called");
+            turnCount = 0;
+            currentPhase = TurnPhase.StartStep;
+        }
+
         public void StartGame()
         {
             Debug.Log($"[TurnManager] StartGame called. StackTrace:\n{System.Environment.StackTrace}");
