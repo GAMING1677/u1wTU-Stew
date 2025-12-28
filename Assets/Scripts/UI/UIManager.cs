@@ -22,6 +22,11 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI turnText;
         [SerializeField] private TextMeshProUGUI drawPileCountText;
         [SerializeField] private TextMeshProUGUI discardPileCountText;
+        [SerializeField] private Image deckPileImage;
+        [SerializeField] private Image discardPileImage;
+
+        private int prevDeckCount = -1; // -1 to force initial set without animation if needed, or handle in setup
+        private int prevDiscardCount = -1;
 
         [Header("Gain Effects - Static")]
         [SerializeField] private GainEffectUI followerGainUI;
@@ -153,6 +158,7 @@ namespace ApprovalMonster.UI
                 gm.deckManager.OnCardDiscarded += OnCardDiscarded;
                 gm.deckManager.OnReset += OnReset;
                 gm.deckManager.OnDeckCountChanged += UpdateDeckCounts;
+                gm.deckManager.OnDeckShuffled += OnDeckShuffled;
                 
                 // Initialize quota display
                 UpdateQuotaUI(gm.resourceManager.totalImpressions, gm.currentStage.quotaScore);
@@ -211,6 +217,7 @@ namespace ApprovalMonster.UI
                  gm.deckManager.OnCardDiscarded -= OnCardDiscarded;
                  gm.deckManager.OnReset -= OnReset;
                  gm.deckManager.OnDeckCountChanged -= UpdateDeckCounts;
+                 gm.deckManager.OnDeckShuffled -= OnDeckShuffled;
                  gm.turnManager.OnTurnChanged.RemoveListener(UpdateTurnDisplay);
              }
         }
@@ -440,28 +447,73 @@ namespace ApprovalMonster.UI
                 turnText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
             }
         }
-        
-        /// <summary>
-        /// Update draw pile and discard pile count display with animation
-        /// </summary>
-        private void UpdateDeckCounts(int drawCount, int discardCount)
+
+        public void UpdateDeckCounts(int deckCount, int discardCount)
         {
-            if (drawPileCountText != null)
+            if (drawPileCountText != null) 
             {
-                drawPileCountText.text = drawCount.ToString();
-                drawPileCountText.transform.DOKill();
-                drawPileCountText.transform.localScale = Vector3.one;
-                drawPileCountText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
+                // 前回と値が違う場合のみロールアニメーション
+                if (deckCount != prevDeckCount && prevDeckCount != -1)
+                {
+                    int startVal = prevDeckCount;
+                    // 数値のロールアニメーション (2秒)
+                    DOTween.To(() => startVal, x => {
+                        startVal = x;
+                        drawPileCountText.text = startVal.ToString();
+                    }, deckCount, 2.0f).SetEase(Ease.OutQuad).OnComplete(() => {
+                        drawPileCountText.text = deckCount.ToString();
+                    });
+                }
+                else
+                {
+                    drawPileCountText.text = deckCount.ToString();
+                }
             }
             
-            if (discardPileCountText != null)
+            if (discardPileCountText != null) 
             {
-                discardPileCountText.text = discardCount.ToString();
-                discardPileCountText.transform.DOKill();
-                discardPileCountText.transform.localScale = Vector3.one;
-                discardPileCountText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f);
+                // 前回と値が違う場合のみロールアニメーション
+                if (discardCount != prevDiscardCount && prevDiscardCount != -1)
+                {
+                    int startVal = prevDiscardCount;
+                    // 数値のロールアニメーション (2秒)
+                    DOTween.To(() => startVal, x => {
+                        startVal = x;
+                        discardPileCountText.text = startVal.ToString();
+                    }, discardCount, 2.0f).SetEase(Ease.OutQuad).OnComplete(() => {
+                        discardPileCountText.text = discardCount.ToString();
+                    });
+                }
+                else
+                {
+                    discardPileCountText.text = discardCount.ToString();
+                }
+            }
+            
+            prevDeckCount = deckCount;
+            prevDiscardCount = discardCount;
+        }
+
+        private void OnDeckShuffled()
+        {
+            // リシャッフル時のパルスアニメーション (2秒間繰り返す)
+            if (deckPileImage != null)
+            {
+                deckPileImage.transform.DOKill();
+                deckPileImage.transform.localScale = Vector3.one;
+                // Vibrato=5程度で2秒間揺らす
+                deckPileImage.transform.DOPunchScale(Vector3.one * 0.3f, 2.0f, 5, 1);
+            }
+            if (discardPileImage != null)
+            {
+                discardPileImage.transform.DOKill();
+                discardPileImage.transform.localScale = Vector3.one;
+                // Vibrato=5程度で2秒間揺らす
+                discardPileImage.transform.DOPunchScale(Vector3.one * 0.3f, 2.0f, 5, 1);
             }
         }
+        
+
 
         public void UpdateQuotaUI(long currentImpression, long quota)
         {
@@ -471,13 +523,31 @@ namespace ApprovalMonster.UI
             {
                 if (remaining > 0)
                 {
-                    // 残り数値のみ表示（K/M単位）
+                    // 未達時
+                    bool isUpdate = quotaText.text != FormatNumber(remaining);
                     quotaText.text = FormatNumber(remaining);
+                    quotaText.color = Color.white;
+                    
+                    // 表示(更新)の際のアニメーション (軽く)
+                    if (isUpdate)
+                    {
+                        quotaText.transform.DOKill(complete: true);
+                        quotaText.transform.DOPunchScale(Vector3.one * 0.2f, 0.2f, 10, 1);
+                    }
                 }
                 else
                 {
-                    // 達成時は「OK」と表示（色変更なし）
-                    quotaText.text = "OK";
+                    // 完了時
+                    if (quotaText.text != "OK") // 完了になった瞬間
+                    {
+                        quotaText.text = "OK";
+                        quotaText.color = Color.white;
+                        
+                        // 完了時のアニメーション (強め)
+                        quotaText.transform.DOKill();
+                        quotaText.transform.localScale = Vector3.one;
+                        quotaText.transform.DOPunchScale(Vector3.one * 0.5f, 0.5f, 10, 1);
+                    }
                 }
             }
 
@@ -485,28 +555,66 @@ namespace ApprovalMonster.UI
             {
                 if (remaining > 0)
                 {
-                    // Calculate penalty dynamically from current turn
-                    int penalty = 5; // Default fallback
+                    // 未達時（待機中）
+                    int penalty = 5;
                     if (GameManager.Instance != null && GameManager.Instance.turnManager != null)
                     {
                         penalty = GameManager.Instance.CalculateQuotaPenalty(GameManager.Instance.turnManager.CurrentTurnCount);
                     }
                     
-                    // 数字のみ表示
-                    penaltyRiskText.text = penalty.ToString();
+                    penaltyRiskText.text = penalty.ToString(); // テキスト更新
                     
-                    // Show entire container (includes background)
                     if (penaltyRiskContainer != null)
                     {
-                        penaltyRiskContainer.SetActive(true);
+                        // 表示の際のアニメーション
+                        bool wasActive = penaltyRiskContainer.activeSelf;
+                        if (!wasActive)
+                        {
+                            penaltyRiskContainer.SetActive(true);
+                            penaltyRiskContainer.transform.DOKill();
+                            penaltyRiskContainer.transform.localScale = Vector3.one;
+                            penaltyRiskContainer.transform.DOPunchScale(Vector3.one * 0.5f, 0.3f, 10, 1);
+                        }
+                        
+                        // 待機中のループアニメーション（びよーん）
+                        // Tweenしていない場合のみ開始（表示アニメーション中は待つ挙動になるが、ループ再開される）
+                        if (!DOTween.IsTweening(penaltyRiskContainer.transform))
+                        {
+                             Sequence seq = DOTween.Sequence();
+                             seq.Append(penaltyRiskContainer.transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 5, 0.5f)); // 弱めのびよーん
+                             seq.AppendInterval(2.0f); // 間隔（少し長めに）
+                             seq.SetLoops(-1, LoopType.Restart); // ループ
+                             seq.SetTarget(penaltyRiskContainer.transform);
+                        }
                     }
                 }
                 else
                 {
-                    // Hide entire container (includes background)
-                    if (penaltyRiskContainer != null)
+                    // 完了時
+                    if (penaltyRiskContainer != null && penaltyRiskContainer.activeSelf)
                     {
-                        penaltyRiskContainer.SetActive(false);
+                        // 完了になった瞬間（まだアクティブな場合）
+                        
+                        // テキストを空に（見栄えのため）
+                        if (penaltyRiskText != null) penaltyRiskText.text = "";
+                        
+                        // ループ停止
+                        penaltyRiskContainer.transform.DOKill();
+                        
+                        // 完了アニメーション後に非表示
+                        // パンチしてから消える演出
+                        // 1. スケールを1にリセット（DOKill直後なので）
+                        penaltyRiskContainer.transform.localScale = Vector3.one;
+                        
+                        // 2. パンチ演出 → 縮小して消滅
+                        Sequence seq = DOTween.Sequence();
+                        seq.Append(penaltyRiskContainer.transform.DOPunchScale(Vector3.one * 0.5f, 0.3f, 10, 1)); // パンチ
+                        seq.Append(penaltyRiskContainer.transform.DOScale(Vector3.zero, 0.2f).SetEase(Ease.InBack)); // 縮小
+                        seq.OnComplete(() => {
+                            if (penaltyRiskContainer != null)
+                                penaltyRiskContainer.SetActive(false); // オブジェクトごと非表示
+                        });
+                        seq.SetTarget(penaltyRiskContainer.transform); // DOKill用
                     }
                 }
             }
@@ -523,6 +631,9 @@ namespace ApprovalMonster.UI
                 view.SetContent(text, impressionCount);
             }
             
+            // 投稿SE再生
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.TimelinePost);
+            
             // Add to top
             postObj.transform.SetAsFirstSibling();
 
@@ -536,7 +647,7 @@ namespace ApprovalMonster.UI
         
         private void OnEndTurnButtonClicked()
         {
-            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
+            // SE removed per user request (other buttons still have SE)
             Debug.Log("[UIManager] End Turn button clicked.");
             var gm = GameManager.Instance;
             if (gm != null && gm.turnManager != null)

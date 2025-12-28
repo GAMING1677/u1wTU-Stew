@@ -56,6 +56,14 @@ namespace ApprovalMonster.Core
         public void GoToStageSelect()
         {
             Debug.Log("[SceneNavigator] GoToStageSelect called.");
+            
+            // ステージセレクト画面に戻る際、メインテーマBGMに切り替え（モンスターモード後のリセット）
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayMainTheme();
+                Debug.Log("[SceneNavigator] Restored main theme BGM when going to stage select");
+            }
+            
             StartCoroutine(TransitionRoutine(stageSelectPanel));
         }
 
