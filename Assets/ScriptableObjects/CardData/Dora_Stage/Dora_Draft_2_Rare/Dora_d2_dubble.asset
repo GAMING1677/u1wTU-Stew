@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Dora_d2_dubble
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u5F71\u5206\u8EAB\u306E\u8853"
-  cardImage: {fileID: 0}
+  cardName: "\u81EA\u4F5C\u81EA\u6F14"
+  cardImage: {fileID: 4479249569757203455, guid: 440a00307dfd30744a8dabcb5c51fb76, type: 3}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C2\u4E07\u4EBA\u5897\u3048\u308B\n\u30A4\u30F3\u30D720\uFF05\u7372\u5F97"
+  cardTag: 
   flavorText: 
   postComments:
   - "\u307F\u3093\u306A\u3001\u5473\u65B9\u3057\u3066\u304F\u308C\u3066\u3042\u308A\u304C\u3068"
@@ -41,3 +42,7 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  flamingSeedCount: 0
+  flamingRate: 0
+  seedToFollowerMultiplier: 0
+  healMentalBySeeds: 0

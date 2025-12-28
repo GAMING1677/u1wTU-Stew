@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Start_follower
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u8AB0\u304B\u3092\u3044\u3044\u306D"
-  cardImage: {fileID: 0}
+  cardImage: {fileID: -1273069585551227448, guid: a3e38caad198fd04d9cb93b95147437c, type: 3}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC100\u4EBA\u5897"
   cardTag: 
   flavorText: "\u3044\u3044\u306D\uFF01\u826F\u304F\u5206\u304B\u3093\u306A\u3044\u3051\u3069\uFF01"
@@ -51,3 +51,7 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  flamingSeedCount: 0
+  flamingRate: 0
+  seedToFollowerMultiplier: 0
+  healMentalBySeeds: 0

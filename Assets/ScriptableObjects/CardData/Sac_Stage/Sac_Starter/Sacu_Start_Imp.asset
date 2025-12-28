@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sacu_Start_Imp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u304A\u306F\u3088\u3046"
-  cardImage: {fileID: 0}
+  cardImage: {fileID: 8197717262057524853, guid: 6be99caa1a50447468bda40f49639a0d, type: 3}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC\xD710%\u30A4\u30F3\u30D7\u3092\u5F97\u308B"
   cardTag: 
   flavorText: "\u6328\u62F6\u306F\u5927\u5207\u306B"
@@ -53,3 +53,7 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  flamingSeedCount: 0
+  flamingRate: 0
+  seedToFollowerMultiplier: 0
+  healMentalBySeeds: 0

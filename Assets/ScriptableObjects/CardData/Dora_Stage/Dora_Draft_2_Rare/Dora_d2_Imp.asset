@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dora_d2_Imp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u932C\u91D1\u8853"
-  cardImage: {fileID: 0}
+  cardImage: {fileID: 5128498613293078906, guid: 020495ecb042a7b4f916eff499cff38f, type: 3}
   description: "\u30A4\u30F3\u30D740%\u3092\u7372\u5F97"
   cardTag: 
   flavorText: "\u91D1\u306F\u5929\u4E0B\u306E\u56DE\u308A\u7269"
@@ -42,3 +42,7 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  flamingSeedCount: 0
+  flamingRate: 0
+  seedToFollowerMultiplier: 0
+  healMentalBySeeds: 0
