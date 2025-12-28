@@ -68,6 +68,7 @@ namespace ApprovalMonster.UI
         
         [Header("Settings")]
         [SerializeField] private Button settingsButton;
+        [SerializeField] private SoundSettingsUI soundSettingsUI;
 
         [Header("Cut-In")]
         [SerializeField] private CutInUI cutInUI;
@@ -210,7 +211,14 @@ namespace ApprovalMonster.UI
         
         private void OnSettingsButtonClicked()
         {
-            AudioManager.Instance?.ShowSettingsPanel();
+            if (soundSettingsUI != null)
+            {
+                soundSettingsUI.Show();
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] SoundSettingsUI is not assigned!");
+            }
         }
 
         private void OnDisable()

@@ -25,15 +25,6 @@ namespace ApprovalMonster.Core
         [SerializeField] private float defaultBGMVolume = 0.25f;
         [SerializeField] private float defaultSEVolume = 0.25f;
         
-        [Header("Settings Panel UI")]
-        [SerializeField] private GameObject settingsPanel;
-        [SerializeField] private CanvasGroup settingsPanelCanvasGroup;
-        [SerializeField] private Slider masterSlider;
-        [SerializeField] private Slider bgmSlider;
-        [SerializeField] private Slider seSlider;
-        [SerializeField] private Button closeButton;
-        [SerializeField] private float panelFadeDuration = 0.3f;
-        
         private float masterVolume;
         private float bgmVolume;
         private float seVolume;
@@ -68,24 +59,7 @@ namespace ApprovalMonster.Core
             // Preload all audio clips to prevent lag on first play
             PreloadAudioClips();
             
-            // Setup settings panel UI
-            InitializeSettingsPanel();
-            
             Debug.Log($"[AudioManager] Initialized. Master: {masterVolume}, BGM: {bgmVolume}, SE: {seVolume}");
-        }
-        
-        private void InitializeSettingsPanel()
-        {
-            // Register slider listeners
-            if (masterSlider != null) masterSlider.onValueChanged.AddListener(SetMasterVolume);
-            if (bgmSlider != null) bgmSlider.onValueChanged.AddListener(SetBGMVolume);
-            if (seSlider != null) seSlider.onValueChanged.AddListener(SetSEVolume);
-            
-            // Register close button
-            if (closeButton != null) closeButton.onClick.AddListener(HideSettingsPanel);
-            
-            // Ensure panel is hidden on start
-            if (settingsPanel != null) settingsPanel.SetActive(false);
         }
         
         // ... (省略: PlayBGM, PlaySE等は変更なし) ...
@@ -118,9 +92,6 @@ namespace ApprovalMonster.Core
             seVolume = Mathf.Clamp01(volume);
             ApplyVolumes();
             SaveVolumes();
-            
-            // テスト再生（音量確認用）
-            PlaySE(SEType.ButtonClick);
         }
         
         public float GetMasterVolume() => masterVolume;
@@ -129,10 +100,11 @@ namespace ApprovalMonster.Core
         
         private void ApplyVolumes()
         {
-            // 対数カーブを適用（2乗）して体感的な音量変化を改善
-            float effectiveMaster = masterVolume * masterVolume;
-            float effectiveBGM = bgmVolume * bgmVolume;
-            float effectiveSE = seVolume * seVolume;
+            // 対数カーブを適用（3乗）して体感的な音量変化を改善
+            // 低い値でより細かい調整が可能になる
+            float effectiveMaster = masterVolume * masterVolume * masterVolume;
+            float effectiveBGM = bgmVolume * bgmVolume * bgmVolume;
+            float effectiveSE = seVolume * seVolume * seVolume;
             
             if (bgmSource != null)
             {
@@ -291,81 +263,6 @@ namespace ApprovalMonster.Core
             ES3.Save(KEY_BGM_VOLUME, bgmVolume);
             ES3.Save(KEY_SE_VOLUME, seVolume);
         }
-        
-        /// <summary>
-        /// 設定パネルを表示
-        /// </summary>
-        public void ShowSettingsPanel()
-        {
-            if (settingsPanel == null) return;
-            
-            settingsPanel.SetActive(true);
-            
-            // スライダーのリスナーを再登録（重複防止のため一度削除してから追加）
-            if (masterSlider != null)
-            {
-                masterSlider.onValueChanged.RemoveListener(SetMasterVolume);
-                masterSlider.onValueChanged.AddListener(SetMasterVolume);
-                masterSlider.value = masterVolume;
-            }
-            if (bgmSlider != null)
-            {
-                bgmSlider.onValueChanged.RemoveListener(SetBGMVolume);
-                bgmSlider.onValueChanged.AddListener(SetBGMVolume);
-                bgmSlider.value = bgmVolume;
-            }
-            if (seSlider != null)
-            {
-                seSlider.onValueChanged.RemoveListener(SetSEVolume);
-                seSlider.onValueChanged.AddListener(SetSEVolume);
-                seSlider.value = seVolume;
-            }
-            
-            // 閉じるボタンのリスナーも再登録
-            if (closeButton != null)
-            {
-                closeButton.onClick.RemoveListener(HideSettingsPanel);
-                closeButton.onClick.AddListener(HideSettingsPanel);
-            }
-            
-            // フェードイン
-            if (settingsPanelCanvasGroup != null)
-            {
-                settingsPanelCanvasGroup.alpha = 0f;
-                settingsPanelCanvasGroup.blocksRaycasts = false;
-                settingsPanelCanvasGroup.DOKill();
-                settingsPanelCanvasGroup.DOFade(1f, panelFadeDuration).OnComplete(() => {
-                    settingsPanelCanvasGroup.blocksRaycasts = true;
-                });
-            }
-            
-            // SE再生
-            PlaySE(SEType.ButtonClick);
-        }
-        
-        /// <summary>
-        /// 設定パネルを非表示
-        /// </summary>
-        public void HideSettingsPanel()
-        {
-            if (settingsPanel == null) return;
-            
-            // フェードアウト
-            if (settingsPanelCanvasGroup != null)
-            {
-                settingsPanelCanvasGroup.blocksRaycasts = false;
-                settingsPanelCanvasGroup.DOKill();
-                settingsPanelCanvasGroup.DOFade(0f, panelFadeDuration).OnComplete(() => {
-                    settingsPanel.SetActive(false);
-                });
-            }
-            else
-            {
-                settingsPanel.SetActive(false);
-            }
-            
-            // SE再生
-            PlaySE(SEType.ButtonClick);
-        }
     }
 }
+
