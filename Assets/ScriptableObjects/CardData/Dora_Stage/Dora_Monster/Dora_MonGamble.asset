@@ -10,17 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
-  m_Name: Sac_MonScore
+  m_Name: Dora_MonGamble
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u8056\u306A\u308B\u9A0E\u58EB"
+  cardName: "\u708E\u306E\u821E"
   cardImage: {fileID: 0}
-  description: "\u624B\u672D\u306E\u30B4\u30D6\u30EA\u30F3\u306E\u6570\xD7500\u4E07\u4EBA\u30D5\u30A9\u30ED\u30EF\u30FC\u5897\n1\u679A\u30C9\u30ED\u30FC\u3059\u308B\n\u30A4\u30F3\u30D71\uFF05\u7372\u5F97"
+  description: "\u708E\u4E0A\u738750%\n\u708E\u4E0A\u3057\u306A\u3051\u308C\u3070\u706B\u7A2E\xD7600%\u306E\u30A4\u30F3\u30D7\u3092\u7372\u5F97\u3057\u3001\u706B\u7A2E\u30920\u500B\u306B\u3059\u308B\n1\u679A\u30C9\u30ED\u30FC\u3059\u308B"
   cardTag: "\u4E0A\u7D1A\u8005\u5411\u3051"
-  flavorText: "\u624B\u4E0B\u306F\u591A\u3044\u65B9\u304C\u826F\u3044"
+  flavorText: 
   postComments:
-  - "\u307F\u3093\u306A\u3044\u3064\u3082\u3042\u308A\u304C\u3068"
-  - "\u30D5\u30A9\u30ED\u30FC\u306E\u307F\u3093\u306A\u3068\u51FA\u4F1A\u3048\u3066\u3088\u304B\u3063\u305F"
-  - "\u672C\u5F53\u306B\u5927\u4E08\u592B\uFF1F\u7121\u7406\u3057\u306A\u304F\u3066\u3044\u3044\u3088\uFF1F"
+  - "\u821E\u3046\u305C"
   motivationCost: 0
   mentalCost: 0
   followerGain: 0
@@ -29,7 +27,7 @@ MonoBehaviour:
   motivationRecovery: 0
   turnDrawBonus: 0
   maxMotivationBonus: 0
-  impressionRate: 0.01
+  impressionRate: 0
   isTurnImpressionEffect: 0
   cardType: 2
   isExhaust: 0
@@ -38,13 +36,13 @@ MonoBehaviour:
   riskProbability: 1
   riskValue: 0
   generatedCards: []
-  handEffectTargetCard: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
+  handEffectTargetCard: {fileID: 0}
   exhaustAllTargetCards: 0
   handCountImpressionRate: 0
   drawByHandCount: 0
-  handCountFollowerRate: 5000000
-  handEffectMinCount: 1
+  handCountFollowerRate: 0
+  handEffectMinCount: 0
   flamingSeedCount: 0
-  flamingRate: 0
-  seedToFollowerMultiplier: 0
+  flamingRate: 0.5
+  seedToFollowerMultiplier: 6
   healMentalBySeeds: 0

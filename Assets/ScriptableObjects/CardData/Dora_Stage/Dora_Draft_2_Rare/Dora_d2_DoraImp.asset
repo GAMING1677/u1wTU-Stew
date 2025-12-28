@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
-  m_Name: Sacu_d2_drrow
+  m_Name: Dora_d2_DoraImp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u307B\u3063\u3053\u308A\u30CB\u30E5\u30FC\u30B9"
+  cardName: "\u5C0E\u304D\u306E\u5973\u795E"
   cardImage: {fileID: 0}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC4\u4E07\u4EBA\u6E1B\n3\u679A\u30C9\u30ED\u30FC\u3059\u308B\n\u6368\u672D\u306B\u30B4\u30D6\u30EA\u30F3\u30921\u679A\u52A0\u3048\u308B"
+  description: "\u30A4\u30F3\u30D7\u7387120%\n\u706B\u7A2E\uFF0B6\n\u708E\u4E0A\u738730%"
   cardTag: 
-  flavorText: "\u675F\u306E\u9593\u306E\u5E73\u548C"
+  flavorText: "\u81EA\u7531\u3068\u306F\u3053\u3046\u3044\u3046\u3053\u3068\u3060"
   postComments:
-  - "\u512A\u3057\u3044\u6C17\u6301\u3061\u306B\u306A\u3063\u305F"
+  - "\u672C\u5F53\u306B\u8A31\u305B\u306A\u3044\u3002\u307F\u3093\u306A\u3082\u4E0D\u8CB7\u6D3B\u52D5\u306B\u5354\u529B\u3057\u3066\u307B\u3057\u3044\u3002"
   motivationCost: 1
-  mentalCost: 8
-  followerGain: -40000
+  mentalCost: 2
+  followerGain: 0
   isTurnMultiplierEffect: 0
-  drawCount: 3
+  drawCount: 0
   motivationRecovery: 0
   turnDrawBonus: 0
   maxMotivationBonus: 0
-  impressionRate: 0
+  impressionRate: 1.2
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
@@ -35,16 +35,14 @@ MonoBehaviour:
   riskType: 0
   riskProbability: 1
   riskValue: 0
-  generatedCards:
-  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
-    destination: 0
+  generatedCards: []
   handEffectTargetCard: {fileID: 0}
   exhaustAllTargetCards: 0
   handCountImpressionRate: 0
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
-  flamingSeedCount: 0
-  flamingRate: 0
+  flamingSeedCount: 6
+  flamingRate: 0.3
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0

@@ -481,6 +481,9 @@ namespace ApprovalMonster.Core
             turnStartMental = resourceManager.currentMental; // Record start mental
             currentTurnQuota = CalculateTurnQuota();
             UpdateQuotaDisplay();
+            
+            // Reset flaming state for new turn (seeds persist)
+            resourceManager.ResetFlamingTurn();
         }
 
         private void OnTurnEnd()
@@ -502,16 +505,20 @@ namespace ApprovalMonster.Core
             
             bool quotaMet = impGained >= currentTurnQuota;
             
-            if (!quotaMet)
+            // ========== Penalty + Flaming Damage ==========
+            int penalty = quotaMet ? 0 : CalculateQuotaPenalty(turnManager.CurrentTurnCount);
+            int flamingDamage = resourceManager.ConsumeFlamingLevel();
+            int totalDamage = penalty + flamingDamage;
+            
+            if (totalDamage > 0)
             {
-                int penalty = CalculateQuotaPenalty(turnManager.CurrentTurnCount);
-                Debug.Log($"[GameManager] Quota Failed! Turn {turnManager.CurrentTurnCount}, Penalty: {penalty} Mental Damage");
+                Debug.Log($"[GameManager] Turn End Damage: penalty={penalty}, flaming={flamingDamage}, total={totalDamage}");
                 
                 // Check mental before damage
                 int mentalBefore = resourceManager.currentMental;
                 int threshold = gameSettings != null ? gameSettings.monsterThreshold : 90;
                 
-                resourceManager.DamageMental(penalty);
+                resourceManager.DamageMental(totalDamage);
                 
                 // Check if monster mode was just triggered
                 if (mentalBefore > threshold && 
@@ -532,9 +539,14 @@ namespace ApprovalMonster.Core
                 // Update mental change after penalty
                 mentalChange = resourceManager.currentMental - turnStartMental;
             }
-            else
+            
+            if (quotaMet)
             {
                 Debug.Log("[GameManager] Quota Met!");
+            }
+            else
+            {
+                Debug.Log($"[GameManager] Quota Failed! Penalty: {penalty}");
             }
             
             // Record turn statistics for debug (use ended turn number, not next turn)
@@ -746,6 +758,75 @@ namespace ApprovalMonster.Core
                 
                 return;
             }
+
+            // ========== Flaming System ==========
+            bool flamingTriggeredThisCard = false;
+            
+            // 1. 特殊カード①: 種×インプ率でインプレッション獲得、種消費
+            if (card.seedToFollowerMultiplier > 0 && !card.healMentalBySeeds)
+            {
+                int seeds = resourceManager.flamingSeeds;
+                if (seeds > 0)
+                {
+                    // ②パターン: 炎上率がある場合はギャンブル
+                    if (card.flamingRate > 0 && !resourceManager.isOnFire)
+                    {
+                        if (Random.value <= card.flamingRate)
+                        {
+                            // 炎上発動 → スコアなし、種消費して炎上度へ
+                            resourceManager.TryTriggerFlaming(1.0f);
+                            flamingTriggeredThisCard = true;
+                            Debug.Log("[GameManager] Gamble card: FLAMING TRIGGERED! No score.");
+                        }
+                        else
+                        {
+                            // 成功 → インプレッション獲得（フォロワー×種×倍率）、種維持
+                            float impRate = seeds * card.seedToFollowerMultiplier;
+                            long impGained = resourceManager.AddImpression(impRate);
+                            Debug.Log($"[GameManager] Gamble card: SUCCESS! {seeds} seeds × {card.seedToFollowerMultiplier} rate = {impGained} impressions");
+                        }
+                    }
+                    else
+                    {
+                        // ①パターン: 確実にインプレッション獲得、種消費
+                        float impRate = seeds * card.seedToFollowerMultiplier;
+                        long impGained = resourceManager.AddImpression(impRate);
+                        resourceManager.flamingSeeds = 0;
+                        resourceManager.onFlamingChanged?.Invoke(0, resourceManager.flamingLevel, resourceManager.isOnFire);
+                        Debug.Log($"[GameManager] Seed to Impression: {seeds} seeds × {card.seedToFollowerMultiplier} rate = {impGained} impressions, seeds consumed");
+                    }
+                }
+            }
+            // 2. 特殊カード③: 種でメンタル回復（種の1/2、切り上げ）
+            else if (card.healMentalBySeeds)
+            {
+                int seeds = resourceManager.flamingSeeds;
+                if (seeds > 0)
+                {
+                    int healAmount = Mathf.CeilToInt(seeds / 2f);
+                    resourceManager.HealMental(healAmount);
+                    resourceManager.flamingSeeds = 0;
+                    resourceManager.onFlamingChanged?.Invoke(0, resourceManager.flamingLevel, resourceManager.isOnFire);
+                    Debug.Log($"[GameManager] Heal by seeds: {seeds} seeds → {healAmount} mental healed, seeds consumed");
+                }
+            }
+            // 3. 通常の炎上処理（種加算）
+            else if (card.flamingSeedCount > 0)
+            {
+                resourceManager.AddFlamingSeeds(card.flamingSeedCount);
+                
+                // 炎上率判定（炎上中でなければ）
+                if (card.flamingRate > 0 && !resourceManager.isOnFire)
+                {
+                    if (resourceManager.TryTriggerFlaming(card.flamingRate))
+                    {
+                        flamingTriggeredThisCard = true;
+                        // TODO: 炎上カットイン表示
+                        FindObjectOfType<UI.UIManager>()?.ShowCutIn("炎上！", $"ターン終了時に {resourceManager.flamingLevel} ダメージ");
+                    }
+                }
+            }
+            // ========== Flaming System End ==========
 
             // Mental cost (positive = hurt)
             if (card.mentalCost > 0)

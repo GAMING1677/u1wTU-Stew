@@ -114,6 +114,23 @@ namespace ApprovalMonster.Data
         [Tooltip("②③④の最低必要枚数（コスト）")]
         public int handEffectMinCount = 1;
 
+        [BoxGroup("Flaming")]
+        [Tooltip("炎上の種の個数（プレイ時に加算）")]
+        public int flamingSeedCount = 0;
+
+        [BoxGroup("Flaming")]
+        [Tooltip("炎上率（0～1）。0=抽選しない")]
+        [Range(0f, 1f)]
+        public float flamingRate = 0f;
+
+        [BoxGroup("Flaming Special")]
+        [Tooltip("種×この値でフォロワー獲得（0=使用しない）")]
+        public int seedToFollowerMultiplier = 0;
+
+        [BoxGroup("Flaming Special")]
+        [Tooltip("種でメンタル回復、種消費")]
+        public bool healMentalBySeeds = false;
+
         public bool HasRisk() => cardType == CardType.Risk || riskType != RiskType.None;
     }
 
