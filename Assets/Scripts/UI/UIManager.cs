@@ -836,6 +836,22 @@ namespace ApprovalMonster.UI
         }
         
         /// <summary>
+        /// モチベーション不足カットインを表示（プリセット対応）
+        /// </summary>
+        public void ShowMotivationLowCutIn(System.Action onComplete = null)
+        {
+            if (cutInUI != null)
+            {
+                cutInUI.ShowMotivationLow(onComplete);
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] CutInUI is not assigned! Proceeding directly.");
+                onComplete?.Invoke();
+            }
+        }
+        
+        /// <summary>
         /// 汎用カットインを表示
         /// </summary>
         public void ShowCutIn(string title, string message, System.Action onComplete = null)
@@ -843,6 +859,29 @@ namespace ApprovalMonster.UI
             if (cutInUI != null)
             {
                 cutInUI.Show(title, message, onComplete);
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] CutInUI is not assigned!");
+                onComplete?.Invoke();
+            }
+        }
+        
+        /// <summary>
+        /// プリセットを使用してカットインを表示
+        /// </summary>
+        public void ShowCutInPreset(CutInPreset preset, System.Action onComplete = null)
+        {
+            if (preset == null)
+            {
+                Debug.LogWarning("[UIManager] CutInPreset is null!");
+                onComplete?.Invoke();
+                return;
+            }
+            
+            if (cutInUI != null)
+            {
+                cutInUI.ShowPreset(preset, onComplete);
             }
             else
             {

@@ -18,17 +18,12 @@ namespace ApprovalMonster.Data
         [Header("Stage Settings")]
         public string stageName;
         
-        [Tooltip("ステージの説明文（ステージセレクト画面で表示）")]
-        [TextArea(2, 4)]
-        public string stageDescription = "がんばれ！";
+        [Header("Cut-in Presets")]
+        [Tooltip("ステージ開始時のカットインプリセット")]
+        public CutInPreset stageStartPreset;
         
-        [Header("Stage Start Cut-in")]
-        [Tooltip("ゲーム開始時に表示するカットインのタイトル")]
-        public string startCutInTitle = "STAGE START";
-        
-        [Tooltip("ゲーム開始時に表示するカットインのメッセージ")]
-        [TextArea(2, 4)]
-        public string startCutInMessage = "";
+        [Tooltip("モチベーション不足時のカットインプリセット")]
+        public CutInPreset motivationLowPreset;
         
         [Tooltip("ゲーム中のターン毎目標スコア（ペナルティ用、クリア条件ではない）")]
         public long quotaScore;

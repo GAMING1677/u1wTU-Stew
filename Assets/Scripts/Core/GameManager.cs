@@ -166,32 +166,30 @@ namespace ApprovalMonster.Core
         /// </summary>
         private void ShowStageStartCutIn()
         {
-            // ステージにカットインタイトルが設定されているか確認
-            if (currentStage != null && !string.IsNullOrEmpty(currentStage.startCutInTitle))
+            var uiManager = FindObjectOfType<UI.UIManager>();
+            if (uiManager == null)
             {
-                var uiManager = FindObjectOfType<UI.UIManager>();
-                if (uiManager != null)
+                Debug.LogWarning("[GameManager] UIManager not found, starting game directly");
+                turnManager.StartGame();
+                return;
+            }
+            
+            // ステージ開始SEを再生
+            AudioManager.Instance?.PlaySE(Data.SEType.StageStart);
+            
+            // プリセットが設定されている場合はプリセットを使用
+            if (currentStage?.stageStartPreset != null)
+            {
+                Debug.Log($"[GameManager] Showing stage start cut-in with preset");
+                uiManager.ShowCutInPreset(currentStage.stageStartPreset, () =>
                 {
-                    Debug.Log($"[GameManager] Showing stage start cut-in: {currentStage.startCutInTitle}");
-                    
-                    // ステージ開始SEを再生
-                    AudioManager.Instance?.PlaySE(Data.SEType.StageStart);
-                    
-                    uiManager.ShowCutIn(currentStage.startCutInTitle, currentStage.startCutInMessage, () =>
-                    {
-                        Debug.Log("[GameManager] Stage start cut-in dismissed, starting game");
-                        turnManager.StartGame();
-                    });
-                }
-                else
-                {
-                    Debug.LogWarning("[GameManager] UIManager not found, starting game directly");
+                    Debug.Log("[GameManager] Stage start cut-in dismissed, starting game");
                     turnManager.StartGame();
-                }
+                });
             }
             else
             {
-                // カットインが設定されていない場合は直接開始
+                // プリセットが設定されていない場合は直接開始
                 Debug.Log("[GameManager] No stage start cut-in configured, starting game directly");
                 turnManager.StartGame();
             }
@@ -718,7 +716,8 @@ namespace ApprovalMonster.Core
                     // やる気不足SE再生
                     AudioManager.Instance?.PlaySE(Data.SEType.MotivationLow);
                     
-                    uiManager.ShowCutIn("やる気が足りない", "なんか面倒だからいいや…");
+                    // モチベ不足カットインを表示
+                    uiManager.ShowMotivationLowCutIn();
                 }
                 
                 return;

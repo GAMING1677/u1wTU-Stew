@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using ApprovalMonster.Core;
 using DG.Tweening;
+using System.Collections;
 
 namespace ApprovalMonster.UI
 {
@@ -12,21 +13,44 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private TextMeshProUGUI resultLabel;
         [SerializeField] private Button titleButton;
+        
+        [Header("Background")]
+        [SerializeField] private Image backgroundImage;
+        [SerializeField] private Sprite clearBackground;
+        [SerializeField] private Sprite failBackground;
+        
+        [Header("Toggle Animation")]
+        [SerializeField] private GameObject animatedObject1;
+        [SerializeField] private GameObject animatedObject2;
+        [SerializeField] private float toggleInterval = 0.5f;
+        
+        private Coroutine animationCoroutine;
 
         private void OnEnable()
         {
             Debug.Log("[ResultManager] OnEnable called");
             
             long score = 0;
+            bool wasCleared = false;
+            bool isScoreAttackMode = false;
+            
             if (SceneNavigator.Instance != null)
             {
                 score = SceneNavigator.Instance.LastGameScore;
-                Debug.Log($"[ResultManager] Score from SceneNavigator: {score}");
+                wasCleared = SceneNavigator.Instance.WasStageCleared;
+                isScoreAttackMode = SceneNavigator.Instance.IsScoreAttackMode;
+                Debug.Log($"[ResultManager] Score: {score}, Cleared: {wasCleared}, ScoreAttack: {isScoreAttackMode}");
             }
             else
             {
                 Debug.LogWarning("[ResultManager] SceneNavigator.Instance is null!");
             }
+            
+            // 背景切り替え（スコアアタックはクリア扱い）
+            SetupBackground(wasCleared || isScoreAttackMode);
+            
+            // スプライトアニメーション開始
+            StartSpriteAnimation();
 
             if (scoreText != null)
             {
@@ -66,15 +90,6 @@ namespace ApprovalMonster.UI
             // クリア状態を表示
             if (resultLabel != null)
             {
-                bool wasCleared = false;
-                bool isScoreAttackMode = false;
-                
-                if (SceneNavigator.Instance != null)
-                {
-                    wasCleared = SceneNavigator.Instance.WasStageCleared;
-                    isScoreAttackMode = SceneNavigator.Instance.IsScoreAttackMode;
-                }
-                
                 // スコアアタックモードの場合は非表示
                 if (isScoreAttackMode)
                 {
@@ -108,6 +123,71 @@ namespace ApprovalMonster.UI
                 titleButton.onClick.AddListener(OnReturnToTitle);
             }
         }
+        
+        private void OnDisable()
+        {
+            StopSpriteAnimation();
+        }
+        
+        private void SetupBackground(bool isClear)
+        {
+            if (backgroundImage == null) return;
+            
+            if (isClear && clearBackground != null)
+            {
+                backgroundImage.sprite = clearBackground;
+            }
+            else if (!isClear && failBackground != null)
+            {
+                backgroundImage.sprite = failBackground;
+            }
+            
+            // 右から左へスライドインアニメーション
+            RectTransform rt = backgroundImage.GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                float screenWidth = rt.rect.width;
+                Vector2 startPos = rt.anchoredPosition;
+                startPos.x += screenWidth; // 右側に配置
+                rt.anchoredPosition = startPos;
+                
+                // 元の位置（0, y）にスライドイン
+                rt.DOAnchorPosX(0, 0.5f).SetEase(Ease.OutQuad);
+            }
+        }
+        
+        private void StartSpriteAnimation()
+        {
+            if (animatedObject1 == null || animatedObject2 == null)
+                return;
+            
+            // 初期状態：1を表示、2を非表示
+            animatedObject1.SetActive(true);
+            animatedObject2.SetActive(false);
+            
+            animationCoroutine = StartCoroutine(ToggleAnimationCoroutine());
+        }
+        
+        private void StopSpriteAnimation()
+        {
+            if (animationCoroutine != null)
+            {
+                StopCoroutine(animationCoroutine);
+                animationCoroutine = null;
+            }
+        }
+        
+        private IEnumerator ToggleAnimationCoroutine()
+        {
+            bool showFirst = true;
+            while (true)
+            {
+                yield return new WaitForSeconds(toggleInterval);
+                showFirst = !showFirst;
+                animatedObject1.SetActive(showFirst);
+                animatedObject2.SetActive(!showFirst);
+            }
+        }
 
         private void OnReturnToTitle()
         {
@@ -116,3 +196,4 @@ namespace ApprovalMonster.UI
         }
     }
 }
+

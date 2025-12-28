@@ -18,9 +18,8 @@ MonoBehaviour:
   requiredStages:
   - {fileID: 11400000, guid: e0bae4ee32cbc61499ca747ad8cb5cba, type: 2}
   stageName: "\u30B5\u30AD\u30E5\u30D0\u30B9_Lv1"
-  stageDescription: "100\u4E07\u30A4\u30F3\u30D7\u7A3C\u3054\u3046\uFF01"
-  startCutInTitle: "100\u4E07\u30A4\u30F3\u30D7\u7A3C\u3054\u3046\uFF01"
-  startCutInMessage: "\u30E1\u30F3\u30BF\u30EB\u304C50%\u4EE5\u4E0B\u306B\u306A\u308B\u3068\u2026\uFF01\uFF1F"
+  stageStartPreset: {fileID: 11400000, guid: 758285aff1f19ab47bafc141d93ae994, type: 2}
+  motivationLowPreset: {fileID: 0}
   quotaScore: 100
   maxTurnCount: 15
   initialDeck:

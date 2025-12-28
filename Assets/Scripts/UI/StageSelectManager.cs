@@ -93,10 +93,10 @@ namespace ApprovalMonster.UI
                 bool isUnlocked = CheckUnlockState(stageButton.stage);
                 stageButton.button.interactable = isUnlocked;
                 
-                // 説明文を設定
+                // 説明文はStageDataから削除されたため、空にするか非表示にする
                 if (stageButton.descriptionText != null)
                 {
-                    stageButton.descriptionText.text = stageButton.stage.stageDescription;
+                    stageButton.descriptionText.gameObject.SetActive(false);
                 }
 
                 // クリック時の処理を設定（クロージャ対策）

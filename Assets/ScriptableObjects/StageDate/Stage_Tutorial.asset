@@ -17,9 +17,8 @@ MonoBehaviour:
     targetScore: 500
   requiredStages: []
   stageName: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB"
-  stageDescription: "500\u30A4\u30F3\u30D7\u7A3C\u3054\u3046\uFF01"
-  startCutInTitle: "500\u30A4\u30F3\u30D7\u7A3C\u3054\u3046\uFF01"
-  startCutInMessage: 
+  stageStartPreset: {fileID: 11400000, guid: 6f3d08548f609914f84bca208d388a7f, type: 2}
+  motivationLowPreset: {fileID: 0}
   quotaScore: 100
   maxTurnCount: 10
   initialDeck:

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63dac9d5f79086b418366c7cf7222e42, type: 3}
-  m_Name: CutIn_GameOver
+  m_Name: CutIn_StartTutorial
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CutInPreset
-  title: 
-  message: "\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC"
+  title: "500\u30A4\u30F3\u30D7\u7A3C\u3054\u3046\uFF01"
+  message: 
   backgroundImage: {fileID: 0}
   backgroundColor: {r: 0, g: 0, b: 0, a: 0.8}
   showIcon: 0
-  iconImage: {fileID: 31222901589935591, guid: 3d35c26e896566348bdaae99f67dec18, type: 3}
+  iconImage: {fileID: -7921258117536197226, guid: 3275a90004fca6f498d64f05f9d561a5, type: 3}
   titleColor: {r: 1, g: 1, b: 1, a: 1}
   messageColor: {r: 1, g: 1, b: 1, a: 1}
   fadeInDuration: 0.3

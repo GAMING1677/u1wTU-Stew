@@ -38,6 +38,8 @@ namespace ApprovalMonster.UI
         [SerializeField] private CutInPreset stageClearPreset;
         [Tooltip("モンスターモード用プリセット")]
         [SerializeField] private CutInPreset monsterModePreset;
+        [Tooltip("モチベーション不足用プリセット")]
+        [SerializeField] private CutInPreset motivationLowPreset;
         
         private Action onClickCallback;
         private bool isShowing = false;
@@ -142,14 +144,41 @@ namespace ApprovalMonster.UI
         }
         
         /// <summary>
+        /// モチベーション不足用プリセットで表示
+        /// </summary>
+        public void ShowMotivationLow(Action onComplete = null)
+        {
+            if (motivationLowPreset != null)
+            {
+                ShowPreset(motivationLowPreset, onComplete);
+            }
+            else
+            {
+                Show("やる気が足りない", "なんか面倒だからいいや…", onComplete);
+            }
+        }
+        
+        /// <summary>
         /// カットインを表示（テキスト指定）
         /// </summary>
         public void Show(string title, string message = "", Action onComplete = null)
         {
-            if (isShowing) return;
+            if (titleText != null)
+            {
+                titleText.text = title;
+                titleText.gameObject.SetActive(!string.IsNullOrEmpty(title));
+            }
+            if (messageText != null)
+            {
+                messageText.text = message;
+                messageText.gameObject.SetActive(!string.IsNullOrEmpty(message));
+            }
             
-            if (titleText != null) titleText.text = title;
-            if (messageText != null) messageText.text = message;
+            // テキスト指定の場合はアイコンを非表示
+            if (iconImage != null)
+            {
+                iconImage.gameObject.SetActive(false);
+            }
             
             currentFadeOutDuration = fadeOutDuration;
             currentClickSound = null;
@@ -171,38 +200,67 @@ namespace ApprovalMonster.UI
         
         private void ApplyPreset(CutInPreset preset)
         {
+            // タイトル
             if (titleText != null)
             {
-                titleText.text = preset.title;
-                titleText.color = preset.titleColor;
+                if (!string.IsNullOrEmpty(preset.title))
+                {
+                    titleText.text = preset.title;
+                    titleText.color = preset.titleColor;
+                    titleText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    titleText.gameObject.SetActive(false);
+                }
             }
             
+            // メッセージ
             if (messageText != null)
             {
-                messageText.text = preset.message;
-                messageText.color = preset.messageColor;
+                if (!string.IsNullOrEmpty(preset.message))
+                {
+                    messageText.text = preset.message;
+                    messageText.color = preset.messageColor;
+                    messageText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    messageText.gameObject.SetActive(false);
+                }
             }
             
+            // 背景画像
             if (backgroundImage != null)
             {
                 if (preset.backgroundImage != null)
                 {
                     backgroundImage.sprite = preset.backgroundImage;
                     backgroundImage.color = Color.white;
+                    backgroundImage.gameObject.SetActive(true);
                 }
                 else
                 {
+                    // 背景画像がなくても背景色で表示する場合はアクティブのまま
                     backgroundImage.sprite = null;
                     backgroundImage.color = preset.backgroundColor;
+                    // 背景色のアルファが0なら非表示
+                    backgroundImage.gameObject.SetActive(preset.backgroundColor.a > 0);
                 }
             }
             
+            // アイコン
             if (iconImage != null)
             {
-                if (preset.iconImage != null)
+                if (preset.showIcon && preset.iconImage != null)
                 {
                     iconImage.sprite = preset.iconImage;
                     iconImage.gameObject.SetActive(true);
+                    
+                    // パンチスケールアニメーション
+                    iconImage.transform.localScale = Vector3.one;
+                    iconImage.transform.DOKill();
+                    iconImage.transform.DOPunchScale(Vector3.one * 0.2f, 0.4f, 8, 0.5f);
                 }
                 else
                 {
@@ -213,7 +271,11 @@ namespace ApprovalMonster.UI
         
         private void ShowInternal(float fadeIn, Action onComplete)
         {
-            if (isShowing) return;
+            // 既に表示中の場合は前のカットインを強制終了してから表示
+            if (isShowing)
+            {
+                ForceHide();
+            }
             
             isShowing = true;
             canClick = true;

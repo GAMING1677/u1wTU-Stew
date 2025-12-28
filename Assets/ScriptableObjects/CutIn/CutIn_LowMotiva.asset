@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63dac9d5f79086b418366c7cf7222e42, type: 3}
-  m_Name: CutIn_GameOver
+  m_Name: CutIn_LowMotiva
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CutInPreset
-  title: 
-  message: "\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC"
+  title: "\u30E2\u30C1\u30D9\u4E0D\u8DB3\uFF01"
+  message: "\u306A\u3093\u304B\u9762\u5012\u3060\u304B\u3089\u3044\u3044\u3084\u2026\u3002"
   backgroundImage: {fileID: 0}
   backgroundColor: {r: 0, g: 0, b: 0, a: 0.8}
-  showIcon: 0
-  iconImage: {fileID: 31222901589935591, guid: 3d35c26e896566348bdaae99f67dec18, type: 3}
+  showIcon: 1
+  iconImage: {fileID: -40059503509390550, guid: b09019ba957b8bf48b9a6f954fea7290, type: 3}
   titleColor: {r: 1, g: 1, b: 1, a: 1}
   messageColor: {r: 1, g: 1, b: 1, a: 1}
   fadeInDuration: 0.3
   fadeOutDuration: 0.2
-  showSound: {fileID: 0}
+  showSound: {fileID: 8300000, guid: f99c828d8a8443e478603e39a8d2ee31, type: 3}
   clickSound: {fileID: 0}

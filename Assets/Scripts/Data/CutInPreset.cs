@@ -24,7 +24,10 @@ namespace ApprovalMonster.Data
         [Tooltip("背景色")]
         public Color backgroundColor = new Color(0, 0, 0, 0.8f);
         
-        [Tooltip("アイコン画像（オプション）")]
+        [Tooltip("アイコンを表示するか")]
+        public bool showIcon = false;
+        
+        [Tooltip("アイコン画像（showIconがtrueの場合のみ表示）")]
         public Sprite iconImage;
         
         [Tooltip("タイトルの色")]
