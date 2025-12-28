@@ -5,6 +5,7 @@ using ApprovalMonster.Core;
 using ApprovalMonster.Data;
 using System.Collections.Generic;
 using NaughtyAttributes;
+using DG.Tweening;
 
 namespace ApprovalMonster.UI
 {
@@ -28,6 +29,9 @@ namespace ApprovalMonster.UI
             
             [Tooltip("ステージの説明文を表示するテキスト")]
             public TextMeshProUGUI descriptionText;
+            
+            [HideInInspector]
+            public Tween pulseTween;
         }
 
         [Header("Stage Buttons")]
@@ -35,19 +39,52 @@ namespace ApprovalMonster.UI
         [ReorderableList]
         public List<StageButton> stageButtons = new List<StageButton>();
         
+        [Header("Coming Soon")]
+        [Tooltip("開発中パネル（クリック時に表示）")]
+        [SerializeField] private GameObject comingSoonPanel;
+        
+        [Tooltip("開発中パネルを閉じるボタン")]
+        [SerializeField] private Button comingSoonCloseButton;
+        
+        [Tooltip("開発中ステージのボタンリスト（ステージ未設定のボタン）")]
+        [SerializeField] private List<Button> comingSoonButtons = new List<Button>();
+        
         [Header("Optional")]
         [Tooltip("戻るボタン（オプション）")]
         [SerializeField] private Button backButton;
+        
+        [Header("Pulse Animation")]
+        [SerializeField] private float pulseDuration = 1.2f;
+        [SerializeField] private float pulseScale = 1.05f;
 
         private void Start()
         {
             SetupStageButtons();
+            SetupComingSoonButtons();
             
             // 戻るボタンがあればタイトルに戻る処理を追加
             if (backButton != null)
             {
                 backButton.onClick.AddListener(OnBackButtonClicked);
             }
+            
+            // 開発中パネルを初期非表示
+            if (comingSoonPanel != null)
+            {
+                comingSoonPanel.SetActive(false);
+            }
+            
+            // 開発中パネルの閉じるボタン
+            if (comingSoonCloseButton != null)
+            {
+                comingSoonCloseButton.onClick.AddListener(HideComingSoonPanel);
+            }
+        }
+        
+        private void OnEnable()
+        {
+            // パネルが表示されるたびにパルスアニメーションを再開
+            RefreshUnlockStates();
         }
         
         /// <summary>
@@ -93,6 +130,12 @@ namespace ApprovalMonster.UI
                 bool isUnlocked = CheckUnlockState(stageButton.stage);
                 stageButton.button.interactable = isUnlocked;
                 
+                // アンロック済みならパルスアニメーション開始
+                if (isUnlocked)
+                {
+                    StartPulseAnimation(stageButton);
+                }
+                
                 // 説明文はStageDataから削除されたため、空にするか非表示にする
                 if (stageButton.descriptionText != null)
                 {
@@ -101,12 +144,38 @@ namespace ApprovalMonster.UI
 
                 // クリック時の処理を設定（クロージャ対策）
                 StageData capturedStage = stageButton.stage;
-                stageButton.button.onClick.AddListener(() => OnStageSelected(capturedStage));
+                Button capturedButton = stageButton.button;
+                int capturedIndex = i;
+                stageButton.button.onClick.AddListener(() => OnStageSelected(capturedStage, capturedButton, capturedIndex));
 
                 Debug.Log($"[StageSelectManager] Setup button {i} for stage: {stageButton.stage.stageName} (Unlocked: {isUnlocked})");
             }
             
             Debug.Log("[StageSelectManager] All buttons setup complete");
+        }
+        
+        private void StartPulseAnimation(StageButton stageButton)
+        {
+            if (stageButton.button == null) return;
+            
+            // 既存のパルスをキャンセル
+            stageButton.pulseTween?.Kill();
+            
+            var transform = stageButton.button.transform;
+            transform.localScale = Vector3.one;
+            
+            stageButton.pulseTween = transform.DOScale(pulseScale, pulseDuration)
+                .SetEase(Ease.InOutSine)
+                .SetLoops(-1, LoopType.Yoyo);
+        }
+        
+        private void StopPulseAnimation(StageButton stageButton)
+        {
+            stageButton.pulseTween?.Kill();
+            if (stageButton.button != null)
+            {
+                stageButton.button.transform.localScale = Vector3.one;
+            }
         }
         
         /// <summary>
@@ -125,6 +194,16 @@ namespace ApprovalMonster.UI
 
                 bool isUnlocked = CheckUnlockState(stageButton.stage);
                 stageButton.button.interactable = isUnlocked;
+                
+                // アンロック状態に応じてパルスを制御
+                if (isUnlocked)
+                {
+                    StartPulseAnimation(stageButton);
+                }
+                else
+                {
+                    StopPulseAnimation(stageButton);
+                }
                 
                 Debug.Log($"[StageSelectManager] Updated button {i}: '{stageButton.stage.stageName}' unlocked={isUnlocked}");
             }
@@ -151,30 +230,42 @@ namespace ApprovalMonster.UI
         /// <summary>
         /// ステージが選択された時の処理
         /// </summary>
-        /// <param name="stage">選択されたステージ</param>
-        private void OnStageSelected(StageData stage)
+        private void OnStageSelected(StageData stage, Button button, int buttonIndex)
         {
-            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
             Debug.Log($"[StageSelectManager] Stage selected: {stage.stageName}");
-
-            // StageManagerにステージを選択させる
-            if (StageManager.Instance != null)
+            
+            // パルスを停止
+            if (buttonIndex >= 0 && buttonIndex < stageButtons.Count)
             {
-                StageManager.Instance.SelectStage(stage);
-                // ゲーム画面に遷移
-                if (SceneNavigator.Instance != null)
-                {
-                    SceneNavigator.Instance.GoToMain();
-                }
-                else
-                {
-                    Debug.LogError("[StageSelectManager] SceneNavigator not found!");
-                }
+                StopPulseAnimation(stageButtons[buttonIndex]);
             }
-            else
-            {
-                Debug.LogError("[StageSelectManager] StageManager.Instance is null!");
-            }
+            
+            // クリックリアクション
+            button.transform.DOKill();
+            button.transform.localScale = Vector3.one;
+            button.transform.DOPunchScale(Vector3.one * -0.1f, 0.2f, 5, 0.5f)
+                .OnComplete(() => {
+                    Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
+                    
+                    // StageManagerにステージを選択させる
+                    if (StageManager.Instance != null)
+                    {
+                        StageManager.Instance.SelectStage(stage);
+                        // ゲーム画面に遷移
+                        if (SceneNavigator.Instance != null)
+                        {
+                            SceneNavigator.Instance.GoToMain();
+                        }
+                        else
+                        {
+                            Debug.LogError("[StageSelectManager] SceneNavigator not found!");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("[StageSelectManager] StageManager.Instance is null!");
+                    }
+                });
         }
 
         /// <summary>
@@ -190,9 +281,81 @@ namespace ApprovalMonster.UI
                 SceneNavigator.Instance.GoToTitle();
             }
         }
+        
+        /// <summary>
+        /// 開発中ボタンのセットアップ
+        /// </summary>
+        private void SetupComingSoonButtons()
+        {
+            if (comingSoonButtons == null || comingSoonButtons.Count == 0) return;
+            
+            foreach (var button in comingSoonButtons)
+            {
+                if (button != null)
+                {
+                    button.onClick.AddListener(ShowComingSoonPanel);
+                }
+            }
+            
+            Debug.Log($"[StageSelectManager] Setup {comingSoonButtons.Count} coming soon buttons");
+        }
+        
+        /// <summary>
+        /// 開発中パネルを表示
+        /// </summary>
+        private void ShowComingSoonPanel()
+        {
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
+            
+            if (comingSoonPanel != null)
+            {
+                comingSoonPanel.SetActive(true);
+                
+                // フェードインアニメーション
+                var canvasGroup = comingSoonPanel.GetComponent<CanvasGroup>();
+                if (canvasGroup != null)
+                {
+                    canvasGroup.alpha = 0f;
+                    canvasGroup.DOFade(1f, 0.3f);
+                }
+                
+                Debug.Log("[StageSelectManager] Showing Coming Soon panel");
+            }
+        }
+        
+        /// <summary>
+        /// 開発中パネルを非表示
+        /// </summary>
+        private void HideComingSoonPanel()
+        {
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
+            
+            if (comingSoonPanel != null)
+            {
+                var canvasGroup = comingSoonPanel.GetComponent<CanvasGroup>();
+                if (canvasGroup != null)
+                {
+                    canvasGroup.DOFade(0f, 0.2f).OnComplete(() => {
+                        comingSoonPanel.SetActive(false);
+                    });
+                }
+                else
+                {
+                    comingSoonPanel.SetActive(false);
+                }
+                
+                Debug.Log("[StageSelectManager] Hiding Coming Soon panel");
+            }
+        }
 
         private void OnDestroy()
         {
+            // パルスアニメーションのクリーンアップ
+            foreach (var stageButton in stageButtons)
+            {
+                stageButton.pulseTween?.Kill();
+            }
+            
             // ボタンリスナーのクリーンアップ
             if (backButton != null)
             {
@@ -210,3 +373,4 @@ namespace ApprovalMonster.UI
         }
     }
 }
+

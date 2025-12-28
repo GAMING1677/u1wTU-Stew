@@ -845,7 +845,7 @@ namespace ApprovalMonster.Core
                             Debug.Log($"[GameManager] Generated card '{gen.card.cardName}' added to hand.");
                             break;
                         case CardDestination.DrawPile:
-                            deckManager.AddCardToTopOfDraw(gen.card);
+                            deckManager.AddCardToMiddleOfDraw(gen.card);
                             Debug.Log($"[GameManager] Generated card '{gen.card.cardName}' added to draw pile.");
                             break;
                     }
@@ -970,9 +970,11 @@ namespace ApprovalMonster.Core
                 Debug.Log($"[GameManager] currentStage.monsterModePreset null? {currentStage.monsterModePreset == null}");
             }
             
+            // ★ Bug fix: 即座にフラグを設定して再発動を防止
+            hasPerformedMonsterDraft = true;
+            
             // Set monster mode state (since ResourceManager no longer does this)
             resourceManager.isMonsterMode = true;
-            // Don't set hasTriggeredMonsterMode yet - wait until draft complete
             
             // Heal mental: currentMental / 2 (rounded up)
             int healAmount = Mathf.CeilToInt(resourceManager.currentMental / 2f);
@@ -1051,8 +1053,8 @@ namespace ApprovalMonster.Core
             deckManager.hand.Add(selectedCard);
             FindObjectOfType<UI.UIManager>()?.OnCardDrawn(selectedCard);
             
-            // Add to draw pile (1 copy)
-            deckManager.AddCardToTopOfDraw(selectedCard);
+            // Add to draw pile (1 copy) - 山札の真ん中に追加
+            deckManager.AddCardToMiddleOfDraw(selectedCard);
             
             // Add to discard pile (1 copy)
             deckManager.AddCardToDiscard(selectedCard);

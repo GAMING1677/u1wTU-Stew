@@ -156,6 +156,21 @@ namespace ApprovalMonster.Core
             // Notify deck count change
             OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
         }
+        
+        /// <summary>
+        /// カードを山札の真ん中に追加（切り上げ）
+        /// </summary>
+        public void AddCardToMiddleOfDraw(CardData card)
+        {
+            // 真ん中の位置を計算（切り上げ）
+            // 0枚: 0, 1枚: 1, 2枚: 1, 3枚: 2, 4枚: 2, ...
+            int middleIndex = Mathf.CeilToInt(drawPile.Count / 2f);
+            drawPile.Insert(middleIndex, card);
+            Debug.Log($"[DeckManager] Card added to middle of draw pile (index {middleIndex}): {card.cardName}");
+            
+            // Notify deck count change
+            OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
+        }
 
         public void ExhaustCard(CardData card)
         {
