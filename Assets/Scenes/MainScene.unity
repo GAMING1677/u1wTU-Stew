@@ -273,7 +273,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &27866523
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10889,13 +10889,6 @@ MonoBehaviour:
   defaultMasterVolume: 1
   defaultBGMVolume: 0.25
   defaultSEVolume: 0.25
-  settingsPanel: {fileID: 1561961246}
-  settingsPanelCanvasGroup: {fileID: 1561961248}
-  masterSlider: {fileID: 1716730021}
-  bgmSlider: {fileID: 1980290318}
-  seSlider: {fileID: 726538990}
-  closeButton: {fileID: 586158533}
-  panelFadeDuration: 0.3
 --- !u!4 &1495089515
 Transform:
   m_ObjectHideFlags: 0
@@ -11467,8 +11460,8 @@ GameObject:
   - component: {fileID: 1561961247}
   - component: {fileID: 1561961251}
   - component: {fileID: 1561961250}
-  - component: {fileID: 1561961249}
   - component: {fileID: 1561961248}
+  - component: {fileID: 1561961252}
   m_Layer: 0
   m_Name: SoundPanel
   m_TagString: Untagged
@@ -11511,18 +11504,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &1561961249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1561961246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4321fbdc2e4ea67419fe771581307212, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.SoundSettingsUI
 --- !u!114 &1561961250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11561,6 +11542,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1561961246}
   m_CullTransparentMesh: 1
+--- !u!114 &1561961252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1561961246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7cee408b7ed7f345ad907f124e6c7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.SoundSettingsUI
+  settingsPanel: {fileID: 1561961246}
+  canvasGroup: {fileID: 1561961248}
+  fadeDuration: 0.3
+  masterSlider: {fileID: 1716730021}
+  bgmSlider: {fileID: 1980290318}
+  seSlider: {fileID: 726538990}
+  closeButton: {fileID: 586158533}
 --- !u!1 &1571167608
 GameObject:
   m_ObjectHideFlags: 0
@@ -11620,6 +11620,7 @@ MonoBehaviour:
   timelineContainer: {fileID: 1109154664}
   maxPosts: 5
   settingsButton: {fileID: 1760194714}
+  soundSettingsUI: {fileID: 1561961252}
   cutInUI: {fileID: 1307431909}
   characterAnimator: {fileID: 409949762}
   endTurnButtonPulse: {fileID: 25495977}
@@ -13284,7 +13285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1893173049
 RectTransform:
   m_ObjectHideFlags: 0
