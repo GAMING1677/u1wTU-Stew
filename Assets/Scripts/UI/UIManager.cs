@@ -64,6 +64,11 @@ namespace ApprovalMonster.UI
         [SerializeField] private Transform timelineContainer;
         [SerializeField] private int maxPosts = 5;
         
+
+        
+        [Header("Settings")]
+        [SerializeField] private Button settingsButton;
+
         [Header("Cut-In")]
         [SerializeField] private CutInUI cutInUI;
 
@@ -196,6 +201,16 @@ namespace ApprovalMonster.UI
              {
                  endTurnButton.onClick.AddListener(OnEndTurnButtonClicked);
              }
+             
+             if (settingsButton != null)
+             {
+                 settingsButton.onClick.AddListener(OnSettingsButtonClicked);
+             }
+        }
+        
+        private void OnSettingsButtonClicked()
+        {
+            AudioManager.Instance?.ShowSettingsPanel();
         }
 
         private void OnDisable()
