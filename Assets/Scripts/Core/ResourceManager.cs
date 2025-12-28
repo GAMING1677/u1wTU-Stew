@@ -18,6 +18,11 @@ namespace ApprovalMonster.Core
         [ReadOnly] public long totalImpressions;
         [ReadOnly] public bool isMonsterMode = false;
         
+        [Header("Flaming")]
+        [ReadOnly] public int flamingSeeds = 0;
+        [ReadOnly] public int flamingLevel = 0;
+        [ReadOnly] public bool isOnFire = false;
+        
         // Persistent modifiers
         private int bonusMaxMotivation = 0;
         public int MaxMotivation => settings != null ? settings.maxMotivation + bonusMaxMotivation : 3;
@@ -31,6 +36,9 @@ namespace ApprovalMonster.Core
         public UnityEvent<int, int> onMotivationChanged; // current, max
         public UnityEvent<long> onImpressionsChanged;
         public UnityEvent onMonsterModeTriggered;
+        
+        // Flaming event: seeds, level, isOnFire
+        public System.Action<int, int, bool> onFlamingChanged;
         
         // Gain events for UI notification
         public UnityEvent<int> onFollowerGained;
@@ -58,6 +66,11 @@ namespace ApprovalMonster.Core
             // Re-initialize flags
             isMonsterMode = false;
             hasTriggeredMonsterMode = false;
+            
+            // Reset flaming
+            flamingSeeds = 0;
+            flamingLevel = 0;
+            isOnFire = false;
 
             BroadcastAll();
         }
@@ -184,6 +197,81 @@ namespace ApprovalMonster.Core
         {
             currentMotivation = MaxMotivation;
             onMotivationChanged?.Invoke(currentMotivation, MaxMotivation);
+        }
+        
+        // ========== Flaming System ==========
+        
+        /// <summary>
+        /// 種を追加。炎上中は炎上度に加算
+        /// </summary>
+        public void AddFlamingSeeds(int count)
+        {
+            if (isOnFire)
+            {
+                flamingLevel += count;
+                Debug.Log($"[ResourceManager] Flaming: Added {count} to flamingLevel (on fire), total: {flamingLevel}");
+            }
+            else
+            {
+                flamingSeeds += count;
+                Debug.Log($"[ResourceManager] Flaming: Added {count} seeds, total: {flamingSeeds}");
+            }
+            onFlamingChanged?.Invoke(flamingSeeds, flamingLevel, isOnFire);
+        }
+        
+        /// <summary>
+        /// 炎上判定。成功でseeds→level変換
+        /// </summary>
+        public bool TryTriggerFlaming(float rate)
+        {
+            if (isOnFire || flamingSeeds == 0) return false;
+            
+            if (Random.value <= rate)
+            {
+                flamingLevel = flamingSeeds;
+                flamingSeeds = 0;
+                isOnFire = true;
+                Debug.Log($"[ResourceManager] Flaming TRIGGERED! Level: {flamingLevel}");
+                onFlamingChanged?.Invoke(0, flamingLevel, true);
+                return true;
+            }
+            Debug.Log($"[ResourceManager] Flaming avoided (roll failed). Seeds: {flamingSeeds}");
+            return false;
+        }
+        
+        /// <summary>
+        /// 炎上ダメージを消費して取得
+        /// </summary>
+        public int ConsumeFlamingLevel()
+        {
+            int damage = flamingLevel;
+            flamingLevel = 0;
+            isOnFire = false;
+            Debug.Log($"[ResourceManager] Consumed flamingLevel: {damage}");
+            onFlamingChanged?.Invoke(flamingSeeds, 0, false);
+            return damage;
+        }
+        
+        /// <summary>
+        /// ターン開始時に炎上状態をリセット（種は維持）
+        /// </summary>
+        public void ResetFlamingTurn()
+        {
+            flamingLevel = 0;
+            isOnFire = false;
+            Debug.Log($"[ResourceManager] Flaming turn reset. Seeds: {flamingSeeds}");
+            onFlamingChanged?.Invoke(flamingSeeds, 0, false);
+        }
+        
+        /// <summary>
+        /// 全炎上パラメータリセット（ゲームリセット時）
+        /// </summary>
+        public void ResetFlaming()
+        {
+            flamingSeeds = 0;
+            flamingLevel = 0;
+            isOnFire = false;
+            onFlamingChanged?.Invoke(0, 0, false);
         }
     }
 }

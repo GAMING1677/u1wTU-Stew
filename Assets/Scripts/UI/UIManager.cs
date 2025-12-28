@@ -79,6 +79,14 @@ namespace ApprovalMonster.UI
         [Header("End Turn Button Pulse")]
         [SerializeField] private ButtonPulse endTurnButtonPulse;
         
+        [Header("Flaming UI")]
+        [Tooltip("種の数を表示するテキスト（オプショナル）")]
+        [SerializeField] private TextMeshProUGUI flamingSeedText;
+        [Tooltip("炎上ダメージを表示するテキスト（オプショナル）")]
+        [SerializeField] private TextMeshProUGUI flamingLevelText;
+        [Tooltip("炎上中のみ表示するコンテナ（オプショナル）")]
+        [SerializeField] private GameObject flamingContainer;
+        
         private bool isSetup = false;
 
         private List<CardView> activeCards = new List<CardView>();
@@ -179,6 +187,10 @@ namespace ApprovalMonster.UI
                 
                 // Monster mode profile switch is now called manually from GameManager.OnMonsterDraftComplete
                 // (Event subscription removed to fix timing issue - profile should switch AFTER draft, not immediately)
+                
+                // Flaming event
+                gm.resourceManager.onFlamingChanged -= UpdateFlamingDisplay;
+                gm.resourceManager.onFlamingChanged += UpdateFlamingDisplay;
             }
             else
             {
@@ -242,6 +254,9 @@ namespace ApprovalMonster.UI
                  gm.deckManager.OnDeckCountChanged -= UpdateDeckCounts;
                  gm.deckManager.OnDeckShuffled -= OnDeckShuffled;
                  gm.turnManager.OnTurnChanged.RemoveListener(UpdateTurnDisplay);
+                 
+                 // Flaming event
+                 gm.resourceManager.onFlamingChanged -= UpdateFlamingDisplay;
              }
         }
         
@@ -424,6 +439,25 @@ namespace ApprovalMonster.UI
             {
                 followerGainUI.PlayEffect($"+{FormatNumber(amount)}"); 
             }
+        }
+
+        private void UpdateFlamingDisplay(int seeds, int level, bool isOnFire)
+        {
+            // Update seed count text
+            if (flamingSeedText != null)
+            {
+                flamingSeedText.text = seeds > 0 ? seeds.ToString() : "";
+            }
+            
+            // Update flaming level text
+            if (flamingLevelText != null)
+            {
+                flamingLevelText.text = isOnFire ? $"-{level}" : "";
+            }
+            
+            // flamingContainer is always visible (removed SetActive)
+            
+            Debug.Log($"[UIManager] Flaming UI Updated: seeds={seeds}, level={level}, isOnFire={isOnFire}");
         }
 
         private void ShowImpressionGain(long amount, float rate)

@@ -10,25 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
-  m_Name: Sac_MonBeginner
+  m_Name: Dora_MonHeal
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u7121\u9650\u56DE\u5ECA"
+  cardName: "\u4E0D\u6B7B\u9CE5"
   cardImage: {fileID: 0}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC10\u4E07\u4EBA\u5897\n10\uFF05\u30A4\u30F3\u30D7\u7372\u5F97\n2\u679A\u30C9\u30ED\u30FC\u3059\u308B\n\u30E2\u30C1\u30D9\u304C1\u56DE\u5FA9\u3059\u308B"
+  description: "\u706B\u7A2E\u306E\u6570\xF7\uFF12\u3060\u3051\u30E1\u30F3\u30BF\u30EB\u3092\u56DE\u5FA9\u3059\u308B\n200%\u306E\u30A4\u30F3\u30D7\u3092\u5F97\u308B\n2\u679A\u30C9\u30ED\u30FC\u3059\u308B"
   cardTag: "\u521D\u5FC3\u8005\u5411\u3051"
-  flavorText: "=\u7D9A\u304D\u306F\u3053\u3061\u3089="
-  postComments:
-  - "\u4ECA\u56DE\u306F\u30DE\u30B8\u3084\u3070\u3044\u304B\u3082\u3002\u7D9A\u304D\u306E\u52D5\u753B\u306F\u30C4\u30EA\u30FC\u3092\u898B\u3066\u306D\uFF01"
-  - "\u3053\u306E\u524D\u6D88\u3048\u3061\u3083\u3063\u305F\u5974\u3001\u30D7\u30ED\u30D5\u306E\u30EA\u30F3\u30AF\u5148\u306A\u3089\u307E\u3060\u6B8B\u3063\u3066\u308B\u3088"
+  flavorText: "\u71C3\u3048\u76DB\u308B\u8F2A\u5EFB"
+  postComments: []
   motivationCost: 0
   mentalCost: 0
-  followerGain: 1000000
+  followerGain: 0
   isTurnMultiplierEffect: 0
   drawCount: 2
-  motivationRecovery: 1
+  motivationRecovery: 0
   turnDrawBonus: 0
   maxMotivationBonus: 0
-  impressionRate: 0.1
+  impressionRate: 2
   isTurnImpressionEffect: 0
   cardType: 2
   isExhaust: 0
@@ -42,8 +40,8 @@ MonoBehaviour:
   handCountImpressionRate: 0
   drawByHandCount: 0
   handCountFollowerRate: 0
-  handEffectMinCount: 1
+  handEffectMinCount: 0
   flamingSeedCount: 0
   flamingRate: 0
   seedToFollowerMultiplier: 0
-  healMentalBySeeds: 0
+  healMentalBySeeds: 1
