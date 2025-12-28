@@ -385,45 +385,69 @@ namespace ApprovalMonster.Core
 
         public void ResetGame()
         {
-            // 0. Explicitly clear everything first
+            Debug.Log("[GameManager] ResetGame called - full state reset");
+            
+            // 0. Reset game active flag
+            isGameActive = false;
+            
+            // 1. Explicitly clear deck first
             deckManager.ClearAll();
 
-            // 1. Reset Resources
+            // 2. Reset Resources (also resets monster mode flags)
             resourceManager.Initialize(gameSettings);
             extraTurnDraws = 0;
             
             // Clear debug statistics
             turnStatsList.Clear();
             
-            // 2. Reset Deck
+            // 3. Reset Deck (if stage is set)
             if (currentStage != null)
             {
                 deckManager.InitializeDeck(currentStage.initialDeck, gameSettings);
             }
             
-            // 3. Reset Quota
+            // 4. Reset Quota
             turnStartImpressions = 0;
+            turnStartFollowers = 0;
+            turnStartMental = 0;
+            lastTurnGainedFollowers = 0;
             currentTurnQuota = 0;
             
-            // 4. Reset Draft Manager
+            // 5. Reset Draft Manager
             if (draftManager != null)
             {
                 draftManager.ResetSelectedCards();
             }
             
-            // 5. Reset flags
+            // 6. Reset ALL game state flags
             hasPerformedMonsterDraft = false;
             isWaitingForMonsterDraft = false;
-            isMonsterModeFromTurnEnd = false; // Reset new monster mode flag
+            isMonsterModeFromTurnEnd = false;
+            shouldTriggerMonsterModeAfterCutIn = false;
             
-            // 6. Reset character profile to normal
+            // 7. Remove event listeners to prevent duplicates on next StartGame
+            if (turnManager != null)
+            {
+                turnManager.OnTurnStart.RemoveListener(OnTurnStart);
+                turnManager.OnTurnEnd.RemoveListener(OnTurnEnd);
+                turnManager.ResetState(); // Reset turn count and phase
+            }
+            if (resourceManager != null)
+            {
+                resourceManager.onMentalChanged.RemoveListener(OnMentalChanged);
+                resourceManager.onImpressionsChanged.RemoveListener(OnImpressionsChanged);
+            }
+            
+            // 8. Reset character profile to normal
             var uiManager = FindObjectOfType<UI.UIManager>();
             if (uiManager != null && currentStage != null && currentStage.normalProfile != null)
             {
                 uiManager.SetupCharacter(currentStage.normalProfile);
+                uiManager.StopCharacterReaction(); // Stop any playing animations
                 Debug.Log("[GameManager] Reset character profile to normal");
             }
             
+            Debug.Log("[GameManager] ResetGame complete");
             // NOTE: Don't start turn here - StartGame() will call turnManager.StartGame()
         }
 

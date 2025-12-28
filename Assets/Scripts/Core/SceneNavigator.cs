@@ -57,6 +57,22 @@ namespace ApprovalMonster.Core
         {
             Debug.Log("[SceneNavigator] GoToStageSelect called.");
             
+            // ゲーム状態のリセット（再プレイ時のバグ防止）
+            var gameManager = FindObjectOfType<GameManager>();
+            if (gameManager != null)
+            {
+                gameManager.ResetGame();
+                Debug.Log("[SceneNavigator] ResetGame called when going to stage select");
+            }
+            
+            // カットインを強制非表示
+            var cutInUI = FindObjectOfType<UI.CutInUI>();
+            if (cutInUI != null)
+            {
+                cutInUI.ForceHide();
+                Debug.Log("[SceneNavigator] CutInUI force hidden when going to stage select");
+            }
+            
             // ステージセレクト画面に戻る際、メインテーマBGMに切り替え（モンスターモード後のリセット）
             if (AudioManager.Instance != null)
             {
@@ -69,14 +85,32 @@ namespace ApprovalMonster.Core
 
         public void GoToTitle()
         {
-             // タイトル画面に戻る際、メインテーマBGMに切り替え
-             if (AudioManager.Instance != null)
-             {
-                 AudioManager.Instance.PlayMainTheme();
-                 Debug.Log("[SceneNavigator] Restored main theme BGM when returning to title");
-             }
+            Debug.Log("[SceneNavigator] GoToTitle called.");
+            
+            // ゲーム状態のリセット（再プレイ時のバグ防止）
+            var gameManager = FindObjectOfType<GameManager>();
+            if (gameManager != null)
+            {
+                gameManager.ResetGame();
+                Debug.Log("[SceneNavigator] ResetGame called when going to title");
+            }
+            
+            // カットインを強制非表示
+            var cutInUI = FindObjectOfType<UI.CutInUI>();
+            if (cutInUI != null)
+            {
+                cutInUI.ForceHide();
+                Debug.Log("[SceneNavigator] CutInUI force hidden when going to title");
+            }
+            
+            // タイトル画面に戻る際、メインテーマBGMに切り替え
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayMainTheme();
+                Debug.Log("[SceneNavigator] Restored main theme BGM when returning to title");
+            }
              
-             StartCoroutine(TransitionRoutine(titlePanel));
+            StartCoroutine(TransitionRoutine(titlePanel));
         }
         
         public void GoToResult()
