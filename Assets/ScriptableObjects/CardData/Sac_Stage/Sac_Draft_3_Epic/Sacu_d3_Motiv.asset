@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Sacu_d3_Motiv
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u308F\u3093\u306B\u3083\u3093\u52D5\u753B"
-  cardImage: {fileID: 0}
+  cardImage: {fileID: 4391556160360618507, guid: e6240f70736fcaf47945e128e8067b12, type: 3}
   description: "\u6BCE\u30BF\u30FC\u30F3\u306E\u30C9\u30ED\u30FC\u679A\u6570\u304C1\u679A\u5897\u3048\u308B\n\uFF08\u4F7F\u3044\u6368\u3066\uFF09"
+  cardTag: 
   flavorText: "\u541B\u306E\u77B3\u306B\u4E7E\u676F"
   postComments: []
   motivationCost: 2
@@ -40,3 +41,7 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  flamingSeedCount: 0
+  flamingRate: 0
+  seedToFollowerMultiplier: 0
+  healMentalBySeeds: 0
