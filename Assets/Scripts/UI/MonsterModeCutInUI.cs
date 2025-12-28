@@ -151,10 +151,11 @@ namespace ApprovalMonster.UI
         {
             Debug.Log($"[MonsterModeCutInUI] Show() called. isShowing={isShowing}, preset null? {preset == null}");
             
+            // ★ Bug fix: 既に表示中の場合は前のカットインを強制終了してから表示
             if (isShowing) 
             {
-                Debug.LogWarning("[MonsterModeCutInUI] Already showing, returning");
-                return;
+                Debug.LogWarning("[MonsterModeCutInUI] Already showing, force hiding first");
+                ForceHide();
             }
             
             isShowing = true;

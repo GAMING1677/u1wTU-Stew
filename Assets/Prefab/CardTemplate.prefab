@@ -1636,7 +1636,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u3084\u308B\u6C17\u3092\uFF11\u5897\u3084\u3059\n(\u4F7F\u7528\u5F8C\u30C7\u30C3\u30AD\u304B\u3089\u9664\u5916\uFF09"
+  m_text: "\u30D5\u30A9\u30ED\u30EF\u30FC\xD720%\u30A4\u30F3\u30D7\u3092\u5F97\u308B\n\u30B4\u30D6\u30EA\u30F3\u3092\u624B\u672D\u306B\uFF11\u679A\u52A0\u3048\u308B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
   m_sharedMaterial: {fileID: 5778998312778993265, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}

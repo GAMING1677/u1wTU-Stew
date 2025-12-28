@@ -19,6 +19,11 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private Transform cardOptionsContainer;
         [SerializeField] private CardView cardViewPrefab;
+        
+        [Header("Background")]
+        [SerializeField] private Image backgroundImage;
+        [SerializeField] private Sprite normalBackground;
+        [SerializeField] private Sprite monsterBackground;
 
         [Header("Animation Settings")]
         [SerializeField] private float fadeInDuration = 0.3f;
@@ -26,6 +31,7 @@ namespace ApprovalMonster.UI
 
         private List<CardView> activeCardViews = new List<CardView>();
         private CardData selectedCard;
+        private bool _isMonsterDraft = false;  // ★ モンスタードラフトかどうかを追跡
         
         /// <summary>
         /// DraftPanel (the actual UI GameObject referenced by canvasGroup)
@@ -41,22 +47,37 @@ namespace ApprovalMonster.UI
         {
             Debug.Log($"[DraftUI] ===== ShowDraftOptions CALLED ===== isMonsterDraft={isMonsterDraft}, gameObject.activeSelf={gameObject.activeSelf}");
             
+            // ★ フラグを保存（コールバック時に使用）
+            _isMonsterDraft = isMonsterDraft;
+            
             if (options == null || options.Count == 0)
             {
                 Debug.LogWarning("[DraftUI] No draft options provided!");
                 return;
             }
 
-            // モンスタードラフトならタイトル変更
+            // モンスタードラフトならタイトルと背景を変更
             if (isMonsterDraft)
             {
                 titleText.text = "選んだカードを3枚入手し、山札・手札・捨て札に加える";
                 titleText.color = Color.red;
+                
+                // 背景をモンスター用に変更
+                if (backgroundImage != null && monsterBackground != null)
+                {
+                    backgroundImage.sprite = monsterBackground;
+                }
             }
             else
             {
                 titleText.text = "選択したカードが山札の一番上にセットされます";
                 titleText.color = Color.white;
+                
+                // 背景を通常用に変更
+                if (backgroundImage != null && normalBackground != null)
+                {
+                    backgroundImage.sprite = normalBackground;
+                }
             }
             
             Debug.Log($"[DraftUI] ShowDraftOptions called. Count: {options?.Count ?? 0}, isMonsterDraft: {isMonsterDraft}");
@@ -144,9 +165,8 @@ namespace ApprovalMonster.UI
             selectedCard = card;
             Debug.Log($"[DraftUI] Card selected: {card.cardName}");
             
-            // ★ NEW: ドラフト選択時のSE再生
-            bool isMonsterDraft = titleText.text.Contains("モンスター");
-            if (isMonsterDraft)
+            // ★ NEW: ドラフト選択時のSE再生（フィールドを使用）
+            if (_isMonsterDraft)
             {
                 // モンスタードラフトの場合、MonsterModePresetのclickSoundを使用
                 var preset = GameManager.Instance?.currentStage?.monsterModePreset;
@@ -201,9 +221,9 @@ namespace ApprovalMonster.UI
                         Debug.Log("[DraftUI] Hand container restored");
                     }
                     
-                    // モンスタードラフトか通常ドラフトかで分岐
-                    Debug.Log($"[DraftUI] Calling GameManager. isMonsterDraft: {titleText.text.Contains("モンスター")}");
-                    if (titleText.text.Contains("モンスター"))
+                    // モンスタードラフトか通常ドラフトかで分岐（★ フィールドを使用）
+                    Debug.Log($"[DraftUI] Calling GameManager. isMonsterDraft: {_isMonsterDraft}");
+                    if (_isMonsterDraft)
                     {
                         Debug.Log($"[DraftUI] Calling OnMonsterDraftComplete with {selectedCard?.cardName}");
                         Core.GameManager.Instance.OnMonsterDraftComplete(selectedCard);
