@@ -173,6 +173,10 @@ namespace ApprovalMonster.Core
                 if (uiManager != null)
                 {
                     Debug.Log($"[GameManager] Showing stage start cut-in: {currentStage.startCutInTitle}");
+                    
+                    // ステージ開始SEを再生
+                    AudioManager.Instance?.PlaySE(Data.SEType.StageStart);
+                    
                     uiManager.ShowCutIn(currentStage.startCutInTitle, currentStage.startCutInMessage, () =>
                     {
                         Debug.Log("[GameManager] Stage start cut-in dismissed, starting game");
@@ -711,6 +715,9 @@ namespace ApprovalMonster.Core
                 var uiManager = FindObjectOfType<UI.UIManager>();
                 if (uiManager != null)
                 {
+                    // やる気不足SE再生
+                    AudioManager.Instance?.PlaySE(Data.SEType.MotivationLow);
+                    
                     uiManager.ShowCutIn("やる気が足りない", "なんか面倒だからいいや…");
                 }
                 

@@ -17,30 +17,42 @@ MonoBehaviour:
   - type: 0
     clip: {fileID: 8300000, guid: 15c5a75aaafe4a6488a6a73e7427f30e, type: 3}
   - type: 1
-    clip: {fileID: 8300000, guid: 7c91366d118f09b44a70c18dc126ae2c, type: 3}
-  - type: 2
     clip: {fileID: 8300000, guid: 290da2668322d2d469d4c7cb954f359e, type: 3}
-  - type: 3
-    clip: {fileID: 0}
-  - type: 4
-    clip: {fileID: 8300000, guid: 4e0ae2ffad0e237469c5261015f23aa3, type: 3}
-  - type: 5
-    clip: {fileID: 0}
-  - type: 6
-    clip: {fileID: 8300000, guid: 96a7c048e92dde64e8cc379dff97e9b2, type: 3}
-  - type: 7
+  - type: 2
     clip: {fileID: 8300000, guid: 9e4d2586aceb2a842acfc2665c0327c5, type: 3}
-  - type: 8
+  - type: 100
+    clip: {fileID: 8300000, guid: 290da2668322d2d469d4c7cb954f359e, type: 3}
+  - type: 101
     clip: {fileID: 0}
-  - type: 9
+  - type: 102
     clip: {fileID: 0}
-  - type: 10
+  - type: 103
     clip: {fileID: 0}
-  - type: 11
+  - type: 200
     clip: {fileID: 0}
-  - type: 12
+  - type: 201
     clip: {fileID: 0}
-  - type: 13
+  - type: 202
+    clip: {fileID: 0}
+  - type: 203
+    clip: {fileID: 0}
+  - type: 204
+    clip: {fileID: 0}
+  - type: 206
+    clip: {fileID: 0}
+  - type: 300
     clip: {fileID: 8300000, guid: 4854149069fa772418f342e757e90e81, type: 3}
-  - type: 14
+  - type: 400
     clip: {fileID: 8300000, guid: 4c78e45b737cc0749967bab35186cc4b, type: 3}
+  - type: 500
+    clip: {fileID: 0}
+  - type: 501
+    clip: {fileID: 8300000, guid: 96a7c048e92dde64e8cc379dff97e9b2, type: 3}
+  - type: 502
+    clip: {fileID: 8300000, guid: c7c9b1596dd13ef49bd94ed58c873ec9, type: 3}
+  - type: 503
+    clip: {fileID: 8300000, guid: f99c828d8a8443e478603e39a8d2ee31, type: 3}
+  - type: 504
+    clip: {fileID: 8300000, guid: bbfe2c98640499245a0e0caa8d0f1a23, type: 3}
+  - type: 3
+    clip: {fileID: 8300000, guid: f99c828d8a8443e478603e39a8d2ee31, type: 3}

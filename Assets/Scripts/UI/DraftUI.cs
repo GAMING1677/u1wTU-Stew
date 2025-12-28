@@ -89,6 +89,9 @@ namespace ApprovalMonster.UI
             Debug.Log($"[DraftUI] DraftPanel shown, alpha reset to 0, starting fade in");
             canvasGroup.DOFade(1f, fadeInDuration);
 
+            // ドラフト表示SE再生
+            AudioManager.Instance?.PlaySE(SEType.CardDraftPanelShow);
+
             // カードビューを生成
             Debug.Log($"[DraftUI] Starting card generation. cardOptionsContainer null? {cardOptionsContainer == null}");
             Debug.Log($"[DraftUI] cardViewPrefab null? {cardViewPrefab == null}");
@@ -140,6 +143,29 @@ namespace ApprovalMonster.UI
 
             selectedCard = card;
             Debug.Log($"[DraftUI] Card selected: {card.cardName}");
+            
+            // ★ NEW: ドラフト選択時のSE再生
+            bool isMonsterDraft = titleText.text.Contains("モンスター");
+            if (isMonsterDraft)
+            {
+                // モンスタードラフトの場合、MonsterModePresetのclickSoundを使用
+                var preset = GameManager.Instance?.currentStage?.monsterModePreset;
+                if (preset != null && preset.clickSound != null)
+                {
+                    AudioManager.Instance?.PlaySE(preset.clickSound);
+                    Debug.Log($"[DraftUI] Playing monster draft click sound: {preset.clickSound.name}");
+                }
+                else
+                {
+                    // フォールバック：通常のボタンSE
+                    AudioManager.Instance?.PlaySE(SEType.ButtonClick);
+                }
+            }
+            else
+            {
+                // 通常ドラフトの場合
+                AudioManager.Instance?.PlaySE(SEType.ButtonClick);
+            }
 
             // 選択されたカード以外をフェードアウト
             foreach (var cardView in activeCardViews)

@@ -2227,8 +2227,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 299, y: -64.6}
-  m_SizeDelta: {x: 549.72, y: 219.26}
+  m_AnchoredPosition: {x: 311.37, y: -64.6}
+  m_SizeDelta: {x: 503.26, y: 219.26}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &388856227
 GameObject:
@@ -11189,6 +11189,8 @@ MonoBehaviour:
   turnText: {fileID: 1553979975}
   drawPileCountText: {fileID: 2027643455}
   discardPileCountText: {fileID: 1343901682}
+  deckPileImage: {fileID: 1559123698}
+  discardPileImage: {fileID: 1623249832}
   followerGainUI: {fileID: 1728073536}
   impressionGainUI: {fileID: 1268626273}
   mentalFillImage: {fileID: 2034688129}
@@ -11875,8 +11877,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.14422, y: -36.86118}
-  m_SizeDelta: {x: 193.58, y: 44.5412}
+  m_AnchoredPosition: {x: -20.621, y: -36.86118}
+  m_SizeDelta: {x: 148.54, y: 44.5412}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1731732116
 MonoBehaviour:
@@ -11898,7 +11900,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 99,999M
+  m_text: 999,999,999
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
   m_sharedMaterial: {fileID: 5778998312778993265, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
@@ -12034,7 +12036,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ver0.0.5
+  m_text: ver0.0.6
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
   m_sharedMaterial: {fileID: 5778998312778993265, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}

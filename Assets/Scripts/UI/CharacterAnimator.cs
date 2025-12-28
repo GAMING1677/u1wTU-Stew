@@ -218,16 +218,36 @@ namespace ApprovalMonster.UI
             if (currentProfile == null || isReacting) return;
             
             Sprite reactionSprite = null;
+            SEType seType = SEType.ReactionHappy_1; // デフォルト
+            
             switch (type)
             {
-                case ReactionType.Happy_1: reactionSprite = currentProfile.reactionHappy_1; break;
-                case ReactionType.Happy_2: reactionSprite = currentProfile.reactionHappy_2; break;
-                case ReactionType.Happy_3: reactionSprite = currentProfile.reactionHappy_3; break;
-                case ReactionType.Sad_1: reactionSprite = currentProfile.reactionSad_1; break;
-                case ReactionType.Sad_2: reactionSprite = currentProfile.reactionSad_2; break;
+                case ReactionType.Happy_1: 
+                    reactionSprite = currentProfile.reactionHappy_1; 
+                    seType = SEType.ReactionHappy_1;
+                    break;
+                case ReactionType.Happy_2: 
+                    reactionSprite = currentProfile.reactionHappy_2; 
+                    seType = SEType.ReactionHappy_2;
+                    break;
+                case ReactionType.Happy_3: 
+                    reactionSprite = currentProfile.reactionHappy_3; 
+                    seType = SEType.ReactionHappy_3;
+                    break;
+                case ReactionType.Sad_1: 
+                    reactionSprite = currentProfile.reactionSad_1; 
+                    seType = SEType.ReactionSad_1;
+                    break;
+                case ReactionType.Sad_2: 
+                    reactionSprite = currentProfile.reactionSad_2; 
+                    seType = SEType.ReactionSad_2;
+                    break;
             }
             
             if (reactionSprite == null) return;
+            
+            // リアクションSEを再生
+            Core.AudioManager.Instance?.PlaySE(seType);
             
             shouldLoopReaction = loop;
             StartCoroutine(ReactionRoutine(reactionSprite, type));

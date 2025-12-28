@@ -103,7 +103,7 @@ namespace ApprovalMonster.Core
         }
         
         /// <summary>
-        /// SEを再生
+        /// SEを再生（SEType指定）
         /// </summary>
         public void PlaySE(SEType type)
         {
@@ -116,6 +116,24 @@ namespace ApprovalMonster.Core
             AudioClip clip = audioDatabase.GetSE(type);
             if (clip == null) return;
             
+            PlaySEClip(clip);
+        }
+        
+        /// <summary>
+        /// SEを再生（AudioClip直接指定）
+        /// MonsterModePresetのclickSound等、カスタム音声の再生用
+        /// </summary>
+        public void PlaySE(AudioClip clip)
+        {
+            if (clip == null) return;
+            PlaySEClip(clip);
+        }
+        
+        /// <summary>
+        /// SE再生の共通処理
+        /// </summary>
+        private void PlaySEClip(AudioClip clip)
+        {
             // Find available SE source
             foreach (var source in seSources)
             {
