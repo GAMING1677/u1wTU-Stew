@@ -11763,7 +11763,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -5.5087, y: 385.9}
+  m_AnchoredPosition: {x: -5.508728, y: 385.9}
   m_SizeDelta: {x: 114.2212, y: 30.7259}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1553979975
@@ -14580,7 +14580,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.DraftUI
   canvasGroup: {fileID: 581304071}
   titleText: {fileID: 1507666412}
-  remainingDraftsText: {fileID: 1507666412}
+  remainingDraftsText: {fileID: 1882464504}
   cardOptionsContainer: {fileID: 1904792448}
   cardViewPrefab: {fileID: 1621553481172379671, guid: 031b171cf6210de4cb047c2d4028de8f, type: 3}
   backgroundImage: {fileID: 778218318}
