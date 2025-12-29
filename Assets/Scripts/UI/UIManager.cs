@@ -87,9 +87,23 @@ namespace ApprovalMonster.UI
         [Tooltip("炎上中のみ表示するコンテナ（オプショナル）")]
         [SerializeField] private GameObject flamingContainer;
         
+        [Header("Tutorial")]
+        [Tooltip("チュートリアルプレイヤー")]
+        [SerializeField] private TutorialPlayer tutorialPlayer;
+        
         private bool isSetup = false;
 
         private List<CardView> activeCards = new List<CardView>();
+        
+        // カウントアニメーション用の現在表示値
+        private float displayedFollowers = 0;
+        private float displayedImpression = 0;
+        private float displayedMentalCurrent = 0;
+        private float displayedQuotaRemaining = 0;
+        private float displayedClearGoalRemaining = 0;
+        
+        // アニメーション時間
+        private const float COUNT_ANIM_DURATION = 0.5f;
 
         private void Awake()
         {
@@ -413,7 +427,22 @@ namespace ApprovalMonster.UI
 
         private void UpdateFollowers(int val)
         {
-            followersText.text = $"{val:N0} ";
+            // 既存のアニメーションを停止
+            DOTween.Kill("followersCount");
+            
+            // カウントアニメーション
+            DOTween.To(() => displayedFollowers, x => {
+                displayedFollowers = x;
+                followersText.text = $"{(int)displayedFollowers:N0} ";
+            }, val, COUNT_ANIM_DURATION)
+            .SetEase(Ease.OutQuad)
+            .SetId("followersCount")
+            .OnComplete(() => {
+                displayedFollowers = val;
+                followersText.text = $"{val:N0} ";
+            });
+            
+            // パンチスケール
             followersText.transform.DOKill();
             followersText.transform.localScale = Vector3.one;
             followersText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
@@ -421,7 +450,23 @@ namespace ApprovalMonster.UI
 
         private void UpdateMental(int current, int max)
         {
-            mentalText.text = $"{current}/{max}";
+            // 既存のアニメーションを停止
+            DOTween.Kill("mentalCount");
+            
+            // カウントアニメーション
+            int targetCurrent = current;
+            int targetMax = max;
+            DOTween.To(() => displayedMentalCurrent, x => {
+                displayedMentalCurrent = x;
+                mentalText.text = $"{(int)displayedMentalCurrent}/{targetMax}";
+            }, targetCurrent, COUNT_ANIM_DURATION)
+            .SetEase(Ease.OutQuad)
+            .SetId("mentalCount")
+            .OnComplete(() => {
+                displayedMentalCurrent = targetCurrent;
+                mentalText.text = $"{targetCurrent}/{targetMax}";
+            });
+            
             if (mentalFillImage != null)
             {
                 float fillAmount = max > 0 ? (float)current / max : 0f;
@@ -453,8 +498,23 @@ namespace ApprovalMonster.UI
 
         private void UpdateImpression(long val)
         {
-            impressionText.text = val.ToString("N0");
-            // Slightly smaller punch for frequent updates
+            // 既存のアニメーションを停止
+            DOTween.Kill("impressionCount");
+            
+            // カウントアニメーション
+            long targetVal = val;
+            DOTween.To(() => displayedImpression, x => {
+                displayedImpression = x;
+                impressionText.text = ((long)displayedImpression).ToString("N0");
+            }, (float)targetVal, COUNT_ANIM_DURATION)
+            .SetEase(Ease.OutQuad)
+            .SetId("impressionCount")
+            .OnComplete(() => {
+                displayedImpression = targetVal;
+                impressionText.text = targetVal.ToString("N0");
+            });
+            
+            // パンチスケール（軽め）
             impressionText.transform.DOKill();
             impressionText.transform.localScale = Vector3.one;
             impressionText.transform.DOPunchScale(Vector3.one * 0.1f, 0.2f);
@@ -609,22 +669,31 @@ namespace ApprovalMonster.UI
             {
                 if (remaining > 0)
                 {
-                    // 未達時
-                    string newText = remaining.ToString("N0");
-                    bool isUpdate = quotaText.text != newText;
-                    quotaText.text = newText;
+                    // 未達時 - カウントアニメーション
+                    DOTween.Kill("quotaCount");
+                    
+                    long targetRemaining = remaining;
+                    DOTween.To(() => displayedQuotaRemaining, x => {
+                        displayedQuotaRemaining = x;
+                        quotaText.text = ((long)displayedQuotaRemaining).ToString("N0");
+                    }, (float)targetRemaining, COUNT_ANIM_DURATION)
+                    .SetEase(Ease.OutQuad)
+                    .SetId("quotaCount")
+                    .OnComplete(() => {
+                        displayedQuotaRemaining = targetRemaining;
+                        quotaText.text = targetRemaining.ToString("N0");
+                    });
+                    
                     quotaText.color = Color.white;
                     
-                    // 表示(更新)の際のアニメーション (軽く)
-                    if (isUpdate)
-                    {
-                        quotaText.transform.DOKill(complete: true);
-                        quotaText.transform.DOPunchScale(Vector3.one * 0.2f, 0.2f, 10, 1);
-                    }
+                    // パンチスケール
+                    quotaText.transform.DOKill(complete: true);
+                    quotaText.transform.DOPunchScale(Vector3.one * 0.2f, 0.2f, 10, 1);
                 }
                 else
                 {
                     // 完了時
+                    DOTween.Kill("quotaCount");
                     if (quotaText.text != "OK") // 完了になった瞬間
                     {
                         quotaText.text = "OK";
@@ -669,7 +738,7 @@ namespace ApprovalMonster.UI
                         {
                              Sequence seq = DOTween.Sequence();
                              seq.Append(penaltyRiskContainer.transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 5, 0.5f)); // 弱めのびよーん
-                             seq.AppendInterval(2.0f); // 間隔（少し長めに）
+                             seq.AppendInterval(0.5f); // 間隔（短めに）
                              seq.SetLoops(-1, LoopType.Restart); // ループ
                              seq.SetTarget(penaltyRiskContainer.transform);
                         }
@@ -977,10 +1046,24 @@ namespace ApprovalMonster.UI
                 
                 if (remaining > 0)
                 {
-                    clearGoalText.text = $"クリアまで… {remaining:N0}";
+                    // カウントアニメーション
+                    DOTween.Kill("clearGoalCount");
+                    
+                    long targetRemaining = remaining;
+                    DOTween.To(() => displayedClearGoalRemaining, x => {
+                        displayedClearGoalRemaining = x;
+                        clearGoalText.text = $"クリアまで… {(long)displayedClearGoalRemaining:N0}";
+                    }, (float)targetRemaining, COUNT_ANIM_DURATION)
+                    .SetEase(Ease.OutQuad)
+                    .SetId("clearGoalCount")
+                    .OnComplete(() => {
+                        displayedClearGoalRemaining = targetRemaining;
+                        clearGoalText.text = $"クリアまで… {targetRemaining:N0}";
+                    });
                 }
                 else
                 {
+                    DOTween.Kill("clearGoalCount");
                     clearGoalText.text = "目標スコア達成完了！";
                 }
             }
@@ -1019,6 +1102,25 @@ namespace ApprovalMonster.UI
                 // スコアアタックモードまたは条件なし
                 clearGoalText.gameObject.SetActive(false);
                 Debug.Log("[UIManager] Clear goal hidden (score attack mode or no clear condition)");
+            }
+        }
+        
+        /// <summary>
+        /// チュートリアルを表示する（外部からの呼び出し用）
+        /// ボタンのOnClickイベントから直接呼び出し可能
+        /// </summary>
+        public void ShowTutorial()
+        {
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
+            
+            if (tutorialPlayer != null)
+            {
+                tutorialPlayer.Show();
+                Debug.Log("[UIManager] Tutorial opened.");
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] TutorialPlayer is not assigned!");
             }
         }
     }
