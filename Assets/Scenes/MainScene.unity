@@ -12932,8 +12932,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 34d6ebeb8c03b054eb19022a99cef986, type: 2}
   - {fileID: 11400000, guid: 5ef98590b312050448b7f5f2428de95f, type: 2}
   - {fileID: 11400000, guid: 76b6b510e043f8f42a6acfeeadd7a580, type: 2}
+  tutorialPanel: {fileID: 1466223544}
   canvasGroup: {fileID: 1466223545}
   fadeDuration: 0.3
+  transitionDuration: 0
   typewriterInterval: 0.05
   pulseScale: 1.1
   pulseDuration: 0.8
