@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u8056\u306A\u308B\u9A0E\u58EB"
   cardImage: {fileID: -7016253564002286268, guid: 13fa42345bb7f224fbd153fdb47fe370, type: 3}
-  description: "\u624B\u672D\u306E\u30B4\u30D6\u30EA\u30F3\u306E\u6570\xD7500\u4E07\u4EBA\u30D5\u30A9\u30ED\u30EF\u30FC\u5897\n1\u679A\u30C9\u30ED\u30FC\u3059\u308B\n\u30A4\u30F3\u30D71\uFF05\u7372\u5F97"
+  description: "\u624B\u672D\u306E\u30B4\u30D6\u30EA\u30F3\u306E\u6570\xD71000\u4E07\u4EBA\u30D5\u30A9\u30ED\u30EF\u30FC\u5897\n1\u679A\u30C9\u30ED\u30FC\u3059\u308B\n\u30A4\u30F3\u30D71\uFF05\u7372\u5F97"
   cardTag: "\u4E0A\u7D1A\u8005\u5411\u3051"
   flavorText: "\u624B\u4E0B\u306F\u591A\u3044\u65B9\u304C\u826F\u3044"
   postComments:
   - "\u307F\u3093\u306A\u3044\u3064\u3082\u3042\u308A\u304C\u3068"
   - "\u30D5\u30A9\u30ED\u30FC\u306E\u307F\u3093\u306A\u3068\u51FA\u4F1A\u3048\u3066\u3088\u304B\u3063\u305F"
   - "\u672C\u5F53\u306B\u5927\u4E08\u592B\uFF1F\u7121\u7406\u3057\u306A\u304F\u3066\u3044\u3044\u3088\uFF1F"
+  postIcon: {fileID: 0}
   motivationCost: 0
   mentalCost: 0
   followerGain: 0
@@ -34,6 +35,7 @@ MonoBehaviour:
   cardType: 2
   isExhaust: 0
   rarity: 0
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0
@@ -42,7 +44,7 @@ MonoBehaviour:
   exhaustAllTargetCards: 0
   handCountImpressionRate: 0
   drawByHandCount: 0
-  handCountFollowerRate: 5000000
+  handCountFollowerRate: 10000000
   handEffectMinCount: 1
   flamingSeedCount: 0
   flamingRate: 0

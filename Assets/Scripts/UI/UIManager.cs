@@ -35,6 +35,8 @@ namespace ApprovalMonster.UI
         [Header("Fill Images")]
         [SerializeField] private Image mentalFillImage;
         [SerializeField] private Image motivationFillImage;
+        [Tooltip("モチベ不足時に振動させるオブジェクト")]
+        [SerializeField] private RectTransform motivationContainer;
         
         [Header("Buttons")]
         [SerializeField] private Button endTurnButton;
@@ -791,7 +793,7 @@ namespace ApprovalMonster.UI
             }
         }
         
-        public void AddPost(string text, long impressionCount)
+        public void AddPost(string text, long impressionCount, Sprite icon = null)
         {
             if (postPrefab == null || timelineContainer == null) return;
 
@@ -799,7 +801,7 @@ namespace ApprovalMonster.UI
             ApprovalMonster.UI.PostView view = postObj.GetComponent<ApprovalMonster.UI.PostView>();
             if (view != null)
             {
-                view.SetContent(text, impressionCount);
+                view.SetContent(text, impressionCount, icon);
             }
             
             // 投稿SE再生
@@ -996,9 +998,58 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void ShowMotivationLowCutIn(System.Action onComplete = null)
         {
+            // モチベゲージを振動させる
+            ShakeMotivationUI();
+            
             if (cutInUI != null)
             {
                 cutInUI.ShowMotivationLow(onComplete);
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] CutInUI is not assigned! Proceeding directly.");
+                onComplete?.Invoke();
+            }
+        }
+        
+        /// <summary>
+        /// モチベーションUIを振動させる
+        /// </summary>
+        private void ShakeMotivationUI()
+        {
+            if (motivationContainer == null) return;
+            
+            // 既存のアニメーションをキャンセル
+            motivationContainer.DOKill();
+            
+            // 振動アニメーション
+            motivationContainer.DOShakePosition(0.4f, new Vector3(10f, 5f, 0), 20, 90, false, true);
+        }
+        
+        /// <summary>
+        /// 手札条件不足カットインを表示
+        /// </summary>
+        public void ShowHandConditionNotMetCutIn(System.Action onComplete = null)
+        {
+            if (cutInUI != null)
+            {
+                cutInUI.ShowHandConditionNotMet(onComplete);
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] CutInUI is not assigned! Proceeding directly.");
+                onComplete?.Invoke();
+            }
+        }
+        
+        /// <summary>
+        /// カードプレイ不可カットインを表示
+        /// </summary>
+        public void ShowCardUnplayableCutIn(System.Action onComplete = null)
+        {
+            if (cutInUI != null)
+            {
+                cutInUI.ShowCardUnplayable(onComplete);
             }
             else
             {

@@ -29,6 +29,11 @@ namespace ApprovalMonster.Data
         [BoxGroup("Basic Info")]
         [TextArea(2, 4)]
         public System.Collections.Generic.List<string> postComments;
+        
+        [BoxGroup("Basic Info")]
+        [Tooltip("ポスト表示時のアイコン（未設定時はデフォルト）")]
+        [ShowAssetPreview]
+        public Sprite postIcon;
 
         [BoxGroup("Costs")]
         [MinValue(0)]
@@ -74,6 +79,10 @@ namespace ApprovalMonster.Data
         
         [BoxGroup("Type & Risk")]
         public CardRarity rarity = CardRarity.Common;
+        
+        [BoxGroup("Type & Risk")]
+        [Tooltip("カードのプレイ条件（特定条件下でのみプレイ可能）")]
+        public CardPlayCondition playCondition = CardPlayCondition.None;
         
         [BoxGroup("Type & Risk")]
         public RiskType riskType;

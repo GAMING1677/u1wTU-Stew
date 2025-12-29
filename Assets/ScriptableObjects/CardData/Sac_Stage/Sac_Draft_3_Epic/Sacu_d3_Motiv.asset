@@ -12,25 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Sacu_d3_Motiv
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u308F\u3093\u306B\u3083\u3093\u52D5\u753B"
-  cardImage: {fileID: 4391556160360618507, guid: e6240f70736fcaf47945e128e8067b12, type: 3}
-  description: "\u6BCE\u30BF\u30FC\u30F3\u306E\u30C9\u30ED\u30FC\u679A\u6570\u304C1\u679A\u5897\u3048\u308B\n\uFF08\u4F7F\u3044\u6368\u3066\uFF09"
+  cardName: "\u81EA\u7531\u3078\u306E\u62DB\u5F85"
+  cardImage: {fileID: -403740995019174644, guid: 31c432619ba29ce42a76c17c7cc73133, type: 3}
+  description: "\u30E2\u30C1\u30D9\u4E0A\u9650\u30921\u5897\u3084\u3059\n\u30E2\u30C1\u30D9\u304C2\u56DE\u5FA9\u3059\u308B\n\uFF08\u4F7F\u3044\u6368\u3066\uFF09"
   cardTag: 
-  flavorText: "\u541B\u306E\u77B3\u306B\u4E7E\u676F"
-  postComments: []
+  flavorText: "\u9650\u5B9A\u62DB\u5F85\uFF01\u79D8\u5BC6\u306E\"\u88CF\"\u30E1\u30BD\u30C3\u30C9\uFF01"
+  postComments:
+  - "\u3053\u308C\u3092\u898B\u3066\u308B\u4EBA\u9650\u5B9A\uFF01"
+  postIcon: {fileID: 0}
   motivationCost: 2
   mentalCost: 0
   followerGain: 0
   isTurnMultiplierEffect: 0
   drawCount: 0
-  motivationRecovery: 0
-  turnDrawBonus: 1
-  maxMotivationBonus: 0
+  motivationRecovery: 2
+  turnDrawBonus: 0
+  maxMotivationBonus: 1
   impressionRate: 0
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 1
   rarity: 2
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0

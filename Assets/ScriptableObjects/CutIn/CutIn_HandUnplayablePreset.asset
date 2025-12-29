@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63dac9d5f79086b418366c7cf7222e42, type: 3}
+  m_Name: CutIn_HandUnplayablePreset
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CutInPreset
+  title: "\u3053\u306E\u30AB\u30FC\u30C9\u306F\u30D7\u30EC\u30A4\u3067\u304D\u307E\u305B\u3093"
+  message: 
+  backgroundImage: {fileID: 0}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 0.8}
+  showIcon: 0
+  iconImage: {fileID: 0}
+  titleColor: {r: 1, g: 1, b: 1, a: 1}
+  messageColor: {r: 1, g: 1, b: 1, a: 1}
+  fadeInDuration: 0.3
+  fadeOutDuration: 0.2
+  showSound: {fileID: 0}
+  clickSound: {fileID: 0}
