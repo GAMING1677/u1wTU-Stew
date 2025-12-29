@@ -113,6 +113,13 @@ namespace ApprovalMonster.Core
             {
                 currentStage = StageManager.Instance.SelectedStage;
                 Debug.Log($"[GameManager] Using selected stage from StageManager: {currentStage.stageName}");
+                
+                // Setup clear goal UI after stage is set
+                var uiManager = FindObjectOfType<UI.UIManager>();
+                if (uiManager != null)
+                {
+                    uiManager.SetupClearGoal();
+                }
             }
             else
             {
@@ -438,13 +445,19 @@ namespace ApprovalMonster.Core
                 resourceManager.onImpressionsChanged.RemoveListener(OnImpressionsChanged);
             }
             
-            // 8. Reset character profile to normal
+            // 8. Reset character profile to normal and UI state
             var uiManager = FindObjectOfType<UI.UIManager>();
-            if (uiManager != null && currentStage != null && currentStage.normalProfile != null)
+            if (uiManager != null)
             {
-                uiManager.SetupCharacter(currentStage.normalProfile);
+                if (currentStage != null && currentStage.normalProfile != null)
+                {
+                    uiManager.SetupCharacter(currentStage.normalProfile);
+                }
                 uiManager.StopCharacterReaction(); // Stop any playing animations
-                Debug.Log("[GameManager] Reset character profile to normal");
+                uiManager.ClearTimeline(); // Clear timeline posts
+                uiManager.ResetEndTurnButtonPulse(); // Reset pulse animation
+                // NOTE: SetupClearGoal is called in StartGame after currentStage is updated
+                Debug.Log("[GameManager] Reset UI state (character, timeline, pulse)");
             }
             
             Debug.Log("[GameManager] ResetGame complete");

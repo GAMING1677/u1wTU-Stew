@@ -27,9 +27,6 @@ namespace ApprovalMonster.UI
             {
                 startButton.onClick.AddListener(OnStartDates);
                 Debug.Log("[TitleManager] Start button listener added.");
-                
-                // スタートボタンのパルスアニメーション開始
-                StartPulseAnimation(startButton.transform);
             }
             else
             {
@@ -37,8 +34,37 @@ namespace ApprovalMonster.UI
             }
         }
         
+        private void OnEnable()
+        {
+            // パネルが表示されるたびにパルスを開始
+            if (startButton != null)
+            {
+                StartPulseAnimation(startButton.transform);
+                Debug.Log("[TitleManager] Pulse animation started on enable.");
+            }
+            
+            // BGMを再生（タイトルに戻った時用）
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayMainTheme();
+            }
+        }
+        
+        private void OnDisable()
+        {
+            // パネルが非表示になったらパルスを停止
+            pulseTween?.Kill();
+            if (startButton != null)
+            {
+                startButton.transform.localScale = Vector3.one;
+            }
+            Debug.Log("[TitleManager] Pulse animation stopped on disable.");
+        }
+        
         private void StartPulseAnimation(Transform target)
         {
+            // 既存のTweenを停止
+            pulseTween?.Kill();
             target.localScale = Vector3.one;
             pulseTween = target.DOScale(pulseScale, pulseDuration)
                 .SetEase(Ease.InOutSine)

@@ -138,6 +138,33 @@ namespace ApprovalMonster.UI
                 characterAnimator.StopCurrentReaction();
             }
         }
+        
+        /// <summary>
+        /// タイムラインの投稿をすべてクリアする（ゲームリセット時用）
+        /// </summary>
+        public void ClearTimeline()
+        {
+            if (timelineContainer != null)
+            {
+                foreach (Transform child in timelineContainer)
+                {
+                    Destroy(child.gameObject);
+                }
+                Debug.Log("[UIManager] Timeline cleared.");
+            }
+        }
+        
+        /// <summary>
+        /// エンドターンボタンのパルスアニメーションをリセットする（ゲームリセット時用）
+        /// </summary>
+        public void ResetEndTurnButtonPulse()
+        {
+            if (endTurnButtonPulse != null)
+            {
+                endTurnButtonPulse.StopPulse();
+                Debug.Log("[UIManager] End turn button pulse reset.");
+            }
+        }
 
         private void OnEnable()
         {
@@ -386,7 +413,7 @@ namespace ApprovalMonster.UI
 
         private void UpdateFollowers(int val)
         {
-            followersText.text = $"{FormatNumber(val)} ";
+            followersText.text = $"{val:N0} ";
             followersText.transform.DOKill();
             followersText.transform.localScale = Vector3.one;
             followersText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
@@ -426,11 +453,13 @@ namespace ApprovalMonster.UI
 
         private void UpdateImpression(long val)
         {
-            impressionText.text = FormatNumber(val);
+            impressionText.text = val.ToString("N0");
             // Slightly smaller punch for frequent updates
             impressionText.transform.DOKill();
             impressionText.transform.localScale = Vector3.one;
             impressionText.transform.DOPunchScale(Vector3.one * 0.1f, 0.2f);
+            
+            UpdateClearGoalText(val);
         }
 
         private void ShowFollowerGain(int amount)
@@ -581,8 +610,9 @@ namespace ApprovalMonster.UI
                 if (remaining > 0)
                 {
                     // 未達時
-                    bool isUpdate = quotaText.text != FormatNumber(remaining);
-                    quotaText.text = FormatNumber(remaining);
+                    string newText = remaining.ToString("N0");
+                    bool isUpdate = quotaText.text != newText;
+                    quotaText.text = newText;
                     quotaText.color = Color.white;
                     
                     // 表示(更新)の際のアニメーション (軽く)
@@ -932,11 +962,35 @@ namespace ApprovalMonster.UI
             }
         }
         
+        private void UpdateClearGoalText(long currentScore)
+        {
+            if (clearGoalText == null) return;
+            
+            var currentStage = GameManager.Instance?.currentStage;
+            // Check if goal exists
+            if (currentStage != null && 
+                currentStage.clearCondition != null && 
+                currentStage.clearCondition.hasScoreGoal)
+            {
+                long target = currentStage.clearCondition.targetScore;
+                long remaining = target - currentScore;
+                
+                if (remaining > 0)
+                {
+                    clearGoalText.text = $"クリアまで… {remaining:N0}";
+                }
+                else
+                {
+                    clearGoalText.text = "目標スコア達成完了！";
+                }
+            }
+        }
+
         /// <summary>
         /// クリア目標の表示を設定
         /// スコアゴールがある場合のみ表示
         /// </summary>
-        private void SetupClearGoal()
+        public void SetupClearGoal()
         {
             if (clearGoalText == null)
             {
@@ -956,8 +1010,9 @@ namespace ApprovalMonster.UI
             if (currentStage.clearCondition != null && currentStage.clearCondition.hasScoreGoal)
             {
                 clearGoalText.gameObject.SetActive(true);
-                clearGoalText.text = $"目標：{currentStage.clearCondition.targetScore:N0}";
-                Debug.Log($"[UIManager] Clear goal displayed: {currentStage.clearCondition.targetScore:N0}");
+                // Initial update
+                UpdateClearGoalText(GameManager.Instance.resourceManager.totalImpressions);
+                Debug.Log($"[UIManager] Clear goal displayed. Target: {currentStage.clearCondition.targetScore:N0}");
             }
             else
             {
