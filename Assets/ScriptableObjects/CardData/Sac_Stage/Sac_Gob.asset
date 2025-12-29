@@ -16,7 +16,7 @@ MonoBehaviour:
   cardImage: {fileID: -348770082466964, guid: 160b2a0556b88b348a884afef3d39799, type: 3}
   description: "\u52B9\u679C\u306A\u3057"
   cardTag: 
-  flavorText: 
+  flavorText: "\u793E\u4F1A\u306E\u304A\u8377\u7269"
   postComments: []
   motivationCost: 0
   mentalCost: 0

@@ -248,6 +248,7 @@ namespace ApprovalMonster.UI
              {
                  SetupCharacter(GameManager.Instance.currentStage.normalProfile);
                  SetupClearGoal(); // クリア目標の表示を設定
+                 SetupFlamingUI(); // Flaming UIの表示/非表示を設定
              }
              
              // Setup button listener
@@ -544,9 +545,23 @@ namespace ApprovalMonster.UI
                 flamingLevelText.text = isOnFire ? $"-{level}" : "";
             }
             
-            // flamingContainer is always visible (removed SetActive)
+            // flamingContainer visibility is controlled by SetupFlamingUI
             
             Debug.Log($"[UIManager] Flaming UI Updated: seeds={seeds}, level={level}, isOnFire={isOnFire}");
+        }
+        
+        /// <summary>
+        /// ステージ設定に基づいてFlaming UIの表示/非表示を設定
+        /// </summary>
+        private void SetupFlamingUI()
+        {
+            if (flamingContainer == null) return;
+            
+            var stage = GameManager.Instance?.currentStage;
+            bool showFlaming = stage != null && stage.enableFlaming;
+            
+            flamingContainer.SetActive(showFlaming);
+            Debug.Log($"[UIManager] Flaming UI visibility set to: {showFlaming} (stage: {stage?.stageName ?? "null"})");
         }
 
         private void ShowImpressionGain(long amount, float rate)
