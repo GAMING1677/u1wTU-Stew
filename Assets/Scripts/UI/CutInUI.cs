@@ -44,6 +44,10 @@ namespace ApprovalMonster.UI
         [SerializeField] private CutInPreset monsterModePreset;
         [Tooltip("モチベーション不足用プリセット")]
         [SerializeField] private CutInPreset motivationLowPreset;
+        [Tooltip("手札条件不足用プリセット")]
+        [SerializeField] private CutInPreset handConditionNotMetPreset;
+        [Tooltip("カードプレイ不可用プリセット")]
+        [SerializeField] private CutInPreset cardUnplayablePreset;
         
         private Action onClickCallback;
         private bool isShowing = false;
@@ -183,6 +187,36 @@ namespace ApprovalMonster.UI
             else
             {
                 Show("やる気が足りない", "なんか面倒だからいいや…", onComplete);
+            }
+        }
+        
+        /// <summary>
+        /// 手札条件不足用プリセットで表示
+        /// </summary>
+        public void ShowHandConditionNotMet(Action onComplete = null)
+        {
+            if (handConditionNotMetPreset != null)
+            {
+                ShowPreset(handConditionNotMetPreset, onComplete);
+            }
+            else
+            {
+                Show("条件を満たしていない", "このカードを使うには条件が必要…", onComplete);
+            }
+        }
+        
+        /// <summary>
+        /// カードプレイ不可用プリセットで表示
+        /// </summary>
+        public void ShowCardUnplayable(Action onComplete = null)
+        {
+            if (cardUnplayablePreset != null)
+            {
+                ShowPreset(cardUnplayablePreset, onComplete);
+            }
+            else
+            {
+                Show("使えないカード", "今は使うことができない…", onComplete);
             }
         }
         

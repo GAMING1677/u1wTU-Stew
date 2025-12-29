@@ -10,6 +10,8 @@ namespace ApprovalMonster.UI
     public class PostView : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI contentText;
+        [Header("Icon")]
+        [SerializeField] private Image iconImage;
         [Header("Metrics")]
         [SerializeField] private TextMeshProUGUI likesText;
         [SerializeField] private TextMeshProUGUI rtText;
@@ -26,11 +28,21 @@ namespace ApprovalMonster.UI
             layoutElement = GetComponent<LayoutElement>();
         }
 
-        public void SetContent(string text, long impressionCount)
+        public void SetContent(string text, long impressionCount, Sprite icon = null)
         {
             if (contentText != null)
             {
                 contentText.text = text;
+            }
+            
+            // アイコン設定（指定があれば変更＆表示）
+            if (iconImage != null && icon != null)
+            {
+                iconImage.sprite = icon;
+                // アルファ値を1に設定して表示
+                Color c = iconImage.color;
+                c.a = 1f;
+                iconImage.color = c;
             }
             
             // Show Base Impressions

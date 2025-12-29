@@ -732,6 +732,44 @@ namespace ApprovalMonster.Core
                 return;
             }
 
+            // ========== Card Play Condition Check ==========
+            // カードのプレイ条件をチェック
+            if (card.playCondition != Data.CardPlayCondition.None)
+            {
+                bool canPlay = true;
+                switch (card.playCondition)
+                {
+                    case Data.CardPlayCondition.Never:
+                        canPlay = false;
+                        break;
+                    case Data.CardPlayCondition.MonsterModeOnly:
+                        canPlay = resourceManager.isMonsterMode;
+                        break;
+                    case Data.CardPlayCondition.NormalModeOnly:
+                        canPlay = !resourceManager.isMonsterMode;
+                        break;
+                }
+                
+                if (!canPlay)
+                {
+                    Debug.Log($"[GameManager] Card {card.cardName} cannot be played: playCondition={card.playCondition}, isMonsterMode={resourceManager.isMonsterMode}");
+                    var uiManager = FindObjectOfType<UI.UIManager>();
+                    
+                    // カットイン表示後にポストを追加（ポストがある場合のみ）
+                    uiManager?.ShowCardUnplayableCutIn(() =>
+                    {
+                        // プレイ不可カードのポスト表示（インプレ0）
+                        if (card.postComments != null && card.postComments.Count > 0)
+                        {
+                            string comment = card.postComments[Random.Range(0, card.postComments.Count)];
+                            uiManager?.AddPost(comment, 0, card.postIcon);
+                            Debug.Log($"[GameManager] Never card post added: {comment}");
+                        }
+                    });
+                    return;
+                }
+            }
+            
             // Hand-Based Effect Cost Check
             if (card.handEffectTargetCard != null)
             {
@@ -741,6 +779,8 @@ namespace ApprovalMonster.Core
                 if (card.exhaustAllTargetCards && handCount < 1)
                 {
                     Debug.Log($"[GameManager] No {card.handEffectTargetCard.cardName} in hand to exhaust!");
+                    var uiManager = FindObjectOfType<UI.UIManager>();
+                    uiManager?.ShowHandConditionNotMetCutIn();
                     return;
                 }
                 
@@ -749,6 +789,8 @@ namespace ApprovalMonster.Core
                     && handCount < card.handEffectMinCount)
                 {
                     Debug.Log($"[GameManager] Need at least {card.handEffectMinCount} {card.handEffectTargetCard.cardName} in hand!");
+                    var uiManager = FindObjectOfType<UI.UIManager>();
+                    uiManager?.ShowHandConditionNotMetCutIn();
                     return;
                 }
             }
@@ -1037,7 +1079,7 @@ namespace ApprovalMonster.Core
                 string comment = card.postComments[Random.Range(0, card.postComments.Count)];
                 // gainedImpressionsが0の場合、フォロワー数×1%を使用
                 long displayImpressions = gainedImpressions > 0 ? gainedImpressions : (long)(resourceManager.currentFollowers * 0.01f);
-                FindObjectOfType<UI.UIManager>()?.AddPost(comment, displayImpressions);
+                FindObjectOfType<UI.UIManager>()?.AddPost(comment, displayImpressions, card.postIcon);
             }
             
             // スコアクリア条件をチェック（カードプレイ後）

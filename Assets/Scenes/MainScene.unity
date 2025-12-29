@@ -9572,6 +9572,8 @@ MonoBehaviour:
   stageClearPreset: {fileID: 11400000, guid: bae6ebf29dc27834ab6f3d91062b1e94, type: 2}
   monsterModePreset: {fileID: 0}
   motivationLowPreset: {fileID: 11400000, guid: d9c5b23c5c64bc446ab6a81e6f2ad1a2, type: 2}
+  handConditionNotMetPreset: {fileID: 11400000, guid: ed230cddb7d1d83418e21b3de13995b1, type: 2}
+  cardUnplayablePreset: {fileID: 11400000, guid: 15440b10e322bdb448720b857fd20411, type: 2}
 --- !u!224 &1307431910
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12002,6 +12004,7 @@ MonoBehaviour:
   impressionGainUI: {fileID: 1268626273}
   mentalFillImage: {fileID: 2034688129}
   motivationFillImage: {fileID: 1294747413}
+  motivationContainer: {fileID: 1028263552}
   endTurnButton: {fileID: 25495974}
   draftUI: {fileID: 1952715833}
   handContainer: {fileID: 384800920}
@@ -13059,7 +13062,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ver0.0.8
+  m_text: ver0.0.9
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
   m_sharedMaterial: {fileID: 0}
