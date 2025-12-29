@@ -251,14 +251,16 @@ namespace ApprovalMonster.UI
                     if (StageManager.Instance != null)
                     {
                         StageManager.Instance.SelectStage(stage);
-                        // ゲーム画面に遷移
-                        if (SceneNavigator.Instance != null)
+                        
+                        // 初回プレイ時のチュートリアル表示チェック
+                        if (ShouldShowTutorialForFirstTime(stage))
                         {
-                            SceneNavigator.Instance.GoToMain();
+                            ShowTutorialThenGoToMain();
                         }
                         else
                         {
-                            Debug.LogError("[StageSelectManager] SceneNavigator not found!");
+                            // 通常のゲーム画面に遷移
+                            GoToMainGame();
                         }
                     }
                     else
@@ -266,6 +268,65 @@ namespace ApprovalMonster.UI
                         Debug.LogError("[StageSelectManager] StageManager.Instance is null!");
                     }
                 });
+        }
+        
+        /// <summary>
+        /// 初回プレイ時にチュートリアルを表示すべきかチェック
+        /// </summary>
+        private bool ShouldShowTutorialForFirstTime(StageData stage)
+        {
+            // 既にチュートリアルを見たことがあればfalse
+            if (TutorialPlayer.HasShownTutorial())
+            {
+                return false;
+            }
+            
+            // 初心者ステージ（前提ステージがない）かチェック
+            bool isBeginnerStage = stage != null && 
+                                   (stage.requiredStages == null || 
+                                    stage.requiredStages.Count == 0);
+            
+            return isBeginnerStage;
+        }
+        
+        /// <summary>
+        /// チュートリアルを表示してからゲーム画面に遷移
+        /// </summary>
+        private void ShowTutorialThenGoToMain()
+        {
+            Debug.Log("[StageSelectManager] First time playing - showing tutorial before game");
+            
+            // TutorialPlayerを探す
+            var tutorialPlayer = FindObjectOfType<TutorialPlayer>(true);
+            if (tutorialPlayer != null)
+            {
+                // チュートリアル終了時にゲーム画面へ遷移するコールバックを設定
+                tutorialPlayer.onTutorialClosed = () => {
+                    tutorialPlayer.onTutorialClosed = null; // コールバックをクリア
+                    GoToMainGame();
+                };
+                tutorialPlayer.Show();
+            }
+            else
+            {
+                Debug.LogWarning("[StageSelectManager] TutorialPlayer not found - going to main directly");
+                GoToMainGame();
+            }
+        }
+        
+        /// <summary>
+        /// メインゲーム画面に遷移
+        /// </summary>
+        private void GoToMainGame()
+        {
+            if (SceneNavigator.Instance != null)
+            {
+                SceneNavigator.Instance.GoToMain();
+            }
+            else
+            {
+                Debug.LogError("[StageSelectManager] SceneNavigator not found!");
+            }
         }
 
         /// <summary>
