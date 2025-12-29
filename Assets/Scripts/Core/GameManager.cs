@@ -582,7 +582,7 @@ namespace ApprovalMonster.Core
                 // Show Turn Result Cut-in
                 string title = quotaMet ? "ノルマ達成！" : "ノルマ未達...";
                 string message = quotaMet 
-                    ? $"インプレッション: +{impGained:N0}\nフォロワー: +{followerGained:N0}" 
+                    ? $"フォロワー: +{followerGained:N0}\nインプレッション: +{impGained:N0}" 
                     : $"ペナルティ: メンタル -{CalculateQuotaPenalty(endedTurn)}";
                 
                 // Color override (Green for success, Red/Purple for fail?) - Optional

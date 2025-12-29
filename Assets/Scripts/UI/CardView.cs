@@ -22,10 +22,22 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI tagText; // Tag or Rarity display
         [SerializeField] private Image riskIcon;
         
-        [Header("Animation")]
+        [Header("Selection Animation")]
         [SerializeField] private float hoverSlideDistance = 100f;
         [SerializeField] private float hoverScale = 1.15f;
         [SerializeField] private float hoverDuration = 0.2f;
+        
+        [Header("Idle Shadow Animation")]
+        [Tooltip("待機中の影アニメーションを有効にするか")]
+        [SerializeField] private bool enableIdleShadow = true;
+        [Tooltip("影用のImage（カードの子オブジェクト）")]
+        [SerializeField] private Image shadowImage;
+        [Tooltip("影のスケール変化量")]
+        [SerializeField] private float shadowPulseScale = 1.08f;
+        [Tooltip("影の色変化（ハイライト時）")]
+        [SerializeField] private Color shadowPulseColor = new Color(0, 0, 0, 0.6f);
+        [Tooltip("影アニメーションの周期（秒）")]
+        [SerializeField] private float shadowPulseDuration = 1.5f;
 
         private CardData _data;
         private CanvasGroup _canvasGroup;
@@ -35,6 +47,9 @@ namespace ApprovalMonster.UI
         
         private bool _isSelected = false;
         private static CardView _currentlySelectedCard = null;
+        private Tween _pulseTween;
+        private Vector3 _originalShadowScale;
+        private Color _originalShadowColor;
 
         private Canvas _canvas;
         private GraphicRaycaster _graphicRaycaster;
@@ -60,6 +75,13 @@ namespace ApprovalMonster.UI
             
             _graphicRaycaster = gameObject.GetComponent<GraphicRaycaster>();
             if (_graphicRaycaster == null) _graphicRaycaster = gameObject.AddComponent<GraphicRaycaster>();
+            
+            // 影の元のスケールと色を保存
+            if (shadowImage != null)
+            {
+                _originalShadowScale = shadowImage.transform.localScale;
+                _originalShadowColor = shadowImage.color;
+            }
         }
 
         /// <summary>
@@ -162,6 +184,9 @@ namespace ApprovalMonster.UI
 
             // Store original position after setup
             _originalPosition = _rectTransform.anchoredPosition;
+            
+            // 待機中のパルスアニメーション開始
+            StartPulse();
         }
         
         /// <summary>
@@ -248,6 +273,9 @@ namespace ApprovalMonster.UI
             _isSelected = true;
             _currentlySelectedCard = this;
             
+            // 選択時はパルスを停止
+            StopPulse();
+            
             // Disable layout control to prevent position override
             if (_layoutElement != null)
             {
@@ -322,15 +350,65 @@ namespace ApprovalMonster.UI
                 _canvas.overrideSorting = false;
                 _canvas.sortingOrder = 0;
             }
+            
+            // 選択解除後にパルス再開
+            StartPulse();
+        }
+        
+        /// <summary>
+        /// 待機中の影アニメーションを開始
+        /// </summary>
+        public void StartPulse()
+        {
+            if (!enableIdleShadow || _isSelected || shadowImage == null) return;
+            
+            StopPulse();
+            
+            // 影のスケールと色をアニメーション
+            var sequence = DOTween.Sequence();
+            
+            // スケールを大きくしながら色も変化
+            sequence.Append(shadowImage.transform
+                .DOScale(shadowPulseScale, shadowPulseDuration / 2f)
+                .SetEase(Ease.InOutSine));
+            sequence.Join(shadowImage
+                .DOColor(shadowPulseColor, shadowPulseDuration / 2f)
+                .SetEase(Ease.InOutSine));
+            
+            sequence.SetLoops(-1, LoopType.Yoyo);
+            _pulseTween = sequence;
+        }
+        
+        /// <summary>
+        /// 影アニメーションを停止
+        /// </summary>
+        public void StopPulse()
+        {
+            if (_pulseTween != null && _pulseTween.IsActive())
+            {
+                _pulseTween.Kill();
+                _pulseTween = null;
+            }
+            // 影を元に戻す
+            if (shadowImage != null)
+            {
+                shadowImage.transform.localScale = _originalShadowScale;
+                shadowImage.color = _originalShadowColor;
+            }
         }
         
         private void OnDestroy()
         {
+            // パルスを停止
+            StopPulse();
+            
             // Clean up if this was the selected card
             if (_currentlySelectedCard == this)
             {
                 _currentlySelectedCard = null;
             }
+            
+            transform.DOKill();
         }
     }
 }

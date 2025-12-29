@@ -17,6 +17,7 @@ namespace ApprovalMonster.UI
         [Header("UI References")]
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private TextMeshProUGUI titleText;
+        [SerializeField] private TextMeshProUGUI remainingDraftsText;
         [SerializeField] private Transform cardOptionsContainer;
         [SerializeField] private CardView cardViewPrefab;
         
@@ -62,6 +63,12 @@ namespace ApprovalMonster.UI
                 titleText.text = "選んだカードを3枚入手し、山札・手札・捨て札に加える";
                 titleText.color = Color.red;
                 
+                // モンスタードラフト時は残りドラフト表示を非表示
+                if (remainingDraftsText != null)
+                {
+                    remainingDraftsText.gameObject.SetActive(false);
+                }
+                
                 // 背景をモンスター用に変更
                 if (backgroundImage != null && monsterBackground != null)
                 {
@@ -70,8 +77,21 @@ namespace ApprovalMonster.UI
             }
             else
             {
+                // 残りドラフト回数を計算
+                var gm = GameManager.Instance;
+                int currentTurn = gm?.turnManager?.CurrentTurnCount ?? 1;
+                int lastDraftTurn = gm?.gameSettings?.lastDraftTurn ?? 10;
+                int remainingDrafts = Mathf.Max(0, lastDraftTurn - currentTurn + 1);
+                
                 titleText.text = "選択したカードが山札の一番上にセットされます";
                 titleText.color = Color.white;
+                
+                // 別テキストに残りドラフト回数を表示
+                if (remainingDraftsText != null)
+                {
+                    remainingDraftsText.text = $"あと{remainingDrafts}回";
+                    remainingDraftsText.gameObject.SetActive(true);
+                }
                 
                 // 背景を通常用に変更
                 if (backgroundImage != null && normalBackground != null)

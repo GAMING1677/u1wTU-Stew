@@ -36,6 +36,10 @@ namespace ApprovalMonster.Data
         public List<CardData> draftPool;
         public List<CardData> monsterDeck;
         
+        [Header("Flaming System")]
+        [Tooltip("このステージでフレーミング（炎上）システムを有効にするか")]
+        public bool enableFlaming = false;
+        
         [Header("Monster Mode")]
         [Tooltip("このステージ専用のモンスターモードカットイン設定")]
         public MonsterModePreset monsterModePreset;

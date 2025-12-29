@@ -22,6 +22,10 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private TextMeshProUGUI messageText;
         
+        [Header("Click Area")]
+        [Tooltip("クリック判定エリア（フルスクリーンのButtonを設定）")]
+        [SerializeField] private Button clickAreaButton;
+        
         [Header("Default Animation")]
         [SerializeField] private float fadeInDuration = 0.3f;
         [SerializeField] private float fadeOutDuration = 0.2f;
@@ -53,10 +57,34 @@ namespace ApprovalMonster.UI
             if (canvasGroup == null)
                 canvasGroup = GetComponent<CanvasGroup>();
             
-            // Ensure this object can receive pointer events
-            // The backgroundImage should have Raycast Target enabled
+            // クリックエリアボタンのリスナー設定
+            if (clickAreaButton != null)
+            {
+                clickAreaButton.onClick.AddListener(OnClickAreaClicked);
+            }
             
             gameObject.SetActive(false);
+        }
+        
+        private void OnDestroy()
+        {
+            if (clickAreaButton != null)
+            {
+                clickAreaButton.onClick.RemoveListener(OnClickAreaClicked);
+            }
+        }
+        
+        /// <summary>
+        /// クリックエリアボタンがクリックされた時
+        /// </summary>
+        private void OnClickAreaClicked()
+        {
+            if (!isShowing || !canClick) return;
+            
+            // クリック遅延チェック
+            if (Time.time - showTime < clickDelay) return;
+            
+            OnClick();
         }
         
         /// <summary>
