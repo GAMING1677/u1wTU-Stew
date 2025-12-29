@@ -114,11 +114,12 @@ namespace ApprovalMonster.Core
                 currentStage = StageManager.Instance.SelectedStage;
                 Debug.Log($"[GameManager] Using selected stage from StageManager: {currentStage.stageName}");
                 
-                // Setup clear goal UI after stage is set
+                // Setup UI after stage is set
                 var uiManager = FindObjectOfType<UI.UIManager>();
                 if (uiManager != null)
                 {
                     uiManager.SetupClearGoal();
+                    uiManager.SetupFlamingUI();
                 }
             }
             else

@@ -10,30 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
-  m_Name: Sacu_d1_dubble
+  m_Name: Sacu_Start_Imp_2
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u30B9\u30BF\u30D0\u306A\u3046"
-  cardImage: {fileID: -3963826598502621724, guid: 4db27e1b01fc41c43a7769df1eda0248, type: 3}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC100\u4EBA\u5897\n\u30A4\u30F3\u30D7\u309210%\u7372\u5F97\n2\u679A\u30C9\u30ED\u30FC\u3059\u308B"
+  cardName: "\u304A\u306F\u3088\u3046"
+  cardImage: {fileID: 8197717262057524853, guid: 6be99caa1a50447468bda40f49639a0d, type: 3}
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\xD710%\u30A4\u30F3\u30D7\u7372\u5F97"
   cardTag: 
-  flavorText: "\u30B3\u30FC\u30D2\u30FC?\u30E9\u30FC\u30E1\u30F3?"
+  flavorText: "\u6328\u62F6\u306F\u5927\u5207\u306B"
   postComments:
-  - "\u30B9\u30BF\u30D0\u6765\u305F\uFF01"
-  - "\u8FD1\u6240\u306E\u30B9\u30BF\u30D0\uFF01"
-  - "\u65C5\u5148\u306E\u30B9\u30BF\u30D0\uFF01"
-  - "\u53CB\u9054\u3068\u30B9\u30BF\u30D0\uFF01"
-  - "\u5916\u56FD\u306E\u30B9\u30BF\u30D0\uFF01"
-  - "\u521D\u3081\u3066\u306E\u30B9\u30BF\u30D0\uFF01"
-  - "\u884C\u304D\u3064\u3051\u306E\u30B9\u30BF\u30D0\uFF01"
-  - "\u7A74\u5834\u306E\u30B9\u30BF\u30D0\uFF01"
-  - "\u3061\u3087\u3063\u3068\u30B9\u30BF\u30D0\u5BC4\u3063\u305F"
-  - "\u307E\u305F\u30B9\u30BF\u30D0\u6765\u305F\uFF01"
+  - "\u3084\u3063\u307B\u30FC"
+  - "\u304A\u306F\u3088"
+  - "\u3082\u3046\u671D\u3060\u306D"
+  - "\u663C\u3058\u3083\u3093"
+  - "\u7720\u6C17\u3068\u6226\u3063\u3066\u307E\u3059"
+  - "\u671D\u304B\u3089\u30D0\u30BF\u30D0\u30BF\u3059\u304E\u3066\u8349"
+  - "\u3082\u3046\u3059\u3067\u306B\u5E30\u308A\u305F\u3044"
+  - "\u4ECA\u65E5\u3082\u3088\u308D\u3057\u304F"
+  - "\u307E\u3060\u982D\u8D77\u304D\u3066\u306A\u3044"
+  - "\u4ECA\u65E5\u3082\u304C\u3093\u3070\u308D"
+  - "\u591C\u66F4\u304B\u3057\u904E\u304E\u3066\u9854\u3080\u304F\u3093\u3067\u308B"
+  - "\u4ECA\u65E5\u5BD2\u3059\u304E\u3066\u5E03\u56E3\u304B\u3089\u51FA\u308C\u3093"
   postIcon: {fileID: 0}
-  motivationCost: 1
-  mentalCost: 3
+  motivationCost: 0
+  mentalCost: 1
   followerGain: 100
   isTurnMultiplierEffect: 0
-  drawCount: 2
+  drawCount: 0
   motivationRecovery: 0
   turnDrawBonus: 0
   maxMotivationBonus: 0

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u30D7\u30EC\u30DF\u30A2\u30E0\u8AB2\u91D1"
   cardImage: {fileID: 660848226564632446, guid: b1efab7c978c005419180da17bf79c1c, type: 3}
-  description: "\u30E2\u30C1\u30D9\u4E0A\u9650\u304C\uFF11\u5897\u3048\u308B\n\u30E2\u30C1\u30D9\u30921\u56DE\u5FA9\n(\u4F7F\u3044\u6368\u3066)"
+  description: "\u30E2\u30C1\u30D9\u30921\u56DE\u5FA9"
   cardTag: 
   flavorText: "\u3053\u3053\u304C\u30B9\u30BF\u30FC\u30C8\u30E9\u30A4\u30F3"
   postComments:
@@ -36,12 +36,12 @@ MonoBehaviour:
   drawCount: 0
   motivationRecovery: 1
   turnDrawBonus: 0
-  maxMotivationBonus: 1
+  maxMotivationBonus: 0
   impressionRate: 0
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 1
-  rarity: 0
+  rarity: 1
   playCondition: 0
   riskType: 0
   riskProbability: 1

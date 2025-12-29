@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u30AE\u30EA\u30AE\u30EA\u306E\u81EA\u64AE\u308A"
   cardImage: {fileID: 0}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C9\u4E07\u4EBA\u5897\u3048\u308B\n\u6368\u3066\u672D\u306B\u30B4\u30D6\u30EA\u30F3\u30923\u679A\u8FFD\u52A0\u3059\u308B"
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C4\u4E07\u4EBA\u5897\u52A0\n\u6368\u3066\u672D\u306B\u30B4\u30D6\u30EA\u30F3\u30923\u679A\u8FFD\u52A0"
   cardTag: 
   flavorText: "\u30DF\u30EA\u5358\u4F4D\u306E\u8ABF\u6574"
   postComments:
   - "\u5F8C\u3067\u6D88\u3059"
   postIcon: {fileID: 0}
   motivationCost: 1
-  mentalCost: 9
-  followerGain: 90000
+  mentalCost: 3
+  followerGain: 40000
   isTurnMultiplierEffect: 0
   drawCount: 0
   motivationRecovery: 0
@@ -38,10 +38,6 @@ MonoBehaviour:
   riskProbability: 1
   riskValue: 0
   generatedCards:
-  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
-    destination: 0
-  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
-    destination: 0
   - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
     destination: 0
   handEffectTargetCard: {fileID: 0}

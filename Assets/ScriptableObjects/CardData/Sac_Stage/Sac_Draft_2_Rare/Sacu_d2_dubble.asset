@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u81EA\u4F5C\u81EA\u6F14"
   cardImage: {fileID: 4479249569757203455, guid: 440a00307dfd30744a8dabcb5c51fb76, type: 3}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C2\u4E07\u4EBA\u5897\u3048\u308B\n\u30A4\u30F3\u30D720\uFF05\u7372\u5F97"
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C2\u4E07\u4EBA\u5897\u52A0\n\u30A4\u30F3\u30D720\uFF05\u7372\u5F97"
   cardTag: 
   flavorText: "\u30D0\u30EC\u306A\u304D\u3083\u3044\u3044\u306E\u3055"
   postComments:
@@ -23,7 +23,7 @@ MonoBehaviour:
   - "\u3084\u3070\u3001\u53EF\u611B\u3059\u304E\u3093\u3060\u3051\u3069"
   postIcon: {fileID: 21300000, guid: abff6f94061685b4e97cdf840144d235, type: 3}
   motivationCost: 1
-  mentalCost: 6
+  mentalCost: 5
   followerGain: 20000
   isTurnMultiplierEffect: 0
   drawCount: 0

@@ -555,7 +555,7 @@ namespace ApprovalMonster.UI
         /// <summary>
         /// ステージ設定に基づいてFlaming UIの表示/非表示を設定
         /// </summary>
-        private void SetupFlamingUI()
+        public void SetupFlamingUI()
         {
             if (flamingContainer == null) return;
             
@@ -701,8 +701,6 @@ namespace ApprovalMonster.UI
                         quotaText.text = targetRemaining.ToString("N0");
                     });
                     
-                    quotaText.color = Color.white;
-                    
                     // パンチスケール
                     quotaText.transform.DOKill(complete: true);
                     quotaText.transform.DOPunchScale(Vector3.one * 0.2f, 0.2f, 10, 1);
@@ -714,7 +712,6 @@ namespace ApprovalMonster.UI
                     if (quotaText.text != "OK") // 完了になった瞬間
                     {
                         quotaText.text = "OK";
-                        quotaText.color = Color.white;
                         
                         // 完了時のアニメーション (強め)
                         quotaText.transform.DOKill();
