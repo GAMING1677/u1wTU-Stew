@@ -17,6 +17,6 @@ MonoBehaviour:
   characterSize: {x: 400, y: 600}
   titleText: MONSTER MODE
   messageText: "\u63C9\u3081\u4E8B\u5927\u597D\u304D\n\u708E\u4E0A\u30C9\u30E9\u30B4\u30F3"
-  showSound: {fileID: 0}
+  showSound: {fileID: 8300000, guid: 6329f39e0c5a00b41bf1670e2be750f5, type: 3}
   clickSound: {fileID: 0}
-  monsterBGM: {fileID: 0}
+  monsterBGM: {fileID: 8300000, guid: d258b3f357aeccc4288118886f3e4275, type: 3}

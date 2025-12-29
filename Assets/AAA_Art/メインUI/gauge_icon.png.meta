@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d4f8a79dcb14b8f41a4b275cdd4fff52
+guid: fd13c8173e7c4c94099d9a606a2ed64e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6569042759848017389
-    second: follow_0
+      213: -6576729605453781959
+    second: gauge_icon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: follow_0
+      name: gauge_icon_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 243
-        height: 70
+        width: 19
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 31248e80a6216d4a0800000000000000
-      internalID: -6569042759848017389
+      spriteID: 934e123d443cab4a0800000000000000
+      internalID: -6576729605453781959
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      follow_0: -6569042759848017389
+      gauge_icon_0: -6576729605453781959
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
