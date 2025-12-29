@@ -21,9 +21,14 @@ MonoBehaviour:
   frameRate: 0.2
   minIdleWait: 0.5
   maxIdleWait: 2
-  reactionHappy_1: {fileID: 0}
-  reactionHappy_2: {fileID: 0}
-  reactionHappy_3: {fileID: 0}
-  reactionSad_1: {fileID: 0}
-  reactionSad_2: {fileID: 0}
+  reactionHappy_1: {fileID: 8220826962873084525, guid: 85e44502622737247b0b43f68fe208ed, type: 3}
+  reactionHappy_2: {fileID: 8220826962873084525, guid: 85e44502622737247b0b43f68fe208ed, type: 3}
+  reactionHappy_3: {fileID: 8220826962873084525, guid: 85e44502622737247b0b43f68fe208ed, type: 3}
+  reactionSad_1: {fileID: 5544875835987656441, guid: 188c92112a68e504ba531dee1a054534, type: 3}
+  reactionSad_2: {fileID: 5216697435922212490, guid: 7b62ab876f5903f4fa159d2892557c38, type: 3}
   reactionDuration: 1
+  seHappy_1: {fileID: 0}
+  seHappy_2: {fileID: 0}
+  seHappy_3: {fileID: 0}
+  seSad_1: {fileID: 0}
+  seSad_2: {fileID: 0}

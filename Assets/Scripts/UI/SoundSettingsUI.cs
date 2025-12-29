@@ -14,7 +14,14 @@ namespace ApprovalMonster.UI
         [Header("Panel")]
         [SerializeField] private GameObject settingsPanel;
         [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private RectTransform panelTransform; // パネル本体のTransform（スケールアニメーション用）
         [SerializeField] private float fadeDuration = 0.3f;
+        
+        [Header("Open/Close Animation")]
+        [SerializeField] private float openScale = 1.0f;
+        [SerializeField] private float closeScale = 0.8f;
+        [SerializeField] private Ease openEase = Ease.OutBack;
+        [SerializeField] private Ease closeEase = Ease.InBack;
         
         [Header("Sliders")]
         [SerializeField] private Slider masterSlider;
@@ -32,6 +39,12 @@ namespace ApprovalMonster.UI
             if (settingsPanel != null)
             {
                 settingsPanel.SetActive(false);
+            }
+            
+            // 初期スケール設定
+            if (panelTransform != null)
+            {
+                panelTransform.localScale = Vector3.one * closeScale;
             }
         }
         
@@ -54,6 +67,14 @@ namespace ApprovalMonster.UI
             // スライダーの初期値を設定
             InitializeSliders(audio);
             
+            // スケールアニメーション（ポップイン）
+            if (panelTransform != null)
+            {
+                panelTransform.DOKill();
+                panelTransform.localScale = Vector3.one * closeScale;
+                panelTransform.DOScale(openScale, fadeDuration).SetEase(openEase);
+            }
+            
             // フェードイン
             if (canvasGroup != null)
             {
@@ -74,6 +95,20 @@ namespace ApprovalMonster.UI
         public void Hide()
         {
             if (settingsPanel == null) return;
+            
+            // 閉じるボタンのリアクション
+            if (closeButton != null)
+            {
+                closeButton.transform.DOKill();
+                closeButton.transform.DOPunchScale(Vector3.one * -0.1f, 0.15f, 5, 0.5f);
+            }
+            
+            // スケールアニメーション（ポップアウト）
+            if (panelTransform != null)
+            {
+                panelTransform.DOKill();
+                panelTransform.DOScale(closeScale, fadeDuration).SetEase(closeEase);
+            }
             
             if (canvasGroup != null)
             {

@@ -48,5 +48,21 @@ namespace ApprovalMonster.Data
         
         [Tooltip("リアクションの表示時間（秒）")]
         public float reactionDuration = 1.0f;
+        
+        [Header("Reaction SE")]
+        [Tooltip("喜び（軽）のSE - 未設定時はデフォルトSEを使用")]
+        public AudioClip seHappy_1;
+        
+        [Tooltip("喜び（中）のSE - 未設定時はデフォルトSEを使用")]
+        public AudioClip seHappy_2;
+        
+        [Tooltip("喜び（大）のSE - 未設定時はデフォルトSEを使用")]
+        public AudioClip seHappy_3;
+        
+        [Tooltip("悲しみ（軽）のSE - 未設定時はデフォルトSEを使用")]
+        public AudioClip seSad_1;
+        
+        [Tooltip("悲しみ（大）のSE - 未設定時はデフォルトSEを使用")]
+        public AudioClip seSad_2;
     }
 }
