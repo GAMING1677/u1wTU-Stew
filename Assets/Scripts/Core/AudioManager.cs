@@ -100,11 +100,10 @@ namespace ApprovalMonster.Core
         
         private void ApplyVolumes()
         {
-            // 対数カーブを適用（3乗）して体感的な音量変化を改善
-            // 低い値でより細かい調整が可能になる
-            float effectiveMaster = masterVolume * masterVolume * masterVolume;
-            float effectiveBGM = bgmVolume * bgmVolume * bgmVolume;
-            float effectiveSE = seVolume * seVolume * seVolume;
+            // リニア（スライダー値をそのまま適用）
+            float effectiveMaster = masterVolume;
+            float effectiveBGM = bgmVolume;
+            float effectiveSE = seVolume;
             
             if (bgmSource != null)
             {

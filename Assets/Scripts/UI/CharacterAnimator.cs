@@ -157,6 +157,9 @@ namespace ApprovalMonster.UI
         private void OnDisable()
         {
             StopIdle();
+            // 状態をリセット（再度有効化された時にアニメーションが正しく開始されるように）
+            isReacting = false;
+            shouldLoopReaction = false;
         }
 
         private void StartIdle()
@@ -218,36 +221,49 @@ namespace ApprovalMonster.UI
             if (currentProfile == null || isReacting) return;
             
             Sprite reactionSprite = null;
-            SEType seType = SEType.ReactionHappy_1; // デフォルト
+            AudioClip characterSE = null;
+            SEType fallbackSEType = SEType.ReactionHappy_1; // デフォルト
             
             switch (type)
             {
                 case ReactionType.Happy_1: 
                     reactionSprite = currentProfile.reactionHappy_1; 
-                    seType = SEType.ReactionHappy_1;
+                    characterSE = currentProfile.seHappy_1;
+                    fallbackSEType = SEType.ReactionHappy_1;
                     break;
                 case ReactionType.Happy_2: 
                     reactionSprite = currentProfile.reactionHappy_2; 
-                    seType = SEType.ReactionHappy_2;
+                    characterSE = currentProfile.seHappy_2;
+                    fallbackSEType = SEType.ReactionHappy_2;
                     break;
                 case ReactionType.Happy_3: 
                     reactionSprite = currentProfile.reactionHappy_3; 
-                    seType = SEType.ReactionHappy_3;
+                    characterSE = currentProfile.seHappy_3;
+                    fallbackSEType = SEType.ReactionHappy_3;
                     break;
                 case ReactionType.Sad_1: 
                     reactionSprite = currentProfile.reactionSad_1; 
-                    seType = SEType.ReactionSad_1;
+                    characterSE = currentProfile.seSad_1;
+                    fallbackSEType = SEType.ReactionSad_1;
                     break;
                 case ReactionType.Sad_2: 
                     reactionSprite = currentProfile.reactionSad_2; 
-                    seType = SEType.ReactionSad_2;
+                    characterSE = currentProfile.seSad_2;
+                    fallbackSEType = SEType.ReactionSad_2;
                     break;
             }
             
             if (reactionSprite == null) return;
             
-            // リアクションSEを再生
-            Core.AudioManager.Instance?.PlaySE(seType);
+            // キャラ固有SEがあれば使用、なければデフォルトSEにフォールバック
+            if (characterSE != null)
+            {
+                Core.AudioManager.Instance?.PlaySE(characterSE);
+            }
+            else
+            {
+                Core.AudioManager.Instance?.PlaySE(fallbackSEType);
+            }
             
             shouldLoopReaction = loop;
             StartCoroutine(ReactionRoutine(reactionSprite, type));
