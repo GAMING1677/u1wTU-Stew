@@ -32,5 +32,5 @@ MonoBehaviour:
   - {fileID: -5196759960502505317, guid: e1ac9399a920ad940b151f2b073a45c2, type: 3}
   - {fileID: -3658603483207479165, guid: de22737ac69d0e2489df72f3cb60c305, type: 3}
   - {fileID: -4132574017774020402, guid: f800f6c7e9f159247971ff86bb3aefde, type: 3}
-  frameInterval: 0.05
+  frameInterval: 0.1
   loop: 1

@@ -45,11 +45,18 @@ namespace ApprovalMonster.UI
         [SerializeField] private Data.TutorialData[] tutorials;
         
         [Header("Settings")]
-        [Tooltip("パネル全体のCanvasGroup（フェード用）")]
+        [Tooltip("チュートリアルパネル（表示/非表示を管理するオブジェクト）")]
+        [SerializeField] private GameObject tutorialPanel;
+        
+        [Tooltip("パネル全体のCanvasGroup（フェード用、オプショナル）")]
         [SerializeField] private CanvasGroup canvasGroup;
         
         [Tooltip("フェード時間")]
         [SerializeField] private float fadeDuration = 0.3f;
+        
+        [Header("Transition")]
+        [Tooltip("チュートリアル切り替え時のトランジション時間")]
+        [SerializeField] private float transitionDuration = 0.2f;
         
         [Header("Typewriter")]
         [Tooltip("1文字あたりの表示間隔（秒）")]
@@ -72,18 +79,22 @@ namespace ApprovalMonster.UI
         private Data.TutorialData currentData;
         private bool isTypewriting = false;
         private string currentFullText = "";
+        private bool isTransitioning = false;
+        
+        /// <summary>
+        /// チュートリアルが閉じられた時に呼ばれるコールバック（外部から設定可能）
+        /// </summary>
+        public System.Action onTutorialClosed;
         
         private void Start()
         {
             SetupButtons();
             
             // 初期状態で非表示
-            if (canvasGroup != null)
+            if (tutorialPanel != null)
             {
-                canvasGroup.alpha = 0f;
-                canvasGroup.blocksRaycasts = false;
+                tutorialPanel.SetActive(false);
             }
-            gameObject.SetActive(false);
         }
         
         private void SetupButtons()
@@ -123,18 +134,22 @@ namespace ApprovalMonster.UI
                 return;
             }
             
-            gameObject.SetActive(true);
-            currentTutorialIndex = 0;
-            LoadTutorial(currentTutorialIndex);
+            // パネルを表示
+            if (tutorialPanel != null)
+            {
+                tutorialPanel.SetActive(true);
+            }
             
+            currentTutorialIndex = 0;
+            LoadTutorialInternal(currentTutorialIndex);
+            
+            // フェードイン（canvasGroupがあれば）
             if (canvasGroup != null)
             {
                 canvasGroup.alpha = 0f;
-                canvasGroup.blocksRaycasts = false;
+                canvasGroup.blocksRaycasts = true;
                 canvasGroup.DOKill();
-                canvasGroup.DOFade(1f, fadeDuration).OnComplete(() => {
-                    canvasGroup.blocksRaycasts = true;
-                });
+                canvasGroup.DOFade(1f, fadeDuration);
             }
             
             // ボタンのずらしパルス開始
@@ -154,18 +169,22 @@ namespace ApprovalMonster.UI
                 return;
             }
             
-            gameObject.SetActive(true);
-            currentTutorialIndex = tutorialIndex;
-            LoadTutorial(currentTutorialIndex);
+            // パネルを表示
+            if (tutorialPanel != null)
+            {
+                tutorialPanel.SetActive(true);
+            }
             
+            currentTutorialIndex = tutorialIndex;
+            LoadTutorialInternal(currentTutorialIndex);
+            
+            // フェードイン（canvasGroupがあれば）
             if (canvasGroup != null)
             {
                 canvasGroup.alpha = 0f;
-                canvasGroup.blocksRaycasts = false;
+                canvasGroup.blocksRaycasts = true;
                 canvasGroup.DOKill();
-                canvasGroup.DOFade(1f, fadeDuration).OnComplete(() => {
-                    canvasGroup.blocksRaycasts = true;
-                });
+                canvasGroup.DOFade(1f, fadeDuration);
             }
         }
         
@@ -176,26 +195,60 @@ namespace ApprovalMonster.UI
         {
             Stop();
             
+            // チュートリアルを見たことをマーク
+            MarkTutorialAsShown();
+            
+            // フェードアウト（canvasGroupがあれば）してから非表示
             if (canvasGroup != null)
             {
-                canvasGroup.blocksRaycasts = false;
                 canvasGroup.DOKill();
                 canvasGroup.DOFade(0f, fadeDuration).OnComplete(() => {
-                    gameObject.SetActive(false);
+                    if (tutorialPanel != null)
+                    {
+                        tutorialPanel.SetActive(false);
+                    }
+                    // コールバックを呼び出し
+                    onTutorialClosed?.Invoke();
                 });
             }
             else
             {
-                gameObject.SetActive(false);
+                // フェードなしで即座に非表示
+                if (tutorialPanel != null)
+                {
+                    tutorialPanel.SetActive(false);
+                }
+                // コールバックを呼び出し
+                onTutorialClosed?.Invoke();
             }
             
             Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
         }
         
+        // PlayerPrefsキー
+        private const string TUTORIAL_SHOWN_KEY = "TutorialShown";
+        
         /// <summary>
-        /// チュートリアルデータを読み込んで再生開始
+        /// チュートリアルを見たことがあるかどうか
         /// </summary>
-        private void LoadTutorial(int index)
+        public static bool HasShownTutorial()
+        {
+            return PlayerPrefs.GetInt(TUTORIAL_SHOWN_KEY, 0) == 1;
+        }
+        
+        /// <summary>
+        /// チュートリアルを見たことをマーク
+        /// </summary>
+        public static void MarkTutorialAsShown()
+        {
+            PlayerPrefs.SetInt(TUTORIAL_SHOWN_KEY, 1);
+            PlayerPrefs.Save();
+        }
+        
+        /// <summary>
+        /// チュートリアルデータを読み込んで再生開始（内部用）
+        /// </summary>
+        private void LoadTutorialInternal(int index)
         {
             if (tutorials == null || index < 0 || index >= tutorials.Length) return;
             
@@ -297,9 +350,10 @@ namespace ApprovalMonster.UI
         public void NextTutorial()
         {
             if (tutorials == null || currentTutorialIndex >= tutorials.Length - 1) return;
+            if (isTransitioning) return;
             
             currentTutorialIndex++;
-            LoadTutorial(currentTutorialIndex);
+            TransitionToTutorial(currentTutorialIndex);
             Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
         }
         
@@ -309,10 +363,38 @@ namespace ApprovalMonster.UI
         public void PrevTutorial()
         {
             if (currentTutorialIndex <= 0) return;
+            if (isTransitioning) return;
             
             currentTutorialIndex--;
-            LoadTutorial(currentTutorialIndex);
+            TransitionToTutorial(currentTutorialIndex);
             Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
+        }
+        
+        /// <summary>
+        /// トランジション付きでチュートリアルを切り替え
+        /// </summary>
+        private void TransitionToTutorial(int index)
+        {
+            isTransitioning = true;
+            
+            // displayImageをフェードアウト
+            if (displayImage != null)
+            {
+                displayImage.DOKill();
+                displayImage.DOFade(0f, transitionDuration).OnComplete(() => {
+                    // データを読み込んで再生開始
+                    LoadTutorialInternal(index);
+                    // フェードイン
+                    displayImage.DOFade(1f, transitionDuration).OnComplete(() => {
+                        isTransitioning = false;
+                    });
+                });
+            }
+            else
+            {
+                LoadTutorialInternal(index);
+                isTransitioning = false;
+            }
         }
         
         /// <summary>
