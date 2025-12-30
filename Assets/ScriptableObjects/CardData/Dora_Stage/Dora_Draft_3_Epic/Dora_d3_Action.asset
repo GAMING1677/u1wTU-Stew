@@ -18,6 +18,7 @@ MonoBehaviour:
   cardTag: 
   flavorText: "\u9650\u5B9A\u62DB\u5F85\uFF01\u79D8\u5BC6\u306E\"\u88CF\"\u30E1\u30BD\u30C3\u30C9\uFF01"
   postComments: []
+  postIcon: {fileID: 0}
   motivationCost: 2
   mentalCost: 0
   followerGain: 0
@@ -30,7 +31,8 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 1
-  rarity: 2
+  rarity: 3
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0
@@ -41,6 +43,12 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
   flamingSeedCount: 0
   flamingRate: 0
   seedToFollowerMultiplier: 0

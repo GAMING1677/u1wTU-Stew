@@ -27,7 +27,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3f296bad1d5fdbf458be2421f7aef0da, type: 2}
   - {fileID: 11400000, guid: 59491aef381348148b0fe84709f51e51, type: 2}
   - {fileID: 11400000, guid: e619c1b53ea0e354f8e1c0ac0896849d, type: 2}
-  - {fileID: 11400000, guid: e805244346a3cda42840098649bb5769, type: 2}
+  - {fileID: 11400000, guid: e619c1b53ea0e354f8e1c0ac0896849d, type: 2}
   draftPool:
   - {fileID: 11400000, guid: 65d7f74469fa00c43b4df11c4b296018, type: 2}
   - {fileID: 11400000, guid: 6b5b5bd4bf632f74688cf9a4ffc08e8b, type: 2}
@@ -53,3 +53,5 @@ MonoBehaviour:
   themeColor: {r: 1, g: 1, b: 1, a: 1}
   normalProfile: {fileID: 11400000, guid: bbf5041c48e695243b3a8e6db9f21938, type: 2}
   monsterProfile: {fileID: 11400000, guid: 61e272c966939d34c96903bfc73fa710, type: 2}
+  showTrackedCardUI: 0
+  trackedCard: {fileID: 0}
