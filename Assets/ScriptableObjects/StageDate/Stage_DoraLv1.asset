@@ -45,8 +45,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b6c2bf33d3f17614fbbf5942be8b4d97, type: 2}
   monsterDeck:
   - {fileID: 11400000, guid: 569b20953c5f86b4bb46ad3e83bf677c, type: 2}
-  - {fileID: 11400000, guid: d8535f2c0acabd641b1f7640629c7669, type: 2}
   - {fileID: 11400000, guid: 3d1565b763ac0c948887ff3debb5bd60, type: 2}
+  - {fileID: 11400000, guid: d8535f2c0acabd641b1f7640629c7669, type: 2}
+  enableFlaming: 1
   monsterModePreset: {fileID: 11400000, guid: 3b8b2b8dd9a73744fad9b54db3ac55f6, type: 2}
   background: {fileID: 0}
   themeColor: {r: 1, g: 1, b: 1, a: 1}

@@ -12,13 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4544b17cccb06d4c96e028d988c0ae2, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: Assembly-CSharp::ApprovalMonster.Data.GameSettings
-  initialFollowers: 100
+  initialFollowers: 10
   maxMental: 100
-  maxMotivation: 1
+  maxMotivation: 3
   initialHandSize: 3
   turnDrawCount: 3
   lastDraftTurn: 10
-  maxTurnCount: 50
   monsterThreshold: 50
   monsterDraftCardCount: 3
   monsterModeMultiplier: 1

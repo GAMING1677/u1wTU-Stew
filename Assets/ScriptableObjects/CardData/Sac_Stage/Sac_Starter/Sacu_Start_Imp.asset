@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u304A\u306F\u3088\u3046"
   cardImage: {fileID: 8197717262057524853, guid: 6be99caa1a50447468bda40f49639a0d, type: 3}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\xD710%\u30A4\u30F3\u30D7\u3092\u5F97\u308B"
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\xD710%\u30A4\u30F3\u30D7\u7372\u5F97"
   cardTag: 
   flavorText: "\u6328\u62F6\u306F\u5927\u5207\u306B"
   postComments:
@@ -30,6 +30,7 @@ MonoBehaviour:
   - "\u4ECA\u65E5\u3082\u304C\u3093\u3070\u308D"
   - "\u591C\u66F4\u304B\u3057\u904E\u304E\u3066\u9854\u3080\u304F\u3093\u3067\u308B"
   - "\u4ECA\u65E5\u5BD2\u3059\u304E\u3066\u5E03\u56E3\u304B\u3089\u51FA\u308C\u3093"
+  postIcon: {fileID: 0}
   motivationCost: 0
   mentalCost: 1
   followerGain: 0
@@ -43,6 +44,7 @@ MonoBehaviour:
   cardType: 0
   isExhaust: 0
   rarity: 0
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0
