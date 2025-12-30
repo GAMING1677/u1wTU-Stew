@@ -701,7 +701,6 @@ namespace ApprovalMonster.UI
                         quotaText.text = targetRemaining.ToString("N0");
                     });
                     
-                    quotaText.color = Color.white;
                     
                     // パンチスケール
                     quotaText.transform.DOKill(complete: true);
@@ -714,7 +713,6 @@ namespace ApprovalMonster.UI
                     if (quotaText.text != "OK") // 完了になった瞬間
                     {
                         quotaText.text = "OK";
-                        quotaText.color = Color.white;
                         
                         // 完了時のアニメーション (強め)
                         quotaText.transform.DOKill();
