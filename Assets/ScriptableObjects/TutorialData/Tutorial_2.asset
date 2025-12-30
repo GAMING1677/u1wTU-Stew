@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.TutorialData
   tutorialTitle: 
   description: "\u3082\u3089\u3063\u305F\u30AB\u30FC\u30C9\u3067\u30A4\u30F3\u30D7\u3092\u7A3C\u3054\u3046\uFF01\n\u30A4\u30F3\u30D7\u306E\u5F0F\u306F<size=120%><b>
-    \u30D5\u30A9\u30ED\u30EF\u30FC\xD7\u30A4\u30F3\u30D7\u7387</b></size> \u3060\u3088\u3002\n\u5C0F\u5B66\u6821\u3067\u7FD2\u3046\u306D\u3002"
+    \u30D5\u30A9\u30ED\u30EF\u30FC\xD7\u30A4\u30F3\u30D7\u7387</b></size> \u3060\u3088\u3002\n\u30D5\u30A9\u30ED\u30EF\u30FC\u3092\u5148\u306B\u5897\u3084\u3059\u306E\u304C\u30AA\u30B9\u30B9\u30E1\uFF01"
   frames:
   - {fileID: 6508702870711778287, guid: eba7687a71cb17d45aaef22a8b010040, type: 3}
   - {fileID: -6150241325202594507, guid: 78061a7e2cc63614d91c5a0e09176637, type: 3}

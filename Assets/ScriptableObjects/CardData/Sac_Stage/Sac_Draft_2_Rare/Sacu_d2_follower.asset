@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u4EBA\u985E\u306E\u9AD8\u307F\u3078"
   cardImage: {fileID: -6262493579803738195, guid: d0f58e86399a9de42b72af5e9107b676, type: 3}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C6000\u4EBA\u5897\u52A0\n\u30A4\u30F3\u30D7\u738710%"
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C6\u4E07\u4EBA\u5897\u52A0\n\u30A4\u30F3\u30D7\u738710%"
   cardTag: 
   flavorText: "\u306A\u3093\u304B\u7159\u3044\u305E"
   postComments:
@@ -46,6 +46,10 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
   flamingSeedCount: 0
   flamingRate: 0
   seedToFollowerMultiplier: 0

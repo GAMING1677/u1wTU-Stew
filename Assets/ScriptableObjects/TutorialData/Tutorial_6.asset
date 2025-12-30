@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Tutorial_6
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.TutorialData
   tutorialTitle: 
-  description: "\u30E1\u30F3\u30BF\u30EB\u304C<size=120%><b> 50%</b></size>\u5207\u3063\u305F\u3089\u3082\u3046\u9650\u754C\uFF01\n\u30E2\u30F3\u30B9\u30BF\u30FC\u306B\u306A\u3063\u3061\u3083\u3046\u304B\u3089\uFF01\n\u30FB\u30FB\u30FB\u30DE\u30B8\u3067\u3002"
+  description: "\u30E1\u30F3\u30BF\u30EB\u304C<size=120%><b> 50%</b></size>\u5207\u3063\u305F\u3089\u30E2\u30F3\u30B9\u30BF\u30FC\u5316\uFF01\n\u8D85\u5F37\u529B\u306A\u30AB\u30FC\u30C9\u3092\u624B\u306B\u5165\u308C\u3089\u308C\u308B\u3088\u3002\n\u3064\u3044\u3067\u306B\u3061\u3087\u3063\u3068\u30E1\u30F3\u30BF\u30EB\u3082\u56DE\u5FA9\u3002"
   frames:
   - {fileID: 8484964797645272160, guid: 0fdaba2b75defcd49929099e7f3bdd3e, type: 3}
   - {fileID: 8491271713418287836, guid: 5cb1b565222276146ab1ccc9cc0f33db, type: 3}
@@ -64,3 +64,8 @@ MonoBehaviour:
   - {fileID: -219448863255307170, guid: e7f45b4c82348b2459d674ee3bb74c10, type: 3}
   frameInterval: 0.05
   loop: 1
+  useSpotlight: 0
+  focusTargetName: 
+  manualFocusPosition: {x: 0.5, y: 0.5}
+  manualFocusRadius: 0.15
+  edgeSoftness: 0.02
