@@ -19,6 +19,7 @@ MonoBehaviour:
   flavorText: "\u91D1\u306F\u5929\u4E0B\u306E\u56DE\u308A\u7269"
   postComments:
   - "\u3053\u306E\u30B5\u30D7\u30EA\u521D\u3081\u3066\u8CB7\u3063\u305F\u3051\u3069\u51C4\u3044\u52B9\u304F\u3088\uFF01"
+  postIcon: {fileID: 0}
   motivationCost: 1
   mentalCost: 3
   followerGain: 0
@@ -31,7 +32,8 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 1
+  rarity: 2
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0

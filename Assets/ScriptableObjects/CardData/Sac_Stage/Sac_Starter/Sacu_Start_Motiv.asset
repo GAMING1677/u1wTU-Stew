@@ -41,7 +41,11 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 1
+<<<<<<< Updated upstream:Assets/ScriptableObjects/CardData/Sac_Stage/Sac_Starter/Sacu_Start_Motiv.asset
   rarity: 0
+=======
+  rarity: 2
+>>>>>>> Stashed changes:Assets/ScriptableObjects/CardData/Sac_Stage/Sac_Draft_2_Rare/Sacu_Start_Motiv.asset
   playCondition: 0
   riskType: 0
   riskProbability: 1

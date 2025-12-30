@@ -35,7 +35,7 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 0
+  rarity: 1
   playCondition: 0
   riskType: 0
   riskProbability: 1
