@@ -19,7 +19,7 @@ MonoBehaviour:
   flavorText: 
   postComments:
   - "\u706B\u3092\u5410\u304F\u305C"
-  postIcon: {fileID: 950788012783042257, guid: bc43c0e6d59ddfa4bafbb7ed4fb1627f, type: 3}
+  postIcon: {fileID: 0}
   motivationCost: 0
   mentalCost: 0
   followerGain: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 2
   isExhaust: 0
-  rarity: 0
+  rarity: 3
   playCondition: 0
   riskType: 0
   riskProbability: 1
@@ -44,6 +44,12 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
   flamingSeedCount: 0
   flamingRate: 0
   seedToFollowerMultiplier: 3

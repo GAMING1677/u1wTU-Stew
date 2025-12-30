@@ -23,7 +23,6 @@ MonoBehaviour:
   - "\u3088\u308D\u3057\u304F\u306D\uFF01"
   - "\u53EF\u611B\u3044\u4EBA\u307F\u3064\u3051\u3061\u3083\u3063\u305F"
   - "\u9762\u767D\u3044\u4EBA\u307F\u3063\u3051\uFF01"
-  - 
   postIcon: {fileID: 0}
   motivationCost: 1
   mentalCost: 2
@@ -49,6 +48,12 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
   flamingSeedCount: 0
   flamingRate: 0
   seedToFollowerMultiplier: 0

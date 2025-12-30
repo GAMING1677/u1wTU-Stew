@@ -263,9 +263,9 @@ namespace ApprovalMonster.UI
              Debug.Log("[UIManager] Start called.");
              
              // Initial Setup for Character
-             if (GameManager.Instance != null && GameManager.Instance.currentStage != null)
+             if (StageManager.Instance != null && StageManager.Instance.SelectedStage != null)
              {
-                 SetupCharacter(GameManager.Instance.currentStage.normalProfile);
+                 SetupCharacter(StageManager.Instance.SelectedStage.normalProfile);
                  SetupClearGoal(); // クリア目標の表示を設定
                  SetupFlamingUI(); // Flaming UIの表示/非表示を設定
                  SetupTrackedCardUI(); // 追跡カードUIの設定
@@ -601,7 +601,7 @@ namespace ApprovalMonster.UI
         {
             if (flamingContainer == null) return;
             
-            var stage = GameManager.Instance?.currentStage;
+            var stage = StageManager.Instance?.SelectedStage;
             bool showFlaming = stage != null && stage.enableFlaming;
             
             flamingContainer.SetActive(showFlaming);
@@ -613,7 +613,7 @@ namespace ApprovalMonster.UI
         /// </summary>
         private void SetupTrackedCardUI()
         {
-            var stage = GameManager.Instance?.currentStage;
+            var stage = StageManager.Instance?.SelectedStage;
             
             if (stage != null && stage.showTrackedCardUI && stage.trackedCard != null)
             {

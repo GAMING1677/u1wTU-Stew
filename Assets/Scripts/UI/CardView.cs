@@ -22,6 +22,17 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI tagText; // Tag or Rarity display
         [SerializeField] private Image riskIcon;
         
+        [Header("Cancel Button")]
+        [SerializeField] private Button cancelButton;
+        [Tooltip("選択解除ボタンのテキスト")]
+        [SerializeField] private TextMeshProUGUI cancelButtonText;
+        
+        [Header("Predicted Impression")]
+        [Tooltip("獲得予定インプ数を表示する吹き出しUI（親オブジェクト）")]
+        [SerializeField] private GameObject predictedImpressionPanel;
+        [Tooltip("獲得予定インプ数を表示するテキスト（吹き出しの子）")]
+        [SerializeField] private TextMeshProUGUI predictedImpressionText;
+        
         [Header("Selection Animation")]
         [SerializeField] private float hoverSlideDistance = 100f;
         [SerializeField] private float hoverScale = 1.15f;
@@ -87,6 +98,19 @@ namespace ApprovalMonster.UI
             {
                 _originalShadowScale = shadowImage.transform.localScale;
                 _originalShadowColor = shadowImage.color;
+            }
+            
+            // キャンセルボタンのセットアップ
+            if (cancelButton != null)
+            {
+                cancelButton.onClick.AddListener(OnCancelButtonClicked);
+                cancelButton.gameObject.SetActive(false); // 初期状態は非表示
+            }
+            
+            // 獲得予定インプ数パネルを初期状態で非表示
+            if (predictedImpressionPanel != null)
+            {
+                predictedImpressionPanel.SetActive(false);
             }
         }
 
@@ -327,6 +351,15 @@ namespace ApprovalMonster.UI
             {
                 Debug.LogWarning($"[CardView] Canvas is null!");
             }
+            
+            // キャンセルボタンを表示
+            if (cancelButton != null)
+            {
+                cancelButton.gameObject.SetActive(true);
+            }
+            
+            // 獲得予定インプ数を計算して表示
+            UpdatePredictedImpression();
         }
 
         /// <summary>
@@ -366,8 +399,29 @@ namespace ApprovalMonster.UI
                 _canvas.sortingOrder = 0;
             }
             
+            // キャンセルボタンを非表示
+            if (cancelButton != null)
+            {
+                cancelButton.gameObject.SetActive(false);
+            }
+            
+            // 獲得予定インプ数パネルを非表示
+            if (predictedImpressionPanel != null)
+            {
+                predictedImpressionPanel.SetActive(false);
+            }
+            
             // 選択解除後にパルス再開
             StartPulse();
+        }
+        
+        /// <summary>
+        /// キャンセルボタンがクリックされた時の処理
+        /// </summary>
+        private void OnCancelButtonClicked()
+        {
+            Debug.Log($"[CardView] Cancel button clicked for {_data.cardName}");
+            Deselect();
         }
         
         /// <summary>
@@ -409,6 +463,69 @@ namespace ApprovalMonster.UI
             {
                 shadowImage.transform.localScale = _originalShadowScale;
                 shadowImage.color = _originalShadowColor;
+            }
+        }
+        
+        /// <summary>
+        /// 獲得予定インプ数を計算して表示
+        /// </summary>
+        private void UpdatePredictedImpression()
+        {
+            if (predictedImpressionPanel == null || predictedImpressionText == null || _data == null)
+            {
+                if (predictedImpressionPanel != null)
+                    predictedImpressionPanel.SetActive(false);
+                return;
+            }
+            
+            // GameManagerとResourceManagerを取得
+            var gm = GameManager.Instance;
+            if (gm == null || gm.resourceManager == null)
+            {
+                predictedImpressionPanel.SetActive(false);
+                return;
+            }
+            
+            // インプ率が0の場合はパネルごと非表示
+            if (_data.impressionRate <= 0)
+            {
+                predictedImpressionPanel.SetActive(false);
+                return;
+            }
+            
+            // 現在のフォロワー数を取得
+            long currentFollowers = gm.resourceManager.currentFollowers;
+            
+            // このカードのフォロワー増減を加味
+            long followersAfterCard = currentFollowers + _data.followerGain;
+            
+            // 獲得予定インプ数を計算（カードプレイ後のフォロワー数 × インプ率）
+            long predictedImpression = (long)(followersAfterCard * _data.impressionRate);
+            
+            // フォーマットして表示（K/M表記、矢印なし）
+            string formattedValue = FormatNumber(predictedImpression);
+            predictedImpressionText.text = formattedValue;
+            
+            // パネルごと表示
+            predictedImpressionPanel.SetActive(true);
+        }
+        
+        /// <summary>
+        /// 数値をK/M表記にフォーマット
+        /// </summary>
+        private string FormatNumber(long value)
+        {
+            if (value >= 1000000)
+            {
+                return $"{(value / 1000000f):F1}M";
+            }
+            else if (value >= 1000)
+            {
+                return $"{(value / 1000f):F1}K";
+            }
+            else
+            {
+                return value.ToString();
             }
         }
         

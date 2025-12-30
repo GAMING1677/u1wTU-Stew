@@ -18,6 +18,11 @@ namespace ApprovalMonster.UI
         [Header("Line 3: Description")]
         [SerializeField] private TextMeshProUGUI line3Text;
         
+        [Header("Ownership Indicator")]
+        [SerializeField] private UnityEngine.UI.Image ownershipIcon;
+        [SerializeField] private Color ownedColor = Color.green;
+        [SerializeField] private Color unownedColor = Color.gray;
+        
         [Header("Rarity Colors")]
         [SerializeField] private Color basicColor = new Color(0.6f, 0.6f, 0.6f);
         [SerializeField] private Color commonColor = Color.white;
@@ -25,17 +30,38 @@ namespace ApprovalMonster.UI
         [SerializeField] private Color epicColor = new Color(1f, 0.84f, 0f);
         
         /// <summary>
-        /// カード情報をセットアップ
+        /// カード情報をセットアップ（通常版：山札・捨て札用）
         /// </summary>
         public void Setup(CardData card, int count)
         {
+            Setup(card, count, showRarity: false, isOwned: true);
+        }
+        
+        /// <summary>
+        /// カード情報をセットアップ（拡張版：カードプール用）
+        /// </summary>
+        public void Setup(CardData card, int count, bool showRarity, bool isOwned)
+        {
             if (card == null) return;
             
-            // Line 1: 【カード名】×3枚
+            // Line 1: [R]【カード名】×3枚 (レアリティタグはオプション)
+            string rarityTag = showRarity ? GetRarityTag(card.rarity) + " " : "";
             string countStr = count > 1 ? $"×{count}枚" : "";
             if (line1Text != null)
             {
-                line1Text.text = $"【{card.cardName}】{countStr}";
+                line1Text.text = $"{rarityTag}【{card.cardName}】{countStr}";
+                // レアリティ色を適用
+                if (showRarity)
+                {
+                    line1Text.color = GetRarityColor(card.rarity);
+                }
+            }
+            
+            // 入手・未入手アイコンの設定
+            if (ownershipIcon != null)
+            {
+                ownershipIcon.gameObject.SetActive(true);
+                ownershipIcon.color = isOwned ? ownedColor : unownedColor;
             }
             
             // Line 2: モチベ:x メンタル:x フォロワー:+xxx インプ率:+xxx
