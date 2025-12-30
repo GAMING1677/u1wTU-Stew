@@ -62,6 +62,37 @@ namespace ApprovalMonster.Core
              Debug.Log($"[SaveDataManager] IsStageCleared('{stageName}') = {isCleared}");
              return isCleared;
         }
+        
+        /// <summary>
+        /// ステージ別ハイスコアを保存（現在の記録より高い場合のみ）
+        /// </summary>
+        /// <returns>新記録の場合true</returns>
+        public bool SaveStageHighScore(string stageName, long score)
+        {
+            string key = $"HighScore_{stageName}";
+            long currentHighScore = LoadStageHighScore(stageName);
+            
+            if (score > currentHighScore)
+            {
+                ES3.Save(key, score);
+                Debug.Log($"[SaveDataManager] New high score for '{stageName}': {score} (previous: {currentHighScore})");
+                return true;
+            }
+            else
+            {
+                Debug.Log($"[SaveDataManager] Score {score} did not beat high score {currentHighScore} for '{stageName}'");
+                return false;
+            }
+        }
+        
+        /// <summary>
+        /// ステージ別ハイスコアを読み込み
+        /// </summary>
+        public long LoadStageHighScore(string stageName)
+        {
+            string key = $"HighScore_{stageName}";
+            return ES3.Load(key, 0L);
+        }
 
         private void OnApplicationQuit()
         {

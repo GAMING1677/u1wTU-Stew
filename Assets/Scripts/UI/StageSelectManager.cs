@@ -30,6 +30,9 @@ namespace ApprovalMonster.UI
             [Tooltip("ステージの説明文を表示するテキスト")]
             public TextMeshProUGUI descriptionText;
             
+            [Tooltip("ハイスコアを表示するテキスト（スコアアタック用）")]
+            public TextMeshProUGUI highScoreText;
+            
             [HideInInspector]
             public Tween pulseTween;
         }
@@ -141,6 +144,9 @@ namespace ApprovalMonster.UI
                 {
                     stageButton.descriptionText.gameObject.SetActive(false);
                 }
+                
+                // ハイスコア表示（スコアアタックステージのみ）
+                UpdateHighScoreDisplay(stageButton);
 
                 // クリック時の処理を設定（クロージャ対策）
                 StageData capturedStage = stageButton.stage;
@@ -205,6 +211,9 @@ namespace ApprovalMonster.UI
                     StopPulseAnimation(stageButton);
                 }
                 
+                // ハイスコア表示を更新
+                UpdateHighScoreDisplay(stageButton);
+                
                 Debug.Log($"[StageSelectManager] Updated button {i}: '{stageButton.stage.stageName}' unlocked={isUnlocked}");
             }
             
@@ -224,6 +233,51 @@ namespace ApprovalMonster.UI
             {
                 Debug.LogError("[StageSelectManager] StageManager.Instance is NULL!");
                 return true; // フォールバック
+            }
+        }
+        
+        /// <summary>
+        /// ハイスコア表示を更新（スコアアタックステージのみ）
+        /// </summary>
+        private void UpdateHighScoreDisplay(StageButton stageButton)
+        {
+            if (stageButton.highScoreText == null || stageButton.stage == null)
+            {
+                Debug.LogWarning($"[StageSelectManager] UpdateHighScoreDisplay skipped - highScoreText or stage is null");
+                return;
+            }
+            
+            // スコアアタックモード判定
+            bool isScoreAttack = (stageButton.stage.clearCondition == null || 
+                                  !stageButton.stage.clearCondition.hasScoreGoal);
+            
+            Debug.Log($"[StageSelectManager] UpdateHighScoreDisplay for '{stageButton.stage.stageName}': isScoreAttack={isScoreAttack}");
+            
+            if (isScoreAttack && SaveDataManager.Instance != null)
+            {
+                long highScore = SaveDataManager.Instance.LoadStageHighScore(stageButton.stage.stageName);
+                
+                Debug.Log($"[StageSelectManager] Loaded high score for '{stageButton.stage.stageName}': {highScore}");
+                
+                if (highScore > 0)
+                {
+                    stageButton.highScoreText.text = $"{highScore:N0}";
+                    stageButton.highScoreText.gameObject.SetActive(true);
+                    Debug.Log($"[StageSelectManager] Displaying high score: {highScore:N0}");
+                }
+                else
+                {
+                    // スコアが0の場合は「---」を表示
+                    stageButton.highScoreText.text = "---";
+                    stageButton.highScoreText.gameObject.SetActive(true);
+                    Debug.Log($"[StageSelectManager] No high score yet, displaying '---'");
+                }
+            }
+            else
+            {
+                // スコアアタックでない場合は非表示
+                stageButton.highScoreText.gameObject.SetActive(false);
+                Debug.Log($"[StageSelectManager] Not a score attack stage, hiding high score text");
             }
         }
 

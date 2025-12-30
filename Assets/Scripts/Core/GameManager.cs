@@ -271,12 +271,26 @@ namespace ApprovalMonster.Core
             
             // Save Score
             long score = resourceManager.totalImpressions;
+            bool isNewHighScore = false;
+            
+            // スコアアタックモード判定（クリア条件がないか、スコアゴールがない場合）
+            bool isScoreAttack = (currentStage.clearCondition == null || 
+                                  !currentStage.clearCondition.hasScoreGoal);
+            
+            // スコアアタックの場合のみハイスコアを保存
+            if (isScoreAttack && SaveDataManager.Instance != null && currentStage != null)
+            {
+                isNewHighScore = SaveDataManager.Instance.SaveStageHighScore(currentStage.stageName, score);
+                Debug.Log($"[GameManager] Score Attack mode - High score saved: {score}, New record: {isNewHighScore}");
+            }
+            
             if (SceneNavigator.Instance != null)
             {
                 SceneNavigator.Instance.LastGameScore = score;
                 SceneNavigator.Instance.WasStageCleared = true; // Score clear = success
-                SceneNavigator.Instance.IsScoreAttackMode = false; // Score goal exists
-                Debug.Log($"[GameManager] Saved clear score: {score}, cleared=true");
+                SceneNavigator.Instance.IsScoreAttackMode = isScoreAttack;
+                SceneNavigator.Instance.IsNewHighScore = isNewHighScore;
+                Debug.Log($"[GameManager] Saved clear score: {score}, cleared=true, scoreAttack={isScoreAttack}, newRecord={isNewHighScore}");
             }
             
             // Navigate to result scene
@@ -322,14 +336,26 @@ namespace ApprovalMonster.Core
                 Debug.Log($"[GameManager] Stage '{currentStage.stageName}' NOT cleared (turn limit, score NOT achieved)");
             }
             
+            
             // Save Score
             long score = resourceManager.totalImpressions;
+            bool isNewHighScore = false;
+            bool isScoreAttack = !hasScoreGoal;
+            
+            // スコアアタックの場合のみハイスコアを保存
+            if (isScoreAttack && SaveDataManager.Instance != null && currentStage != null)
+            {
+                isNewHighScore = SaveDataManager.Instance.SaveStageHighScore(currentStage.stageName, score);
+                Debug.Log($"[GameManager] Score Attack mode - High score saved: {score}, New record: {isNewHighScore}");
+            }
+            
             if (SceneNavigator.Instance != null)
             {
                 SceneNavigator.Instance.LastGameScore = score;
                 SceneNavigator.Instance.WasStageCleared = wasCleared;
-                SceneNavigator.Instance.IsScoreAttackMode = !hasScoreGoal;
-                Debug.Log($"[GameManager] Saved finish score: {score}, cleared={wasCleared}, isScoreAttack={!hasScoreGoal}");
+                SceneNavigator.Instance.IsScoreAttackMode = isScoreAttack;
+                SceneNavigator.Instance.IsNewHighScore = isNewHighScore;
+                Debug.Log($"[GameManager] Saved finish score: {score}, cleared={wasCleared}, isScoreAttack={isScoreAttack}, newRecord={isNewHighScore}");
             }
             
             // Navigate directly to result scene

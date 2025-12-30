@@ -26,6 +26,7 @@ namespace ApprovalMonster.Core
         public long LastGameScore { get; set; }
         public bool WasStageCleared { get; set; }
         public bool IsScoreAttackMode { get; set; } // clearConditionがnullまたはhasScoreGoal=false
+        public bool IsNewHighScore { get; set; } // 新記録達成フラグ
 
         private void Awake()
         {
