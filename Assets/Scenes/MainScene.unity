@@ -11381,22 +11381,22 @@ MonoBehaviour:
     commonWeight: 50
     rareWeight: 50
     epicWeight: 0
-  - minImpressions: 10000
+  - minImpressions: 20000
+    commonWeight: 0
+    rareWeight: 95
+    epicWeight: 5
+  - minImpressions: 30000
     commonWeight: 0
     rareWeight: 90
     epicWeight: 10
-  - minImpressions: 20000
+  - minImpressions: 40000
+    commonWeight: 0
+    rareWeight: 80
+    epicWeight: 20
+  - minImpressions: 50000
     commonWeight: 0
     rareWeight: 70
     epicWeight: 30
-  - minImpressions: 30000
-    commonWeight: 0
-    rareWeight: 60
-    epicWeight: 40
-  - minImpressions: 50000
-    commonWeight: 0
-    rareWeight: 50
-    epicWeight: 50
 --- !u!1 &1200749426
 GameObject:
   m_ObjectHideFlags: 0
