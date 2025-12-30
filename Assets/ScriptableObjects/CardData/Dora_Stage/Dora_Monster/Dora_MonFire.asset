@@ -19,6 +19,7 @@ MonoBehaviour:
   flavorText: 
   postComments:
   - "\u706B\u3092\u5410\u304F\u305C"
+  postIcon: {fileID: 950788012783042257, guid: bc43c0e6d59ddfa4bafbb7ed4fb1627f, type: 3}
   motivationCost: 0
   mentalCost: 0
   followerGain: 0
@@ -32,6 +33,7 @@ MonoBehaviour:
   cardType: 2
   isExhaust: 0
   rarity: 0
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0

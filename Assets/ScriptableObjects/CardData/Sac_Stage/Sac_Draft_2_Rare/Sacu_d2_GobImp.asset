@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sacu_d2_GobImp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u63FA\u308C\u306A\u3044\u8C37"
-  cardImage: {fileID: 0}
+  cardImage: {fileID: -8189331028518723324, guid: 210d8e7793302804db42eff995c62d76, type: 3}
   description: "\u30A4\u30F3\u30D7\u738780%\n\u6368\u3066\u672D\u306B\u30B4\u30D6\u30EA\u30F3\u30921\u679A\u8FFD\u52A0"
   cardTag: 
   flavorText: "\u4F38\u3073\u3057\u308D\u3068\u3082\u8A00\u3046"
