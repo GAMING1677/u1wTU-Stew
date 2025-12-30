@@ -54,3 +54,5 @@ MonoBehaviour:
   themeColor: {r: 1, g: 1, b: 1, a: 1}
   normalProfile: {fileID: 11400000, guid: bbf5041c48e695243b3a8e6db9f21938, type: 2}
   monsterProfile: {fileID: 11400000, guid: efa6a0370fe82804f8ae1d45d9b59723, type: 2}
+  showTrackedCardUI: 1
+  trackedCard: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}

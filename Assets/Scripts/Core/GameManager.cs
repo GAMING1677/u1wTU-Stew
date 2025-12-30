@@ -119,6 +119,7 @@ namespace ApprovalMonster.Core
                 if (uiManager != null)
                 {
                     uiManager.SetupClearGoal();
+                    uiManager.RefreshTrackedCardUI(); // 追跡カードUIをステージに合わせて更新
                 }
             }
             else
@@ -456,7 +457,7 @@ namespace ApprovalMonster.Core
                 uiManager.StopCharacterReaction(); // Stop any playing animations
                 uiManager.ClearTimeline(); // Clear timeline posts
                 uiManager.ResetEndTurnButtonPulse(); // Reset pulse animation
-                // NOTE: SetupClearGoal is called in StartGame after currentStage is updated
+                // NOTE: RefreshTrackedCardUI is called in StartGame after currentStage is updated
                 Debug.Log("[GameManager] Reset UI state (character, timeline, pulse)");
             }
             

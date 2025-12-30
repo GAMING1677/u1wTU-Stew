@@ -54,5 +54,12 @@ namespace ApprovalMonster.Data
         
         [Tooltip("モンスターモード時のキャラクター設定")]
         public CharacterProfile monsterProfile;
+        
+        [Header("Tracked Card UI")]
+        [Tooltip("特定カードの枚数表示UIを使用するか")]
+        public bool showTrackedCardUI = false;
+        
+        [Tooltip("追跡対象のカード")]
+        public CardData trackedCard;
     }
 }
