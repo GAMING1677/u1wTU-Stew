@@ -41,6 +41,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 228faca90a700a74393232f155fbd8a6, type: 2}
   - {fileID: 11400000, guid: 26d2e408aadb99e4495df518355bd7ab, type: 2}
   - {fileID: 11400000, guid: bfed7d988106a0f49ae7fd3cb794fa12, type: 2}
+  - {fileID: 11400000, guid: 0b2fd745e79c3a94c8adcf4c8fa934ad, type: 2}
   - {fileID: 11400000, guid: bf1f60d204b1613438c827f0aabc6d6d, type: 2}
   - {fileID: 11400000, guid: b6c2bf33d3f17614fbbf5942be8b4d97, type: 2}
   monsterDeck:
@@ -53,3 +54,5 @@ MonoBehaviour:
   themeColor: {r: 1, g: 1, b: 1, a: 1}
   normalProfile: {fileID: 11400000, guid: bbf5041c48e695243b3a8e6db9f21938, type: 2}
   monsterProfile: {fileID: 11400000, guid: 61e272c966939d34c96903bfc73fa710, type: 2}
+  showTrackedCardUI: 0
+  trackedCard: {fileID: 0}
