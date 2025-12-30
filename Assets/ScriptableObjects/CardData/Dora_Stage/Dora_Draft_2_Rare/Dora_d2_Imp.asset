@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u932C\u91D1\u8853"
   cardImage: {fileID: 5128498613293078906, guid: 020495ecb042a7b4f916eff499cff38f, type: 3}
-  description: "\u30A4\u30F3\u30D740%\u3092\u7372\u5F97"
+  description: "\u30A4\u30F3\u30D740%\u3092\u7372\u5F97\n\u706B\u7A2E\uFF0B1"
   cardTag: 
   flavorText: "\u91D1\u306F\u5929\u4E0B\u306E\u56DE\u308A\u7269"
   postComments:
   - "\u3053\u306E\u30B5\u30D7\u30EA\u521D\u3081\u3066\u8CB7\u3063\u305F\u3051\u3069\u51C4\u3044\u52B9\u304F\u3088\uFF01"
+  postIcon: {fileID: 0}
   motivationCost: 1
   mentalCost: 3
   followerGain: 0
@@ -31,7 +32,8 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 1
+  rarity: 2
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0
@@ -42,7 +44,13 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
-  flamingSeedCount: 0
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
+  flamingSeedCount: 1
   flamingRate: 0
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0

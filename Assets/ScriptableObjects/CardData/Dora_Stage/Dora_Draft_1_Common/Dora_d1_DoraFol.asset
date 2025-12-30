@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u8D64\u3044\u5507"
   cardImage: {fileID: 0}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC2\u4E07\u4EBA\u5897\n\u706B\u7A2E\uFF0B5\n\u708E\u4E0A\u738712%"
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC4000\u5897\n\u706B\u7A2E\uFF0B1 \u708E\u4E0A\u738712%\n\uFF11\u679A\u30C9\u30ED\u30FC"
   cardTag: 
   flavorText: "\u3042\u306A\u305F\u306E\u820C\u306F\u4F55\u679A\uFF1F"
   postComments: []
   postIcon: {fileID: 0}
   motivationCost: 1
-  mentalCost: 6
-  followerGain: 10000
+  mentalCost: 1
+  followerGain: 4000
   isTurnMultiplierEffect: 0
-  drawCount: 0
+  drawCount: 1
   motivationRecovery: 0
   turnDrawBonus: 0
   maxMotivationBonus: 0
@@ -31,7 +31,7 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 0
+  rarity: 1
   playCondition: 0
   riskType: 0
   riskProbability: 1
@@ -49,7 +49,7 @@ MonoBehaviour:
   discardPileCountFollowerRate: 0
   minPileCountImpressionRate: 0
   minPileCountFollowerRate: 0
-  flamingSeedCount: 5
+  flamingSeedCount: 1
   flamingRate: 0.12
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
