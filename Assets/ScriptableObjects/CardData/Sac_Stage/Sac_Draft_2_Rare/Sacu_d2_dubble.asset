@@ -21,7 +21,11 @@ MonoBehaviour:
   - "\u3053\u306E\u5B50\u672C\u5F53\u306B\u304B\u308F\u3044\u3044"
   - "\u306F\u3041\u3001\u5C0A\u3044"
   - "\u3084\u3070\u3001\u53EF\u611B\u3059\u304E\u3093\u3060\u3051\u3069"
-  postIcon: {fileID: 21300000, guid: abff6f94061685b4e97cdf840144d235, type: 3}
+  - "\u751F\u307E\u308C\u3066\u304D\u3066\u304F\u308C\u3066\u3042\u308A\u304C\u3068\u3046"
+  - "\u3044\u3064\u307F\u3066\u3082\u53EF\u611B\u3044"
+  - "\u3064\u3044\u8CA2\u3044\u3058\u3083\u3046\u308F"
+  - "\u3053\u306E\u4E16\u306E\u5929\u4F7F\uFF01"
+  postIcon: {fileID: -4937016980448437836, guid: ff56100bbcacb6446bb349ff2ed093fc, type: 3}
   motivationCost: 1
   mentalCost: 5
   followerGain: 20000
