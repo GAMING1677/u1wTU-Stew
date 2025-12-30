@@ -27,6 +27,24 @@ namespace ApprovalMonster.Data
         [Tooltip("ループ再生するか")]
         public bool loop = true;
         
+        [Header("スポットライト設定")]
+        [Tooltip("スポットライトを使用するか")]
+        public bool useSpotlight = false;
+        
+        [Tooltip("フォーカス対象の名前（UIオブジェクトを検索）")]
+        public string focusTargetName;
+        
+        [Tooltip("手動でフォーカス位置を指定する場合（正規化座標 0-1）")]
+        public Vector2 manualFocusPosition = new Vector2(0.5f, 0.5f);
+        
+        [Tooltip("手動でフォーカス半径を指定する場合（正規化 0-1）")]
+        [Range(0.05f, 0.5f)]
+        public float manualFocusRadius = 0.15f;
+        
+        [Tooltip("エッジのソフトさ")]
+        [Range(0.01f, 0.1f)]
+        public float edgeSoftness = 0.02f;
+        
         /// <summary>
         /// 総再生時間（秒）
         /// </summary>

@@ -564,13 +564,17 @@ MonoBehaviour:
   tagText: {fileID: 8419233902137698827}
   riskIcon: {fileID: 8676741931728145650}
   hoverSlideDistance: 220
-  hoverScale: 1.8
+  hoverScale: 1.5
   hoverDuration: 0.2
   enableIdleShadow: 1
   shadowImage: {fileID: 5661012729453106552}
   shadowPulseScale: 1
   shadowPulseColor: {r: 0, g: 0, b: 0, a: 0.6}
   shadowPulseDuration: 1.5
+  basicColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  commonColor: {r: 1, g: 1, b: 1, a: 1}
+  rareColor: {r: 0, g: 0.75, b: 1, a: 1}
+  epicColor: {r: 1, g: 0.84, b: 0, a: 1}
 --- !u!225 &6100228661105836764
 CanvasGroup:
   m_ObjectHideFlags: 0

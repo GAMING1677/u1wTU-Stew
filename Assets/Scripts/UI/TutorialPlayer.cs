@@ -70,6 +70,9 @@ namespace ApprovalMonster.UI
         [Tooltip("ボタン間のずらし時間（秒）")]
         [SerializeField] private float pulseOffset = 0.2f;
         
+        [Header("Spotlight")]
+        [SerializeField] private TutorialSpotlight spotlight;
+        
         // State
         private int currentTutorialIndex = 0;
         private int currentFrameIndex = 0;
@@ -278,6 +281,9 @@ namespace ApprovalMonster.UI
             // ナビゲーションボタンの有効/無効
             UpdateNavigationButtons();
             
+            // スポットライト更新
+            UpdateSpotlight();
+            
             // 再生開始
             currentFrameIndex = 0;
             Play();
@@ -292,6 +298,41 @@ namespace ApprovalMonster.UI
             if (nextButton != null)
             {
                 nextButton.interactable = currentTutorialIndex < tutorials.Length - 1;
+            }
+        }
+        
+        /// <summary>
+        /// スポットライトを更新
+        /// </summary>
+        private void UpdateSpotlight()
+        {
+            if (spotlight == null || currentData == null) return;
+            
+            if (currentData.useSpotlight)
+            {
+                // フォーカス対象を名前で検索
+                if (!string.IsNullOrEmpty(currentData.focusTargetName))
+                {
+                    var target = GameObject.Find(currentData.focusTargetName);
+                    if (target != null)
+                    {
+                        var rectTransform = target.GetComponent<RectTransform>();
+                        if (rectTransform != null)
+                        {
+                            spotlight.FocusOn(rectTransform, 1.2f, currentData.edgeSoftness);
+                            return;
+                        }
+                    }
+                    Debug.LogWarning($"[TutorialPlayer] Spotlight target '{currentData.focusTargetName}' not found!");
+                }
+                
+                // フォールバック：手動指定の位置を使用
+                spotlight.FocusOnPosition(currentData.manualFocusPosition, currentData.manualFocusRadius, currentData.edgeSoftness);
+            }
+            else
+            {
+                // スポットライトを非表示
+                spotlight.Hide();
             }
         }
         
@@ -439,6 +480,7 @@ namespace ApprovalMonster.UI
             if (descriptionText != null)
             {
                 descriptionText.text = currentFullText;
+                descriptionText.maxVisibleCharacters = int.MaxValue; // 全文字を表示
             }
             
             isTypewriting = false;
@@ -493,7 +535,7 @@ namespace ApprovalMonster.UI
         }
         
         /// <summary>
-        /// タイプライター効果で説明文を表示
+        /// タイプライター効果で説明文を表示（リッチテキストタグ対応）
         /// </summary>
         private IEnumerator TypewriterCoroutine(string fullText)
         {
@@ -501,11 +543,20 @@ namespace ApprovalMonster.UI
             
             isTypewriting = true;
             currentFullText = fullText;
-            descriptionText.text = "";
             
-            foreach (char c in fullText)
+            // 全文をセットしてメッシュを更新
+            descriptionText.text = fullText;
+            descriptionText.ForceMeshUpdate();
+            
+            int totalVisibleCharacters = descriptionText.textInfo.characterCount;
+            
+            // 最初は非表示
+            descriptionText.maxVisibleCharacters = 0;
+            
+            // 1文字ずつ表示
+            for (int i = 0; i <= totalVisibleCharacters; i++)
             {
-                descriptionText.text += c;
+                descriptionText.maxVisibleCharacters = i;
                 yield return new WaitForSeconds(typewriterInterval);
             }
             
