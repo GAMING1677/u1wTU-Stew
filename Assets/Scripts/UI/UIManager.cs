@@ -5,6 +5,7 @@ using TMPro;
 using ApprovalMonster.Core;
 using ApprovalMonster.Data;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 
 namespace ApprovalMonster.UI
@@ -24,6 +25,11 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI discardPileCountText;
         [SerializeField] private Image deckPileImage;
         [SerializeField] private Image discardPileImage;
+        
+        [Header("Deck Viewer")]
+        [SerializeField] private DeckViewerUI deckViewerUI;
+        [SerializeField] private Button deckPileButton;
+        [SerializeField] private Button discardPileButton;
 
         private int prevDeckCount = -1; // -1 to force initial set without animation if needed, or handle in setup
         private int prevDiscardCount = -1;
@@ -92,6 +98,14 @@ namespace ApprovalMonster.UI
         [Header("Tutorial")]
         [Tooltip("チュートリアルプレイヤー")]
         [SerializeField] private TutorialPlayer tutorialPlayer;
+        
+        [Header("Tracked Card Count")]
+        [Tooltip("追跡対象のカード")]
+        [SerializeField] private CardData trackedCard;
+        [Tooltip("山札内の枚数を表示するテキスト")]
+        [SerializeField] private TextMeshProUGUI trackedCardDrawPileText;
+        [Tooltip("捨て札内の枚数を表示するテキスト")]
+        [SerializeField] private TextMeshProUGUI trackedCardDiscardPileText;
         
         private bool isSetup = false;
 
@@ -263,6 +277,22 @@ namespace ApprovalMonster.UI
              {
                  settingsButton.onClick.AddListener(OnSettingsButtonClicked);
              }
+             
+             // Deck Viewer buttons
+             if (deckPileButton != null)
+             {
+                 deckPileButton.onClick.AddListener(OnDeckPileButtonClicked);
+             }
+             if (discardPileButton != null)
+             {
+                 discardPileButton.onClick.AddListener(OnDiscardPileButtonClicked);
+             }
+             
+             // EndTurnボタンを常にパルス
+             if (endTurnButtonPulse != null)
+             {
+                 endTurnButtonPulse.StartPulse();
+             }
         }
         
         private void OnSettingsButtonClicked()
@@ -274,6 +304,22 @@ namespace ApprovalMonster.UI
             else
             {
                 Debug.LogWarning("[UIManager] SoundSettingsUI is not assigned!");
+            }
+        }
+        
+        private void OnDeckPileButtonClicked()
+        {
+            if (deckViewerUI != null)
+            {
+                deckViewerUI.ShowDrawPile();
+            }
+        }
+        
+        private void OnDiscardPileButtonClicked()
+        {
+            if (deckViewerUI != null)
+            {
+                deckViewerUI.ShowDiscardPile();
             }
         }
 
@@ -488,15 +534,7 @@ namespace ApprovalMonster.UI
                 motivationFillImage.DOFillAmount(fillAmount, 0.3f);
             }
             
-            // モチベーションがゼロになったらボタンをパルス
-            if (current <= 0 && endTurnButtonPulse != null)
-            {
-                endTurnButtonPulse.StartPulse();
-            }
-            else if (current > 0 && endTurnButtonPulse != null)
-            {
-                endTurnButtonPulse.StopPulse();
-            }
+            // パルス条件は削除 - 常にパルスさせる設定はStart時に行う
         }
 
         private void UpdateImpression(long val)
@@ -653,6 +691,9 @@ namespace ApprovalMonster.UI
                 }
             }
             
+            // 追跡カードの枚数を更新
+            UpdateTrackedCardCounts();
+            
             prevDeckCount = deckCount;
             prevDiscardCount = discardCount;
         }
@@ -673,6 +714,32 @@ namespace ApprovalMonster.UI
                 discardPileImage.transform.localScale = Vector3.one;
                 // Vibrato=5程度で2秒間揺らす
                 discardPileImage.transform.DOPunchScale(Vector3.one * 0.3f, 2.0f, 5, 1);
+            }
+        }
+        
+        /// <summary>
+        /// 追跡対象カードの山札・捨て札内の枚数を更新
+        /// </summary>
+        private void UpdateTrackedCardCounts()
+        {
+            if (trackedCard == null) return;
+            
+            var gm = Core.GameManager.Instance;
+            if (gm == null || gm.deckManager == null) return;
+            
+            // 山札内の枚数をカウント
+            int drawPileCount = gm.deckManager.drawPile.Count(c => c == trackedCard);
+            // 捨て札内の枚数をカウント
+            int discardPileCount = gm.deckManager.discardPile.Count(c => c == trackedCard);
+            
+            if (trackedCardDrawPileText != null)
+            {
+                trackedCardDrawPileText.text = drawPileCount.ToString();
+            }
+            
+            if (trackedCardDiscardPileText != null)
+            {
+                trackedCardDiscardPileText.text = discardPileCount.ToString();
             }
         }
         
