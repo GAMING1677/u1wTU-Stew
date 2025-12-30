@@ -25,7 +25,11 @@ MonoBehaviour:
   followerGain: 1000000
   isTurnMultiplierEffect: 0
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   drawCount: 2
+=======
+  drawCount: 1
+>>>>>>> Stashed changes
 =======
   drawCount: 1
 >>>>>>> Stashed changes

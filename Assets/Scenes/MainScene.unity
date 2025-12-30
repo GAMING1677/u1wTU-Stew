@@ -9807,7 +9807,10 @@ RectTransform:
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 --- !u!1 &1068597873
 GameObject:
   m_ObjectHideFlags: 0
@@ -16161,7 +16164,10 @@ MonoBehaviour:
   playSE: 0
   seType: 0
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 --- !u!1 &1802178660
 GameObject:
   m_ObjectHideFlags: 0
