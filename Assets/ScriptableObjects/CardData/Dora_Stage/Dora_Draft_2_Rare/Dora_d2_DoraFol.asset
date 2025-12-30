@@ -14,14 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u795E\u306F\u898B\u3066\u3044\u308B"
   cardImage: {fileID: 0}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C10\u4E07\u4EBA\u5897\u3048\u308B\n\u706B\u7A2E\uFF0B3\n\u708E\u4E0A\u738730%"
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C6\u4E07\u4EBA\u5897\u3048\u308B\n\u706B\u7A2E\uFF0B3\n\u708E\u4E0A\u738730%"
   cardTag: 
   flavorText: "\u96A3\u4EBA\u3068\u795E\u69D8\u306F\u3044\u3064\u3082\u3042\u306A\u305F\u3092\u898B\u5B88\u3063\u3066\u3044\u307E\u3059"
   postComments:
   - "\u3010\u7DCA\u6025\u901F\u5831\u3011\u3042\u306E\u4E8C\u4EBA\u5B9F\u306F\u2026\u3002"
+  postIcon: {fileID: 0}
   motivationCost: 1
   mentalCost: 2
-  followerGain: 100000
+  followerGain: 60000
   isTurnMultiplierEffect: 0
   drawCount: 0
   motivationRecovery: 0
@@ -31,7 +32,8 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 1
+  rarity: 2
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0
@@ -42,6 +44,12 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
   flamingSeedCount: 3
   flamingRate: 0.3
   seedToFollowerMultiplier: 0

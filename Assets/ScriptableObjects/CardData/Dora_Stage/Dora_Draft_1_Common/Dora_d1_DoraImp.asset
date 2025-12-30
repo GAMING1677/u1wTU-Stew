@@ -21,7 +21,7 @@ MonoBehaviour:
   - "\u3044\u307E\u3060\uFF01\u53E9\u3051\uFF01"
   postIcon: {fileID: 0}
   motivationCost: 1
-  mentalCost: 6
+  mentalCost: 1
   followerGain: 0
   isTurnMultiplierEffect: 0
   drawCount: 0
@@ -32,7 +32,7 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 0
+  rarity: 1
   playCondition: 0
   riskType: 0
   riskProbability: 1

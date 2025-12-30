@@ -26,6 +26,7 @@ MonoBehaviour:
   - "\u59CB\u3081\u3066\u304D\u305F\u30B9\u30BF\u30D0\uFF01"
   - "\u884C\u304D\u3064\u3051\u306E\u30B9\u30BF\u30D0\uFF01"
   - "\u7A74\u5834\u306E\u30B9\u30BF\u30D0\uFF01"
+  postIcon: {fileID: 0}
   motivationCost: 1
   mentalCost: 4
   followerGain: 1000
@@ -38,7 +39,8 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 0
+  rarity: 1
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0
@@ -49,6 +51,12 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
   flamingSeedCount: 0
   flamingRate: 0
   seedToFollowerMultiplier: 0
