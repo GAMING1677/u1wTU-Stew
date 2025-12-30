@@ -38,7 +38,15 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
   rarity: 0
+=======
+=======
+>>>>>>> Stashed changes
+  rarity: 1
+  playCondition: 0
+>>>>>>> Stashed changes
   riskType: 0
   riskProbability: 1
   riskValue: 0

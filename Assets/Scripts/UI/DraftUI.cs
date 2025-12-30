@@ -18,6 +18,9 @@ namespace ApprovalMonster.UI
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private TextMeshProUGUI remainingDraftsText;
+        [SerializeField] private TextMeshProUGUI currentRankText;
+        [SerializeField] private Button openRankTableButton;
+        [SerializeField] private DraftRankTableUI draftRankTableUI;
         [SerializeField] private Transform cardOptionsContainer;
         [SerializeField] private CardView cardViewPrefab;
         
@@ -29,6 +32,8 @@ namespace ApprovalMonster.UI
         [Header("Animation Settings")]
         [SerializeField] private float fadeInDuration = 0.3f;
         [SerializeField] private float fadeOutDuration = 0.2f;
+        
+        private List<CardData> _currentDraftPool; // ランクテーブル用に保持
 
         private List<CardView> activeCardViews = new List<CardView>();
         private CardData selectedCard;
@@ -69,6 +74,22 @@ namespace ApprovalMonster.UI
                     remainingDraftsText.gameObject.SetActive(false);
                 }
                 
+                // モンスタードラフト時はランク表示とボタンを非表示
+                if (currentRankText != null)
+                {
+                    currentRankText.gameObject.SetActive(false);
+                }
+                if (openRankTableButton != null)
+                {
+                    openRankTableButton.gameObject.SetActive(false);
+                }
+                
+                // モンスタードラフト時はランクテーブルを非表示
+                if (draftRankTableUI != null)
+                {
+                    draftRankTableUI.Hide();
+                }
+                
                 // 背景をモンスター用に変更
                 if (backgroundImage != null && monsterBackground != null)
                 {
@@ -77,6 +98,9 @@ namespace ApprovalMonster.UI
             }
             else
             {
+                // ドラフトプールを保持（ボタンクリック時用）
+                _currentDraftPool = GameManager.Instance?.currentStage?.draftPool;
+                
                 // 残りドラフト回数を計算
                 var gm = GameManager.Instance;
                 int currentTurn = gm?.turnManager?.CurrentTurnCount ?? 1;
@@ -91,6 +115,25 @@ namespace ApprovalMonster.UI
                 {
                     remainingDraftsText.text = $"あと{remainingDrafts}回";
                     remainingDraftsText.gameObject.SetActive(true);
+                }
+                
+                // 現在のランクを表示
+                UpdateCurrentRankText();
+                if (currentRankText != null)
+                {
+                    currentRankText.gameObject.SetActive(true);
+                }
+                
+                // ランクテーブルを開くボタンを表示
+                if (openRankTableButton != null)
+                {
+                    openRankTableButton.gameObject.SetActive(true);
+                }
+                
+                // テーブルはボタンで開くので、最初は非表示
+                if (draftRankTableUI != null)
+                {
+                    draftRankTableUI.gameObject.SetActive(false);
                 }
                 
                 // 背景を通常用に変更
@@ -264,6 +307,13 @@ namespace ApprovalMonster.UI
         public void HideDraftUI(System.Action onComplete = null)
         {
             Debug.Log("[DraftUI] ===== HideDraftUI CALLED =====");
+            
+            // ランクテーブルも非表示にする
+            if (draftRankTableUI != null)
+            {
+                draftRankTableUI.Hide();
+            }
+            
             canvasGroup.DOFade(0f, fadeOutDuration).OnComplete(() =>
             {
                 Debug.Log("[DraftUI] Fade complete, disabling raycasts");
@@ -291,6 +341,55 @@ namespace ApprovalMonster.UI
                 }
             }
             activeCardViews.Clear();
+        }
+        
+        private void Awake()
+        {
+            // ボタンのクリックイベントを設定
+            if (openRankTableButton != null)
+            {
+                openRankTableButton.onClick.AddListener(OnOpenRankTableButtonClicked);
+            }
+        }
+        
+        /// <summary>
+        /// 現在のランクテキストを更新
+        /// </summary>
+        private void UpdateCurrentRankText()
+        {
+            if (currentRankText == null) return;
+            
+            var gm = GameManager.Instance;
+            if (gm == null || gm.draftManager == null)
+            {
+                currentRankText.text = "ランク: -";
+                return;
+            }
+            
+            long currentImpressions = gm.resourceManager?.totalImpressions ?? 0;
+            int rankIndex = gm.draftManager.GetCurrentRankIndex(currentImpressions);
+            int maxRank = gm.draftManager.probabilityTable?.Count ?? 0;
+            
+            // 最高ランクならMAX表示
+            if (maxRank > 0 && rankIndex == maxRank - 1)
+            {
+                currentRankText.text = "ランク: MAX";
+            }
+            else
+            {
+                currentRankText.text = $"ランク: {rankIndex + 1}";
+            }
+        }
+        
+        /// <summary>
+        /// ランクテーブルを開くボタンがクリックされた
+        /// </summary>
+        private void OnOpenRankTableButtonClicked()
+        {
+            if (draftRankTableUI != null && _currentDraftPool != null)
+            {
+                draftRankTableUI.Show(_currentDraftPool);
+            }
         }
     }
 }

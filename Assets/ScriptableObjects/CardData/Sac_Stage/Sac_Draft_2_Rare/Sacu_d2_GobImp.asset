@@ -20,6 +20,10 @@ MonoBehaviour:
   postComments:
   - "\u521D\u3081\u3066\u306E\u30CF\u30EF\u30A4\u8A18\u5FF5"
   - "\u6C34\u7740\u306A\u3093\u3066\u4E45\u3005"
+  - "\u3084\u3070\u3001\u3081\u3063\u3061\u3083\u592A\u3063\u305F"
+  - "\u65B0\u3057\u3044\u6C34\u7740\u3081\u3063\u3061\u3083\u304B\u308F\u3044\u3044"
+  - "\u6CF3\u3050\u306E\u82E6\u624B"
+  - "\u6D77\u6C34\u3057\u3087\u3063\u3071\u3044"
   postIcon: {fileID: 0}
   motivationCost: 1
   mentalCost: 9
@@ -33,7 +37,7 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
-  rarity: 1
+  rarity: 2
   playCondition: 0
   riskType: 0
   riskProbability: 1

@@ -37,7 +37,15 @@ MonoBehaviour:
   isTurnImpressionEffect: 0
   cardType: 0
   isExhaust: 0
+<<<<<<< Updated upstream:Assets/ScriptableObjects/CardData/Sac_Stage/Sac_Draft_2_Rare/Sacu_d2_drrow.asset
+<<<<<<< Updated upstream:Assets/ScriptableObjects/CardData/Sac_Stage/Sac_Draft_2_Rare/Sacu_d2_drrow.asset
   rarity: 1
+=======
+  rarity: 3
+>>>>>>> Stashed changes:Assets/ScriptableObjects/CardData/Sac_Stage/Sac_Draft_3_Epic/Sacu_d3_drrow.asset
+=======
+  rarity: 3
+>>>>>>> Stashed changes:Assets/ScriptableObjects/CardData/Sac_Stage/Sac_Draft_3_Epic/Sacu_d3_drrow.asset
   playCondition: 0
   riskType: 0
   riskProbability: 1

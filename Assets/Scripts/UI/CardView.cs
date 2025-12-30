@@ -38,6 +38,12 @@ namespace ApprovalMonster.UI
         [SerializeField] private Color shadowPulseColor = new Color(0, 0, 0, 0.6f);
         [Tooltip("影アニメーションの周期（秒）")]
         [SerializeField] private float shadowPulseDuration = 1.5f;
+        
+        [Header("Rarity Colors")]
+        [SerializeField] private Color basicColor = new Color(0.6f, 0.6f, 0.6f); // 灰色
+        [SerializeField] private Color commonColor = Color.white;
+        [SerializeField] private Color rareColor = new Color(0f, 0.75f, 1f); // 水色
+        [SerializeField] private Color epicColor = new Color(1f, 0.84f, 0f); // 金色
 
         private CardData _data;
         private CanvasGroup _canvasGroup;
@@ -135,11 +141,19 @@ namespace ApprovalMonster.UI
                 followerGainText.text = FormatNumber(data.followerGain);
             }
 
-            // Impression Rate - percentage
+            // Impression Rate - percentage (hide if 0)
             if (impressionRateText != null)
             {
-                float percentage = data.impressionRate * 100f;
-                impressionRateText.text = $"{percentage:F0}%";
+                if (data.impressionRate > 0)
+                {
+                    float percentage = data.impressionRate * 100f;
+                    impressionRateText.text = $"{percentage:F0}%";
+                    impressionRateText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    impressionRateText.gameObject.SetActive(false);
+                }
             }
 
             if (data.HasRisk())
@@ -165,8 +179,9 @@ namespace ApprovalMonster.UI
                     }
                     else
                     {
-                        // Regular card: show rarity
+                        // Regular card: show rarity with color
                         tagText.text = data.rarity.ToString();
+                        tagText.color = GetRarityColor(data.rarity);
                     }
                 }
                 else
@@ -409,6 +424,25 @@ namespace ApprovalMonster.UI
             }
             
             transform.DOKill();
+        }
+        
+        /// <summary>
+        /// レアリティに応じた色を取得
+        /// </summary>
+        private Color GetRarityColor(CardRarity rarity)
+        {
+            switch (rarity)
+            {
+                case CardRarity.Basic:
+                    return basicColor;
+                case CardRarity.Rare:
+                    return rareColor;
+                case CardRarity.Epic:
+                    return epicColor;
+                case CardRarity.Common:
+                default:
+                    return commonColor;
+            }
         }
     }
 }

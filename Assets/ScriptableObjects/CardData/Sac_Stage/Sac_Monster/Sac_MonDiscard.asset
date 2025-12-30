@@ -22,7 +22,7 @@ MonoBehaviour:
   - "\u8AB0\u304B\u52A9\u3051\u3066\u307B\u3057\u3044"
   - "\u30DE\u30B8\u304D\u3082\u3044\u3001\u7121\u7406"
   postIcon: {fileID: 0}
-  motivationCost: 0
+  motivationCost: 1
   mentalCost: 0
   followerGain: 0
   isTurnMultiplierEffect: 0
