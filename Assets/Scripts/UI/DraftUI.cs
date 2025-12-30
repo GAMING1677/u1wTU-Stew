@@ -108,7 +108,7 @@ namespace ApprovalMonster.UI
                 int totalDrafts = lastDraftTurn; // 合計ドラフト回数
                 int currentDraftNumber = currentTurn; // 現在のドラフト回数（＝現在のターン）
                 
-                titleText.text = "選択したカードが山札の一番上にセットされます";
+                titleText.text = "選択したカードを山札の一番上にセットします（スキップ不可）";
                 titleText.color = Color.white;
                 
                 // 別テキストに現在のドラフト回数を表示
