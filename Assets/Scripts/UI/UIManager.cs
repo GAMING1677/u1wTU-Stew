@@ -87,6 +87,15 @@ namespace ApprovalMonster.UI
         [Header("End Turn Button Pulse")]
         [SerializeField] private ButtonPulse endTurnButtonPulse;
         
+        [Header("Discard Animation")]
+        [Tooltip("カードが捨て札に吸い込まれるアニメーションの時間")]
+        [SerializeField] private float discardAnimDuration = 0.4f;
+        [Tooltip("各カード間のアニメーション開始遅延")]
+        [SerializeField] private float discardAnimStagger = 0.05f;
+        
+        // 捨て札アニメーション中かどうか
+        private bool isDiscardingHand = false;
+        
         [Header("Flaming UI")]
         [Tooltip("種の数を表示するテキスト（オプショナル）")]
         [SerializeField] private TextMeshProUGUI flamingSeedText;
@@ -1041,6 +1050,13 @@ namespace ApprovalMonster.UI
 
         private void OnCardDiscarded(CardData data)
         {
+            // 一括アニメーション中はイベントをスキップ（データ処理はGameManagerが行う）
+            if (isDiscardingHand)
+            {
+                Debug.Log($"[UIManager] OnCardDiscarded skipped during bulk discard: {data.cardName}");
+                return;
+            }
+            
             Debug.Log($"[UIManager] OnCardDiscarded called for {data.cardName}");
             
             // Find the first card view with matching CardData reference
@@ -1065,6 +1081,102 @@ namespace ApprovalMonster.UI
             {
                 Debug.LogWarning($"[UIManager] Could not find CardView for {data.cardName}");
             }
+        }
+        
+        /// <summary>
+        /// 手札を一括で捨て札へアニメーション付きで移動させる
+        /// 各カードが順番に捨て札へ吸い込まれていく演出
+        /// </summary>
+        /// <param name="onComplete">アニメーション完了後のコールバック</param>
+        public void AnimateDiscardHand(System.Action onComplete)
+        {
+            // 手札がない場合は即座に完了
+            if (activeCards.Count == 0)
+            {
+                Debug.Log("[UIManager] AnimateDiscardHand: No cards to animate");
+                onComplete?.Invoke();
+                return;
+            }
+            
+            Debug.Log($"[UIManager] AnimateDiscardHand: Animating {activeCards.Count} cards");
+            isDiscardingHand = true;
+            
+            // 捨て札の位置を取得
+            Vector3 discardPos = discardPileImage != null 
+                ? discardPileImage.transform.position 
+                : Vector3.zero;
+            
+            // アニメーション対象のカードをコピー（activeCardsはクリアするため）
+            List<CardView> cardsToAnimate = new List<CardView>(activeCards);
+            activeCards.Clear();
+            
+            int animatingCount = cardsToAnimate.Count;
+            int completedCount = 0;
+            
+            for (int i = 0; i < cardsToAnimate.Count; i++)
+            {
+                CardView card = cardsToAnimate[i];
+                float delay = i * discardAnimStagger;
+                
+                // 既存のTweenをキャンセル
+                card.transform.DOKill();
+                
+                // パルスアニメーションを停止
+                card.StopPulse();
+                
+                // 親から切り離して最前面に配置（他のUIの上を移動するため）
+                card.transform.SetParent(handContainer.parent);
+                
+                // シーケンスアニメーション
+                Sequence seq = DOTween.Sequence();
+                seq.AppendInterval(delay);
+                seq.Append(card.transform.DOMove(discardPos, discardAnimDuration).SetEase(Ease.InQuad));
+                seq.Join(card.transform.DOScale(0f, discardAnimDuration).SetEase(Ease.InQuad));
+                seq.Join(card.transform.DORotate(new Vector3(0, 0, -30f), discardAnimDuration, RotateMode.Fast));
+                seq.OnComplete(() =>
+                {
+                    Destroy(card.gameObject);
+                    completedCount++;
+                    
+                    // 全てのアニメーションが完了したらコールバック
+                    if (completedCount >= animatingCount)
+                    {
+                        Debug.Log("[UIManager] AnimateDiscardHand: All animations completed");
+                        isDiscardingHand = false;
+                        onComplete?.Invoke();
+                    }
+                });
+            }
+            
+            // 捨て札パイルのパルスアニメーション
+            if (discardPileImage != null)
+            {
+                discardPileImage.transform.DOKill();
+                discardPileImage.transform.localScale = Vector3.one;
+                
+                // 少し遅延してから開始（カードが到着し始める頃）
+                float pulseDelay = cardsToAnimate.Count * discardAnimStagger * 0.5f;
+                DOTween.Sequence()
+                    .AppendInterval(pulseDelay)
+                    .Append(discardPileImage.transform.DOPunchScale(Vector3.one * 0.2f, 0.5f, 5, 1));
+            }
+        }
+        
+        /// <summary>
+        /// 手札を即座にクリアする（アニメーションなし、緊急時用）
+        /// </summary>
+        public void ClearHandImmediate()
+        {
+            foreach (var card in activeCards)
+            {
+                if (card != null)
+                {
+                    card.transform.DOKill();
+                    Destroy(card.gameObject);
+                }
+            }
+            activeCards.Clear();
+            isDiscardingHand = false;
         }
         
         /// <summary>

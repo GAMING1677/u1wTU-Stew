@@ -594,11 +594,6 @@ namespace ApprovalMonster.Core
             turnStatsList.Add(stats);
             Debug.Log($"[GameManager] Turn Stats: {stats}");
             
-            deckManager.DiscardHand();
-            
-            // Only start next turn if game is still active and not ending
-            Debug.Log($"[GameManager] OnTurnEnd - After processing, Phase: {turnManager.CurrentPhase}, isGameActive: {isGameActive}");
-            
             // Only start next turn if game is still active and not ending
             Debug.Log($"[GameManager] OnTurnEnd - After processing, Phase: {turnManager.CurrentPhase}, isGameActive: {isGameActive}");
             
@@ -606,66 +601,101 @@ namespace ApprovalMonster.Core
                 turnManager.CurrentPhase != TurnManager.TurnPhase.Result && 
                 turnManager.CurrentPhase != TurnManager.TurnPhase.GameOver)
             {
-                // Show Turn Result Cut-in
-                string title = quotaMet ? "ノルマ達成！" : "ノルマ未達...";
-                string message = quotaMet 
-                    ? $"フォロワー: +{followerGained:N0}\nインプレッション: +{impGained:N0}" 
-                    : $"ペナルティ: メンタル -{CalculateQuotaPenalty(endedTurn)}";
-                
-                // Color override (Green for success, Red/Purple for fail?) - Optional
-                // For now just standard cut-in
-                
-                Debug.Log("[GameManager] Showing Turn Result CutIn");
-                
-                // Determine Character Reaction
-                double ratio = (double)impGained / currentTurnQuota;
-                UI.CharacterAnimator.ReactionType reactionType = UI.CharacterAnimator.ReactionType.Sad_1;
-                
-                if (ratio >= 5.0) reactionType = UI.CharacterAnimator.ReactionType.Happy_3;
-                else if (ratio >= 1.0) reactionType = UI.CharacterAnimator.ReactionType.Happy_2;
-                else if (ratio < 0.5) reactionType = UI.CharacterAnimator.ReactionType.Sad_2;
-                else reactionType = UI.CharacterAnimator.ReactionType.Sad_1; // 0.5 <= ratio < 1.0
-                
-                Debug.Log($"[GameManager] Quota Ratio: {ratio:F2} (Gained: {impGained} / Quota: {currentTurnQuota}) -> Reaction: {reactionType}");
-                
-                var ui = FindObjectOfType<UI.UIManager>();
-                if (ui != null)
+                // ========== 手札を捨て札へアニメーション ==========
+                var uiManager = FindObjectOfType<UI.UIManager>();
+                if (uiManager != null)
                 {
-                    ui.ShowCharacterReaction(reactionType, loop: true);
+                    // 変数をキャプチャ用にローカルコピー
+                    bool localQuotaMet = quotaMet;
+                    int localFollowerGained = followerGained;
+                    long localImpGained = impGained;
+                    int localMentalChange = mentalChange;
+                    
+                    uiManager.AnimateDiscardHand(() => 
+                    {
+                        // アニメーション完了後にデータ処理
+                        deckManager.DiscardHand();
+                        
+                        // カットインを表示
+                        ShowTurnEndCutIn(localQuotaMet, localFollowerGained, localImpGained, endedTurn);
+                    });
                 }
                 else
                 {
-                    Debug.LogError("[GameManager] UIManager not found when trying to show reaction!");
+                    // UIManagerがない場合はアニメーションなしで即座に処理
+                    Debug.LogWarning("[GameManager] UIManager not found, skipping discard animation");
+                    deckManager.DiscardHand();
+                    ShowTurnEndCutIn(quotaMet, followerGained, impGained, endedTurn);
                 }
-                
-                FindObjectOfType<UI.UIManager>()?.ShowCutIn(title, message, () => {
-                    Debug.Log("[GameManager] CutIn dismissed");
-                    
-                    // Stop looping reaction
-                    FindObjectOfType<UI.UIManager>()?.StopCharacterReaction();
-                    
-                    // Check if monster mode should be triggered now
-                    if (shouldTriggerMonsterModeAfterCutIn)
-                    {
-                        Debug.Log("[GameManager] Triggering deferred monster mode");
-                        shouldTriggerMonsterModeAfterCutIn = false;
-                        
-                        // Mark that this monster mode is from turn end (not mid-turn card play)
-                        isMonsterModeFromTurnEnd = true;
-                        isWaitingForMonsterDraft = true;
-                        OnMonsterModeTriggered();
-                        // Note: StartTurn will be called after monster draft completes
-                    }
-                    else
-                    {
-                        turnManager.StartTurn();
-                    }
-                });
             }
             else
             {
-                Debug.Log("[ GameManager] OnTurnEnd - Game is ending, not starting next turn");
+                // ゲーム終了時はアニメーションをスキップ
+                Debug.Log("[GameManager] OnTurnEnd - Game is ending, discarding hand immediately");
+                var uiManager = FindObjectOfType<UI.UIManager>();
+                uiManager?.ClearHandImmediate();
+                deckManager.DiscardHand();
             }
+        }
+        
+        /// <summary>
+        /// ターン終了時のカットイン表示処理
+        /// OnTurnEndから分離してコールバック内で呼び出し可能に
+        /// </summary>
+        private void ShowTurnEndCutIn(bool quotaMet, int followerGained, long impGained, int endedTurn)
+        {
+            // Show Turn Result Cut-in
+            string title = quotaMet ? "ノルマ達成！" : "ノルマ未達...";
+            string message = quotaMet 
+                ? $"フォロワー: +{followerGained:N0}\nインプレッション: +{impGained:N0}" 
+                : $"ペナルティ: メンタル -{CalculateQuotaPenalty(endedTurn)}";
+            
+            Debug.Log("[GameManager] Showing Turn Result CutIn");
+            
+            // Determine Character Reaction
+            double ratio = currentTurnQuota > 0 ? (double)impGained / currentTurnQuota : 0;
+            UI.CharacterAnimator.ReactionType reactionType = UI.CharacterAnimator.ReactionType.Sad_1;
+            
+            if (ratio >= 5.0) reactionType = UI.CharacterAnimator.ReactionType.Happy_3;
+            else if (ratio >= 1.0) reactionType = UI.CharacterAnimator.ReactionType.Happy_2;
+            else if (ratio < 0.5) reactionType = UI.CharacterAnimator.ReactionType.Sad_2;
+            else reactionType = UI.CharacterAnimator.ReactionType.Sad_1; // 0.5 <= ratio < 1.0
+            
+            Debug.Log($"[GameManager] Quota Ratio: {ratio:F2} (Gained: {impGained} / Quota: {currentTurnQuota}) -> Reaction: {reactionType}");
+            
+            var ui = FindObjectOfType<UI.UIManager>();
+            if (ui != null)
+            {
+                ui.ShowCharacterReaction(reactionType, loop: true);
+            }
+            else
+            {
+                Debug.LogError("[GameManager] UIManager not found when trying to show reaction!");
+            }
+            
+            FindObjectOfType<UI.UIManager>()?.ShowCutIn(title, message, () => {
+                Debug.Log("[GameManager] CutIn dismissed");
+                
+                // Stop looping reaction
+                FindObjectOfType<UI.UIManager>()?.StopCharacterReaction();
+                
+                // Check if monster mode should be triggered now
+                if (shouldTriggerMonsterModeAfterCutIn)
+                {
+                    Debug.Log("[GameManager] Triggering deferred monster mode");
+                    shouldTriggerMonsterModeAfterCutIn = false;
+                    
+                    // Mark that this monster mode is from turn end (not mid-turn card play)
+                    isMonsterModeFromTurnEnd = true;
+                    isWaitingForMonsterDraft = true;
+                    OnMonsterModeTriggered();
+                    // Note: StartTurn will be called after monster draft completes
+                }
+                else
+                {
+                    turnManager.StartTurn();
+                }
+            });
         }
         
         /// <summary>
