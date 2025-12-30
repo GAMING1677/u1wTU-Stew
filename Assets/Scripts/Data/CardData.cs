@@ -122,6 +122,30 @@ namespace ApprovalMonster.Data
         [BoxGroup("Hand-Based Effects")]
         [Tooltip("②③④の最低必要枚数（コスト）")]
         public int handEffectMinCount = 1;
+        
+        [BoxGroup("Pile-Based Effects")]
+        [Tooltip("山札内の対象カード枚数×この値でインプレッション獲得（0=使用しない）")]
+        public float drawPileCountImpressionRate = 0f;
+        
+        [BoxGroup("Pile-Based Effects")]
+        [Tooltip("捨て札内の対象カード枚数×この値でインプレッション獲得（0=使用しない）")]
+        public float discardPileCountImpressionRate = 0f;
+        
+        [BoxGroup("Pile-Based Effects")]
+        [Tooltip("山札内の対象カード枚数×この値でフォロワー獲得（0=使用しない）")]
+        public int drawPileCountFollowerRate = 0;
+        
+        [BoxGroup("Pile-Based Effects")]
+        [Tooltip("捨て札内の対象カード枚数×この値でフォロワー獲得（0=使用しない）")]
+        public int discardPileCountFollowerRate = 0;
+        
+        [BoxGroup("Pile-Based Effects")]
+        [Tooltip("山札と捨て札の少ない方の枚数×この値でインプレッション獲得（0=使用しない）")]
+        public float minPileCountImpressionRate = 0f;
+        
+        [BoxGroup("Pile-Based Effects")]
+        [Tooltip("山札と捨て札の少ない方の枚数×この値でフォロワー獲得（0=使用しない）")]
+        public int minPileCountFollowerRate = 0;
 
         [BoxGroup("Flaming")]
         [Tooltip("炎上の種の個数（プレイ時に加算）")]

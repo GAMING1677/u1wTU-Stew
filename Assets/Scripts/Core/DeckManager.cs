@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using ApprovalMonster.Data;
 using NaughtyAttributes;
 
@@ -216,6 +217,22 @@ namespace ApprovalMonster.Core
                 }
             }
             return exhausted;
+        }
+        
+        /// <summary>
+        /// 山札内の特定カードの枚数をカウント
+        /// </summary>
+        public int CountCardInDrawPile(CardData targetCard)
+        {
+            return drawPile.Count(c => c == targetCard);
+        }
+        
+        /// <summary>
+        /// 捨て札内の特定カードの枚数をカウント
+        /// </summary>
+        public int CountCardInDiscardPile(CardData targetCard)
+        {
+            return discardPile.Count(c => c == targetCard);
         }
     }
 }

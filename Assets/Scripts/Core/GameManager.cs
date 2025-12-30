@@ -1050,6 +1050,61 @@ namespace ApprovalMonster.Core
                     Debug.Log($"[GameManager] Hand count effect: {handCount} cards × {card.handCountFollowerRate} = {followers} followers.");
                 }
             }
+            
+            // Pile-Based Effects Execution
+            if (card.handEffectTargetCard != null)
+            {
+                // 山札参照効果
+                int drawPileCount = deckManager.CountCardInDrawPile(card.handEffectTargetCard);
+                
+                if (card.drawPileCountImpressionRate > 0 && drawPileCount > 0)
+                {
+                    float rate = drawPileCount * card.drawPileCountImpressionRate;
+                    long gained = resourceManager.AddImpression(rate);
+                    Debug.Log($"[GameManager] Draw pile count effect: {drawPileCount} cards × {card.drawPileCountImpressionRate} rate = {gained} impressions.");
+                }
+                
+                if (card.drawPileCountFollowerRate > 0 && drawPileCount > 0)
+                {
+                    int followers = drawPileCount * card.drawPileCountFollowerRate;
+                    resourceManager.AddFollowers(followers);
+                    Debug.Log($"[GameManager] Draw pile count effect: {drawPileCount} cards × {card.drawPileCountFollowerRate} = {followers} followers.");
+                }
+                
+                // 捨て札参照効果
+                int discardPileCount = deckManager.CountCardInDiscardPile(card.handEffectTargetCard);
+                
+                if (card.discardPileCountImpressionRate > 0 && discardPileCount > 0)
+                {
+                    float rate = discardPileCount * card.discardPileCountImpressionRate;
+                    long gained = resourceManager.AddImpression(rate);
+                    Debug.Log($"[GameManager] Discard pile count effect: {discardPileCount} cards × {card.discardPileCountImpressionRate} rate = {gained} impressions.");
+                }
+                
+                if (card.discardPileCountFollowerRate > 0 && discardPileCount > 0)
+                {
+                    int followers = discardPileCount * card.discardPileCountFollowerRate;
+                    resourceManager.AddFollowers(followers);
+                    Debug.Log($"[GameManager] Discard pile count effect: {discardPileCount} cards × {card.discardPileCountFollowerRate} = {followers} followers.");
+                }
+                
+                // 山札と捨て札の少ない方の枚数を参照
+                int minPileCount = Mathf.Min(drawPileCount, discardPileCount);
+                
+                if (card.minPileCountImpressionRate > 0 && minPileCount > 0)
+                {
+                    float rate = minPileCount * card.minPileCountImpressionRate;
+                    long gained = resourceManager.AddImpression(rate);
+                    Debug.Log($"[GameManager] Min pile count effect: Min({drawPileCount}, {discardPileCount}) = {minPileCount} cards × {card.minPileCountImpressionRate} rate = {gained} impressions.");
+                }
+                
+                if (card.minPileCountFollowerRate > 0 && minPileCount > 0)
+                {
+                    int followers = minPileCount * card.minPileCountFollowerRate;
+                    resourceManager.AddFollowers(followers);
+                    Debug.Log($"[GameManager] Min pile count effect: Min({drawPileCount}, {discardPileCount}) = {minPileCount} cards × {card.minPileCountFollowerRate} = {followers} followers.");
+                }
+            }
 
             // Risk Logic
             if (card.HasRisk())
