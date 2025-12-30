@@ -100,12 +100,15 @@ namespace ApprovalMonster.UI
         [SerializeField] private TutorialPlayer tutorialPlayer;
         
         [Header("Tracked Card Count")]
-        [Tooltip("追跡対象のカード")]
-        [SerializeField] private CardData trackedCard;
         [Tooltip("山札内の枚数を表示するテキスト")]
         [SerializeField] private TextMeshProUGUI trackedCardDrawPileText;
         [Tooltip("捨て札内の枚数を表示するテキスト")]
         [SerializeField] private TextMeshProUGUI trackedCardDiscardPileText;
+        [Tooltip("追跡カードUIのコンテナ（表示/非表示制御用）")]
+        [SerializeField] private GameObject trackedCardUIContainer;
+        
+        // 追跡対象カード（ステージから設定）
+        private CardData trackedCard;
         
         private bool isSetup = false;
 
@@ -265,6 +268,7 @@ namespace ApprovalMonster.UI
                  SetupCharacter(GameManager.Instance.currentStage.normalProfile);
                  SetupClearGoal(); // クリア目標の表示を設定
                  SetupFlamingUI(); // Flaming UIの表示/非表示を設定
+                 SetupTrackedCardUI(); // 追跡カードUIの設定
              }
              
              // Setup button listener
@@ -602,6 +606,43 @@ namespace ApprovalMonster.UI
             
             flamingContainer.SetActive(showFlaming);
             Debug.Log($"[UIManager] Flaming UI visibility set to: {showFlaming} (stage: {stage?.stageName ?? "null"})");
+        }
+        
+        /// <summary>
+        /// ステージに基づいて追跡カードUIを設定
+        /// </summary>
+        private void SetupTrackedCardUI()
+        {
+            var stage = GameManager.Instance?.currentStage;
+            
+            if (stage != null && stage.showTrackedCardUI && stage.trackedCard != null)
+            {
+                // ステージの設定を使用
+                trackedCard = stage.trackedCard;
+                if (trackedCardUIContainer != null)
+                {
+                    trackedCardUIContainer.SetActive(true);
+                }
+                Debug.Log($"[UIManager] Tracked card UI enabled for: {trackedCard.cardName}");
+            }
+            else
+            {
+                // 無効化
+                trackedCard = null;
+                if (trackedCardUIContainer != null)
+                {
+                    trackedCardUIContainer.SetActive(false);
+                }
+                Debug.Log("[UIManager] Tracked card UI disabled");
+            }
+        }
+        
+        /// <summary>
+        /// 外部から追跡カードUIを再初期化する（ゲームリセット時など）
+        /// </summary>
+        public void RefreshTrackedCardUI()
+        {
+            SetupTrackedCardUI();
         }
 
         private void ShowImpressionGain(long amount, float rate)

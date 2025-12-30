@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63dac9d5f79086b418366c7cf7222e42, type: 3}
   m_Name: CutIn_StartTutorial
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CutInPreset
-  title: "500\u30A4\u30F3\u30D7\u7A3C\u3054\u3046\uFF01"
+  title: "5000\u30A4\u30F3\u30D7\u7A3C\u3054\u3046\uFF01"
   message: 
   backgroundImage: {fileID: 0}
   backgroundColor: {r: 0, g: 0, b: 0, a: 0.8}

@@ -105,15 +105,16 @@ namespace ApprovalMonster.UI
                 var gm = GameManager.Instance;
                 int currentTurn = gm?.turnManager?.CurrentTurnCount ?? 1;
                 int lastDraftTurn = gm?.gameSettings?.lastDraftTurn ?? 10;
-                int remainingDrafts = Mathf.Max(0, lastDraftTurn - currentTurn + 1);
+                int totalDrafts = lastDraftTurn; // 合計ドラフト回数
+                int currentDraftNumber = currentTurn; // 現在のドラフト回数（＝現在のターン）
                 
                 titleText.text = "選択したカードが山札の一番上にセットされます";
                 titleText.color = Color.white;
                 
-                // 別テキストに残りドラフト回数を表示
+                // 別テキストに現在のドラフト回数を表示
                 if (remainingDraftsText != null)
                 {
-                    remainingDraftsText.text = $"あと{remainingDrafts}回";
+                    remainingDraftsText.text = $"{currentDraftNumber}/{totalDrafts}回目";
                     remainingDraftsText.gameObject.SetActive(true);
                 }
                 
