@@ -8,9 +8,10 @@ namespace ApprovalMonster.UI
     /// <summary>
     /// ボタンクリック時のリアクションを追加する汎用コンポーネント
     /// Buttonコンポーネントと同じGameObjectにアタッチして使用
+    /// 注意: onClickイベントには干渉せず、IPointerClickHandlerで独立して動作
     /// </summary>
     [RequireComponent(typeof(Button))]
-    public class ButtonClickReaction : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+    public class ButtonClickReaction : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
     {
         [Header("Punch Scale Settings")]
         [Tooltip("クリック時のスケール変化量")]
@@ -47,17 +48,12 @@ namespace ApprovalMonster.UI
         {
             button = GetComponent<Button>();
             originalScale = transform.localScale;
-            
-            // onClickにリアクションを追加
-            button.onClick.AddListener(OnButtonClick);
+            // 注意: onClickにはリスナーを追加しない！
+            // IPointerClickHandlerで独立して処理する
         }
         
         private void OnDestroy()
         {
-            if (button != null)
-            {
-                button.onClick.RemoveListener(OnButtonClick);
-            }
             transform.DOKill();
         }
         
@@ -66,6 +62,7 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void OnPointerDown(PointerEventData eventData)
         {
+            Debug.Log($"[ButtonClickReaction] OnPointerDown: {gameObject.name}, interactable={button.interactable}");
             if (!button.interactable) return;
             
             isPressed = true;
@@ -78,6 +75,7 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void OnPointerUp(PointerEventData eventData)
         {
+            Debug.Log($"[ButtonClickReaction] OnPointerUp: {gameObject.name}, isPressed={isPressed}");
             if (!isPressed) return;
             
             isPressed = false;
@@ -86,10 +84,14 @@ namespace ApprovalMonster.UI
         }
         
         /// <summary>
-        /// ボタンクリック時
+        /// ボタンクリック時（IPointerClickHandler）
+        /// Buttonのonclickとは独立して動作
         /// </summary>
-        private void OnButtonClick()
+        public void OnPointerClick(PointerEventData eventData)
         {
+            Debug.Log($"[ButtonClickReaction] OnPointerClick: {gameObject.name}, interactable={button.interactable}");
+            if (!button.interactable) return;
+            
             // パンチスケールアニメーション
             transform.DOKill();
             transform.localScale = originalScale;
@@ -100,6 +102,12 @@ namespace ApprovalMonster.UI
             {
                 Core.AudioManager.Instance?.PlaySE(seType);
             }
+            
+            // Button.onClick を明示的に呼び出す（IPointerClickHandler が Button の処理をブロックする場合の対策）
+            Debug.Log($"[ButtonClickReaction] Invoking button.onClick for: {gameObject.name}");
+            button.onClick?.Invoke();
+            
+            Debug.Log($"[ButtonClickReaction] OnPointerClick completed: {gameObject.name}");
         }
     }
 }

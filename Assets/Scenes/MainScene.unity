@@ -2274,7 +2274,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
   m_sharedMaterial: {fileID: 6904993892817679551, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
@@ -2283,7 +2283,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -3438,7 +3438,7 @@ GameObject:
   - component: {fileID: 270132870}
   - component: {fileID: 270132869}
   m_Layer: 0
-  m_Name: FireImage
+  m_Name: HidaneImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3477,16 +3477,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.04328513, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 906388131340123023, guid: ba7076b0125f6614c97e9a3520d70e44, type: 3}
+  m_Sprite: {fileID: 9031678776897287090, guid: 46912cea456365c4bb54f84649e7b8a0, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -3819,6 +3819,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1411817447}
+  - {fileID: 494784618}
   - {fileID: 279209077}
   m_Father: {fileID: 1893173049}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3959,7 +3960,6 @@ GameObject:
   - component: {fileID: 388992387}
   - component: {fileID: 388992386}
   - component: {fileID: 388992385}
-  - component: {fileID: 388992384}
   m_Layer: 0
   m_Name: CardPoolButton
   m_TagString: Untagged
@@ -3987,26 +3987,6 @@ RectTransform:
   m_AnchoredPosition: {x: 455, y: -95}
   m_SizeDelta: {x: 70, y: 101}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &388992384
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 388992382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7115b70b4191d344e95c01b4e44cd257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.ButtonClickReaction
-  punchScale: -0.1
-  duration: 0.15
-  vibrato: 5
-  elasticity: 0.5
-  pressDownScale: 0.95
-  pressDownDuration: 0.08
-  playSE: 0
-  seType: 0
 --- !u!114 &388992385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5454,7 +5434,6 @@ GameObject:
   - component: {fileID: 486844629}
   - component: {fileID: 486844632}
   - component: {fileID: 486844630}
-  - component: {fileID: 486844633}
   m_Layer: 0
   m_Name: TitleButton
   m_TagString: Untagged
@@ -5546,26 +5525,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 486844628}
   m_CullTransparentMesh: 1
---- !u!114 &486844633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 486844628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7115b70b4191d344e95c01b4e44cd257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.ButtonClickReaction
-  punchScale: -0.1
-  duration: 0.15
-  vibrato: 5
-  elasticity: 0.5
-  pressDownScale: 0.95
-  pressDownDuration: 0.08
-  playSE: 0
-  seType: 0
 --- !u!1 &494648298
 GameObject:
   m_ObjectHideFlags: 0
@@ -5701,6 +5660,142 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 494648298}
+  m_CullTransparentMesh: 1
+--- !u!1 &494784617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 494784618}
+  - component: {fileID: 494784620}
+  - component: {fileID: 494784619}
+  m_Layer: 0
+  m_Name: NewRecord
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &494784618
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494784617}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 374802474}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 9.799988, y: -181}
+  m_SizeDelta: {x: 580.34, y: 75.1643}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &494784619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494784617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: New Record!
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: e0ef47fc12dbb6944aa4d8ccffe0f7f1, type: 2}
+  m_sharedMaterial: {fileID: -2511052053861807749, guid: e0ef47fc12dbb6944aa4d8ccffe0f7f1, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4278229759
+  m_fontColor: {r: 1, g: 0.60544705, b: 0, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &494784620
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494784617}
   m_CullTransparentMesh: 1
 --- !u!1 &503219465
 GameObject:
@@ -9800,7 +9895,6 @@ GameObject:
   - component: {fileID: 963362496}
   - component: {fileID: 963362500}
   - component: {fileID: 963362498}
-  - component: {fileID: 963362497}
   m_Layer: 0
   m_Name: OpenTableButton
   m_TagString: Untagged
@@ -9828,26 +9922,6 @@ RectTransform:
   m_AnchoredPosition: {x: 431.3734, y: -456}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &963362497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963362495}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7115b70b4191d344e95c01b4e44cd257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.ButtonClickReaction
-  punchScale: -0.1
-  duration: 0.15
-  vibrato: 5
-  elasticity: 0.5
-  pressDownScale: 0.95
-  pressDownDuration: 0.08
-  playSE: 0
-  seType: 0
 --- !u!114 &963362498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13681,7 +13755,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 99
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e0ef47fc12dbb6944aa4d8ccffe0f7f1, type: 2}
   m_sharedMaterial: {fileID: -2511052053861807749, guid: e0ef47fc12dbb6944aa4d8ccffe0f7f1, type: 2}
@@ -16577,7 +16651,6 @@ GameObject:
   - component: {fileID: 1559123699}
   - component: {fileID: 1559123698}
   - component: {fileID: 1559123701}
-  - component: {fileID: 1559123700}
   m_Layer: 0
   m_Name: Yamafuda
   m_TagString: Untagged
@@ -16643,26 +16716,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1559123696}
   m_CullTransparentMesh: 1
---- !u!114 &1559123700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1559123696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7115b70b4191d344e95c01b4e44cd257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.ButtonClickReaction
-  punchScale: -0.1
-  duration: 0.15
-  vibrato: 5
-  elasticity: 0.5
-  pressDownScale: 0.95
-  pressDownDuration: 0.08
-  playSE: 0
-  seType: 0
 --- !u!114 &1559123701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17181,7 +17234,6 @@ GameObject:
   - component: {fileID: 1623249833}
   - component: {fileID: 1623249832}
   - component: {fileID: 1623249835}
-  - component: {fileID: 1623249834}
   m_Layer: 0
   m_Name: Sutefuda
   m_TagString: Untagged
@@ -17247,26 +17299,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1623249830}
   m_CullTransparentMesh: 1
---- !u!114 &1623249834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1623249830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7115b70b4191d344e95c01b4e44cd257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.ButtonClickReaction
-  punchScale: -0.1
-  duration: 0.15
-  vibrato: 5
-  elasticity: 0.5
-  pressDownScale: 0.95
-  pressDownDuration: 0.08
-  playSE: 0
-  seType: 0
 --- !u!114 &1623249835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17541,16 +17573,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3895319618856938042, guid: f4b00e6472c0de34cabbd54eb2996fe9, type: 3}
+  m_Sprite: {fileID: -2079769690209822552, guid: 187478852b30d914eb9750fe037589d4, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -19061,7 +19093,6 @@ GameObject:
   - component: {fileID: 1843902824}
   - component: {fileID: 1843902823}
   - component: {fileID: 1843902822}
-  - component: {fileID: 1843902825}
   m_Layer: 0
   m_Name: HelpButton
   m_TagString: Untagged
@@ -19183,26 +19214,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1843902820}
   m_CullTransparentMesh: 1
---- !u!114 &1843902825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1843902820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7115b70b4191d344e95c01b4e44cd257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.ButtonClickReaction
-  punchScale: -0.1
-  duration: 0.15
-  vibrato: 5
-  elasticity: 0.5
-  pressDownScale: 0.95
-  pressDownDuration: 0.08
-  playSE: 0
-  seType: 0
 --- !u!1 &1853961969
 GameObject:
   m_ObjectHideFlags: 0
@@ -19335,10 +19346,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u30AB\u30FC\u30C9\u30D7\u30FC\u30EB"
+  m_text: ALL
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
-  m_sharedMaterial: {fileID: 5778998312778993265, guid: 7758a6ba7c46b4d42ab131a05bdb7aa8, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
+  m_sharedMaterial: {fileID: 6904993892817679551, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -19612,6 +19623,7 @@ MonoBehaviour:
   animatedObject1: {fileID: 371259409}
   animatedObject2: {fileID: 605510883}
   toggleInterval: 0.5
+  newRecordText: {fileID: 494784619}
 --- !u!114 &1893173051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20572,8 +20584,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190335
-  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
+    rgba: 4285641532
+  m_fontColor: {r: 0.2352941, g: 0.7019608, b: 0.4431373, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -21536,7 +21548,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 99
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e0ef47fc12dbb6944aa4d8ccffe0f7f1, type: 2}
   m_sharedMaterial: {fileID: -2511052053861807749, guid: e0ef47fc12dbb6944aa4d8ccffe0f7f1, type: 2}
@@ -22194,7 +22206,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 6
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
   m_sharedMaterial: {fileID: 6904993892817679551, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
@@ -22874,7 +22886,6 @@ GameObject:
   - component: {fileID: 8883547071950279482}
   - component: {fileID: 42354306750198587}
   - component: {fileID: 6007104724006246097}
-  - component: {fileID: 8883547071950279483}
   m_Layer: 0
   m_Name: SoundPanleButton
   m_TagString: Untagged
@@ -23175,26 +23186,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1806326873552345767}
   m_CullTransparentMesh: 1
---- !u!114 &8883547071950279483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1806326873552345767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7115b70b4191d344e95c01b4e44cd257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Mygame::ApprovalMonster.UI.ButtonClickReaction
-  punchScale: -0.1
-  duration: 0.15
-  vibrato: 5
-  elasticity: 0.5
-  pressDownScale: 0.95
-  pressDownDuration: 0.08
-  playSE: 0
-  seType: 0
 --- !u!114 &9005883365199518708
 MonoBehaviour:
   m_ObjectHideFlags: 0

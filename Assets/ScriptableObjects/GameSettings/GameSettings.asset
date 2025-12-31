@@ -16,7 +16,7 @@ MonoBehaviour:
   maxMental: 100
   maxMotivation: 3
   initialHandSize: 3
-  turnDrawCount: 8
+  turnDrawCount: 3
   lastDraftTurn: 10
   monsterThreshold: 50
   monsterDraftCardCount: 3

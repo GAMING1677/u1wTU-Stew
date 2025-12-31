@@ -24,6 +24,10 @@ namespace ApprovalMonster.UI
         [SerializeField] private GameObject animatedObject2;
         [SerializeField] private float toggleInterval = 0.5f;
         
+        [Header("New Record")]
+        [Tooltip("ハイスコア更新時に表示するテキスト")]
+        [SerializeField] private TextMeshProUGUI newRecordText;
+        
         private Coroutine animationCoroutine;
 
         private void OnEnable()
@@ -33,13 +37,15 @@ namespace ApprovalMonster.UI
             long score = 0;
             bool wasCleared = false;
             bool isScoreAttackMode = false;
+            bool isNewHighScore = false;
             
             if (SceneNavigator.Instance != null)
             {
                 score = SceneNavigator.Instance.LastGameScore;
                 wasCleared = SceneNavigator.Instance.WasStageCleared;
                 isScoreAttackMode = SceneNavigator.Instance.IsScoreAttackMode;
-                Debug.Log($"[ResultManager] Score: {score}, Cleared: {wasCleared}, ScoreAttack: {isScoreAttackMode}");
+                isNewHighScore = SceneNavigator.Instance.IsNewHighScore;
+                Debug.Log($"[ResultManager] Score: {score}, Cleared: {wasCleared}, ScoreAttack: {isScoreAttackMode}, NewRecord: {isNewHighScore}");
             }
             else
             {
@@ -51,6 +57,9 @@ namespace ApprovalMonster.UI
             
             // スプライトアニメーション開始
             StartSpriteAnimation();
+            
+            // ハイスコア更新表示
+            SetupNewRecordDisplay(isNewHighScore);
 
             if (scoreText != null)
             {
@@ -153,6 +162,30 @@ namespace ApprovalMonster.UI
                 
                 // 元の位置（0, y）にスライドイン
                 rt.DOAnchorPosX(0, 0.5f).SetEase(Ease.OutQuad);
+            }
+        }
+        
+        private void SetupNewRecordDisplay(bool isNewHighScore)
+        {
+            if (newRecordText == null) return;
+            
+            if (isNewHighScore)
+            {
+                newRecordText.gameObject.SetActive(true);
+                newRecordText.text = "NEW RECORD!";
+                
+                // パルスアニメーション
+                newRecordText.transform.localScale = Vector3.zero;
+                Sequence seq = DOTween.Sequence();
+                seq.Append(newRecordText.transform.DOScale(1.2f, 0.3f).SetEase(Ease.OutBack));
+                seq.Append(newRecordText.transform.DOScale(1f, 0.1f));
+                seq.Append(newRecordText.transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 5, 1).SetLoops(-1));
+                
+                Debug.Log("[ResultManager] Displaying NEW RECORD!");
+            }
+            else
+            {
+                newRecordText.gameObject.SetActive(false);
             }
         }
         

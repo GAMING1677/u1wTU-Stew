@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DoragonPreset
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.MonsterModePreset
   backgroundImage: {fileID: 0}
-  characterImage: {fileID: 5075049686085735935, guid: 01ccf57dadba1dd4d9475295443c5bb3, type: 3}
+  characterImage: {fileID: 6676110402349576994, guid: 3bf77caf8eeb9b3478560af780ce5e05, type: 3}
   characterSize: {x: 400, y: 600}
   titleText: MONSTER MODE
   messageText: "\u63C9\u3081\u4E8B\u5927\u597D\u304D\n\u708E\u4E0A\u30C9\u30E9\u30B4\u30F3"

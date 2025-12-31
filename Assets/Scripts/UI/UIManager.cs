@@ -145,6 +145,12 @@ namespace ApprovalMonster.UI
         private void Awake()
         {
             Debug.Log("[UIManager] Awake called.");
+            
+            // FlamingUIをデフォルトで非表示（ステージ設定で有効な場合のみ表示）
+            if (flamingContainer != null)
+            {
+                flamingContainer.SetActive(false);
+            }
         }
 
         public void SetupCharacter(CharacterProfile profile)
@@ -319,9 +325,11 @@ namespace ApprovalMonster.UI
         
         private void OnSettingsButtonClicked()
         {
+            Debug.Log("[UIManager] OnSettingsButtonClicked called!");
             if (soundSettingsUI != null)
             {
                 soundSettingsUI.Show();
+                Debug.Log("[UIManager] soundSettingsUI.Show() called");
             }
             else
             {
@@ -331,17 +339,21 @@ namespace ApprovalMonster.UI
         
         private void OnDeckPileButtonClicked()
         {
+            Debug.Log("[UIManager] OnDeckPileButtonClicked called!");
             if (deckViewerUI != null)
             {
                 deckViewerUI.ShowDrawPile();
+                Debug.Log("[UIManager] deckViewerUI.ShowDrawPile() called");
             }
         }
         
         private void OnDiscardPileButtonClicked()
         {
+            Debug.Log("[UIManager] OnDiscardPileButtonClicked called!");
             if (deckViewerUI != null)
             {
                 deckViewerUI.ShowDiscardPile();
+                Debug.Log("[UIManager] deckViewerUI.ShowDiscardPile() called");
             }
         }
 

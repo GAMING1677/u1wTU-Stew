@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Start_Dora_Imp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u767B\u5C71"
-  cardImage: {fileID: 0}
+  cardImage: {fileID: -7370846112228509550, guid: 75bf769ed349bc246a61292849e825e7, type: 3}
   description: "40%\u30A4\u30F3\u30D7\u3092\u5F97\u308B\n\u706B\u7A2E\uFF0B4\n\u708E\u4E0A\u7387
     5%"
   cardTag: 
   flavorText: "\u81EA\u7136\u306E\u30DE\u30A6\u30F3\u30C8"
   postComments:
   - "\u3053\u306E\u524D\u306E\u30D5\u30E9\u30F3\u30B9\u65C5\u884C\u697D\u3057\u304B\u3063\u305F\u306A"
+  postIcon: {fileID: 0}
   motivationCost: 1
   mentalCost: 0
   followerGain: 0
@@ -33,6 +34,7 @@ MonoBehaviour:
   cardType: 0
   isExhaust: 0
   rarity: 0
+  playCondition: 0
   riskType: 0
   riskProbability: 1
   riskValue: 0
@@ -43,6 +45,12 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
   flamingSeedCount: 4
   flamingRate: 0.05
   seedToFollowerMultiplier: 0
