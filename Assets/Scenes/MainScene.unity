@@ -10310,7 +10310,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Core.StageManager
   allStages:
+  - {fileID: 11400000, guid: e0bae4ee32cbc61499ca747ad8cb5cba, type: 2}
   - {fileID: 11400000, guid: 6600d5104e2b5d146b9411558d97ff0e, type: 2}
+  - {fileID: 11400000, guid: 4be1040f06be0a742a509516815e673d, type: 2}
+  - {fileID: 11400000, guid: 19248af1b8f7f9b49b9f9f243423090f, type: 2}
+  - {fileID: 11400000, guid: a13770deaf62c1043ab09e2829bba579, type: 2}
   selectedStage: {fileID: 0}
   selectedStageIndex: -1
 --- !u!1 &963362495

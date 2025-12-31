@@ -295,16 +295,24 @@ namespace ApprovalMonster.UI
         /// </summary>
         private void UpdateTotalHighScoreDisplay()
         {
-            if (totalHighScoreText == null) return;
+            Debug.Log("[StageSelectManager] UpdateTotalHighScoreDisplay called");
+            
+            if (totalHighScoreText == null)
+            {
+                Debug.LogWarning("[StageSelectManager] totalHighScoreText is NULL - not assigned in Inspector!");
+                return;
+            }
             
             if (SaveDataManager.Instance != null)
             {
                 long totalScore = SaveDataManager.Instance.GetTotalScoreAttackHighScore();
                 totalHighScoreText.text = $" {totalScore:N0}";
                 totalHighScoreText.gameObject.SetActive(true);
+                Debug.Log($"[StageSelectManager] Updated totalHighScoreText to: {totalScore:N0}");
             }
             else
             {
+                Debug.LogWarning("[StageSelectManager] SaveDataManager.Instance is NULL");
                 totalHighScoreText.gameObject.SetActive(false);
             }
         }

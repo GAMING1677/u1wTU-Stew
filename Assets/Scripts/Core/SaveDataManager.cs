@@ -139,19 +139,35 @@ namespace ApprovalMonster.Core
             }
             
             long totalScore = 0;
+            int scoreAttackCount = 0;
+            
+            Debug.Log($"[SaveDataManager] Calculating total score from {StageManager.Instance.allStages.Count} total stages...");
             
             foreach (var stage in StageManager.Instance.allStages)
             {
-                if (stage == null) continue;
+                if (stage == null)
+                {
+                    Debug.LogWarning("[SaveDataManager] Null stage found in allStages");
+                    continue;
+                }
                 
                 // クリア条件がない＝スコアアタック/エンドレスステージ
-                if (stage.clearCondition == null)
+                bool isScoreAttack = stage.clearCondition == null;
+                
+                if (isScoreAttack)
                 {
                     long stageScore = LoadStageHighScore(stage.stageName);
                     totalScore += stageScore;
+                    scoreAttackCount++;
+                    Debug.Log($"[SaveDataManager] ScoreAttack '{stage.stageName}': {stageScore} (cumulative: {totalScore})");
+                }
+                else
+                {
+                    Debug.Log($"[SaveDataManager] Skipping '{stage.stageName}' (has clearCondition: {stage.clearCondition != null})");
                 }
             }
             
+            Debug.Log($"[SaveDataManager] Total ScoreAttack stages: {scoreAttackCount}, Total High Score: {totalScore}");
             return totalScore;
         }
 
