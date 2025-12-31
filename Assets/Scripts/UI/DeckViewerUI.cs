@@ -57,9 +57,20 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void ShowDrawPile()
         {
+            Debug.Log("[DeckViewerUI] ShowDrawPile() called");
             var gm = GameManager.Instance;
-            if (gm == null || gm.deckManager == null) return;
+            if (gm == null)
+            {
+                Debug.LogError("[DeckViewerUI] GameManager.Instance is null!");
+                return;
+            }
+            if (gm.deckManager == null)
+            {
+                Debug.LogError("[DeckViewerUI] deckManager is null!");
+                return;
+            }
             
+            Debug.Log($"[DeckViewerUI] Showing draw pile with {gm.deckManager.drawPile.Count} cards");
             Show(gm.deckManager.drawPile, ViewType.DrawPile);
         }
         
@@ -68,9 +79,20 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void ShowDiscardPile()
         {
+            Debug.Log("[DeckViewerUI] ShowDiscardPile() called");
             var gm = GameManager.Instance;
-            if (gm == null || gm.deckManager == null) return;
+            if (gm == null)
+            {
+                Debug.LogError("[DeckViewerUI] GameManager.Instance is null!");
+                return;
+            }
+            if (gm.deckManager == null)
+            {
+                Debug.LogError("[DeckViewerUI] deckManager is null!");
+                return;
+            }
             
+            Debug.Log($"[DeckViewerUI] Showing discard pile with {gm.deckManager.discardPile.Count} cards");
             Show(gm.deckManager.discardPile, ViewType.DiscardPile);
         }
         

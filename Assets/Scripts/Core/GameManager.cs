@@ -1,6 +1,9 @@
 using UnityEngine;
 using ApprovalMonster.Data;
 using NaughtyAttributes;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using unityroom.Api;
+#endif
 
 namespace ApprovalMonster.Core
 {
@@ -246,6 +249,9 @@ namespace ApprovalMonster.Core
             {
                 isNewHighScore = SaveDataManager.Instance.SaveStageHighScore(currentStage.stageName, score);
                 Debug.Log($"[GameManager] Score Attack mode (GameOver) - High score check: {score}, New record: {isNewHighScore}");
+                
+                // unityroomにスコアを送信
+                SendScoreToUnityroom(score);
             }
             
             if (SceneNavigator.Instance != null)
@@ -362,6 +368,9 @@ namespace ApprovalMonster.Core
             {
                 isNewHighScore = SaveDataManager.Instance.SaveStageHighScore(currentStage.stageName, score);
                 Debug.Log($"[GameManager] Score Attack mode - High score saved: {score}, New record: {isNewHighScore}");
+                
+                // unityroomにスコアを送信
+                SendScoreToUnityroom(score);
             }
             
             if (SceneNavigator.Instance != null)
@@ -1374,6 +1383,32 @@ namespace ApprovalMonster.Core
                  // Freeze logic etc.
             }
         }
+        
+        #region Unityroom Score Ranking
+        
+        /// <summary>
+        /// unityroomにスコアを送信（スコアアタックモード時のみ、WebGLビルドでのみ動作）
+        /// </summary>
+        /// <param name="score">送信するスコア</param>
+        /// <param name="boardNo">スコアボード番号（unityroomで設定したもの）</param>
+        private void SendScoreToUnityroom(long score, int boardNo = 1)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            try
+            {
+                UnityroomApiClient.Instance?.SendScore(boardNo, score, ScoreboardWriteMode.HighScoreDesc);
+                Debug.Log($"[GameManager] Score sent to unityroom: {score} (board #{boardNo})");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[GameManager] Failed to send score to unityroom: {e.Message}");
+            }
+#else
+            Debug.Log($"[GameManager] Unityroom score send skipped (not WebGL build): {score}");
+#endif
+        }
+        
+        #endregion
     }
     
     [System.Serializable]
@@ -1409,3 +1444,4 @@ namespace ApprovalMonster.Core
         }
     }
 }
+
