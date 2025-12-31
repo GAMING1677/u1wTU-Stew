@@ -16,7 +16,7 @@ MonoBehaviour:
   cardImage: {fileID: 4479249569757203455, guid: 440a00307dfd30744a8dabcb5c51fb76, type: 3}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C2000\u4EBA\u5897\u3048\u308B\n\u30A4\u30F3\u30D720\uFF05\u7372\u5F97"
   cardTag: 
-  flavorText: 
+  flavorText: "\u4FE1\u983C\u3078\u306E\u88CF\u5207\u308A"
   postComments:
   - "\u3053\u306E\u5B50\u672C\u5F53\u306B\u304B\u308F\u3044\u3044"
   - "\u306F\u3041\u3001\u5C0A\u3044"
