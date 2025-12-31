@@ -171,22 +171,18 @@ namespace ApprovalMonster.UI
             canvasGroup.gameObject.SetActive(true);
             canvasGroup.alpha = 0f;
             canvasGroup.blocksRaycasts = true;
-            Debug.Log($"[DraftUI] DraftPanel shown, alpha reset to 0, starting fade in");
+
             canvasGroup.DOFade(1f, fadeInDuration);
 
             // ドラフト表示SE再生
             AudioManager.Instance?.PlaySE(SEType.CardDraftPanelShow);
 
             // カードビューを生成
-            Debug.Log($"[DraftUI] Starting card generation. cardOptionsContainer null? {cardOptionsContainer == null}");
-            Debug.Log($"[DraftUI] cardViewPrefab null? {cardViewPrefab == null}");
-            Debug.Log($"[DraftUI] Options count: {options.Count}");
-            
+
             foreach (var cardData in options)
             {
-                Debug.Log($"[DraftUI] Instantiating card: {cardData.cardName}");
+
                 var cardView = Instantiate(cardViewPrefab, cardOptionsContainer);
-                Debug.Log($"[DraftUI] Card instantiated: {cardView != null}, active: {cardView?.gameObject.activeSelf}");
                 
                 cardView.Setup(cardData, showTag: true); // Show tag/rarity in draft
                 

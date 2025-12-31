@@ -62,7 +62,7 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void OnPointerDown(PointerEventData eventData)
         {
-            Debug.Log($"[ButtonClickReaction] OnPointerDown: {gameObject.name}, interactable={button.interactable}");
+
             if (!button.interactable) return;
             
             isPressed = true;
@@ -75,7 +75,7 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void OnPointerUp(PointerEventData eventData)
         {
-            Debug.Log($"[ButtonClickReaction] OnPointerUp: {gameObject.name}, isPressed={isPressed}");
+
             if (!isPressed) return;
             
             isPressed = false;
@@ -89,7 +89,7 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log($"[ButtonClickReaction] OnPointerClick: {gameObject.name}, interactable={button.interactable}");
+
             if (!button.interactable) return;
             
             // パンチスケールアニメーション
@@ -104,10 +104,9 @@ namespace ApprovalMonster.UI
             }
             
             // Button.onClick を明示的に呼び出す（IPointerClickHandler が Button の処理をブロックする場合の対策）
-            Debug.Log($"[ButtonClickReaction] Invoking button.onClick for: {gameObject.name}");
+
             button.onClick?.Invoke();
-            
-            Debug.Log($"[ButtonClickReaction] OnPointerClick completed: {gameObject.name}");
+
         }
     }
 }

@@ -121,7 +121,6 @@ namespace ApprovalMonster.UI
         /// <param name="showTag">Whether to show tag/rarity (for draft UI only)</param>
         public void Setup(CardData data, bool showTag = false)
         {
-            Debug.Log($"[CardView] Setup() START - Card: {data?.cardName ?? "NULL"}, FlavorText: '{data?.flavorText ?? "NULL"}', Description: '{data?.description ?? "NULL"}'");
             _data = data;
 
             if (cardImage != null)
@@ -135,7 +134,7 @@ namespace ApprovalMonster.UI
             if (flavorText != null && !string.IsNullOrEmpty(data.flavorText))
             {
                 flavorText.text = data.flavorText;
-                Debug.Log($"[CardView] Flavor text set: {data.flavorText}");
+
             }
             else
             {
@@ -146,7 +145,7 @@ namespace ApprovalMonster.UI
             if (descriptionText != null && !string.IsNullOrEmpty(data.description))
             {
                 descriptionText.text = data.description;
-                Debug.Log($"[CardView] Description set: {data.description}");
+
             }
             else
             {
@@ -278,7 +277,6 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log($"[CardView] OnPointerClick called for {_data.cardName}, _isSelected: {_isSelected}");
             
             if (_isSelected)
             {
@@ -300,8 +298,6 @@ namespace ApprovalMonster.UI
         /// </summary>
         private void Select()
         {
-            Debug.Log($"[CardView] Select() called. Current position: {_rectTransform.anchoredPosition}, Original: {_originalPosition}");
-            
             // Deselect previously selected card
             if (_currentlySelectedCard != null && _currentlySelectedCard != this)
             {
@@ -319,14 +315,10 @@ namespace ApprovalMonster.UI
             if (_layoutElement != null)
             {
                 _layoutElement.ignoreLayout = true;
-                Debug.Log($"[CardView] LayoutElement.ignoreLayout set to TRUE");
+
             }
             
             float targetY = _originalPosition.y + hoverSlideDistance;
-            Debug.Log($"[CardView] Animating to Y: {targetY} (original: {_originalPosition.y}, slide: {hoverSlideDistance})");
-            Debug.Log($"[CardView] RectTransform null? {_rectTransform == null}");
-            Debug.Log($"[CardView] Current localPosition: {transform.localPosition}");
-            
             // Slide up and scale up
             // Use DOLocalMoveY instead of DOAnchorPosY to bypass anchor constraints
             float currentLocalY = transform.localPosition.y;
@@ -337,7 +329,6 @@ namespace ApprovalMonster.UI
                 .SetEase(Ease.OutQuad)
                 .SetUpdate(true);
             
-            Debug.Log($"[CardView] Tween created: {tween != null}, Moving from {currentLocalY} to {targetLocalY}");
             
             transform.DOScale(_originalScale * hoverScale, hoverDuration);
             
@@ -345,7 +336,7 @@ namespace ApprovalMonster.UI
             {
                 _canvas.overrideSorting = true;
                 _canvas.sortingOrder = 100;
-                Debug.Log($"[CardView] Canvas sorting set to 100");
+
             }
             else
             {
@@ -367,7 +358,6 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void Deselect()
         {
-            Debug.Log($"[CardView] Deselect() called for {_data.cardName}");
             
             _isSelected = false;
             
@@ -420,7 +410,7 @@ namespace ApprovalMonster.UI
         /// </summary>
         private void OnCancelButtonClicked()
         {
-            Debug.Log($"[CardView] Cancel button clicked for {_data.cardName}");
+
             Deselect();
         }
         

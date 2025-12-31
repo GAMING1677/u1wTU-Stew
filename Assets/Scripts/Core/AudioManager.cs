@@ -59,7 +59,6 @@ namespace ApprovalMonster.Core
             // Preload all audio clips to prevent lag on first play
             PreloadAudioClips();
             
-            Debug.Log($"[AudioManager] Initialized. Master: {masterVolume}, BGM: {bgmVolume}, SE: {seVolume}");
         }
         
         // ... (省略: PlayBGM, PlaySE等は変更なし) ...
@@ -132,7 +131,7 @@ namespace ApprovalMonster.Core
             
             if (bgmSource.clip == bgm && bgmSource.isPlaying)
             {
-                Debug.Log($"[AudioManager] BGM '{bgm.name}' is already playing");
+
                 return;
             }
             
@@ -140,7 +139,7 @@ namespace ApprovalMonster.Core
             bgmSource.loop = loop;
             bgmSource.Play();
             
-            Debug.Log($"[AudioManager] Playing BGM: {bgm.name}");
+
         }
         
         /// <summary>
@@ -253,7 +252,6 @@ namespace ApprovalMonster.Core
                 }
             }
             
-            Debug.Log($"[AudioManager] Preloaded {preloadCount} audio clips");
         }
         
         private void SaveVolumes()

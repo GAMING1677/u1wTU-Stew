@@ -56,7 +56,7 @@ namespace ApprovalMonster.Core
 
         public void GoToStageSelect()
         {
-            Debug.Log("[SceneNavigator] GoToStageSelect called.");
+
             
             // ゲーム状態のリセット（再プレイ時のバグ防止）
             var gameManager = FindObjectOfType<GameManager>();

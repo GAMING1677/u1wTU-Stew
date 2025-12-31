@@ -50,12 +50,6 @@ namespace ApprovalMonster.UI
                 enabled = false;
                 return;
             }
-        }
-        
-        private void Start()
-        {
-            // シングルトンインスタンスでない場合は何もしない
-            if (Instance != this) return;
             
             // 初期状態で非表示
             if (settingsPanel != null)
@@ -68,6 +62,14 @@ namespace ApprovalMonster.UI
             {
                 panelTransform.localScale = Vector3.one * closeScale;
             }
+        }
+        
+        private void Start()
+        {
+            // シングルトンインスタンスでない場合は何もしない
+            if (Instance != this) return;
+            
+            // Awakeで初期化済み
         }
         
         /// <summary>

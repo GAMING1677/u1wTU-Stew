@@ -26,7 +26,7 @@ namespace ApprovalMonster.UI
             if (startButton != null)
             {
                 startButton.onClick.AddListener(OnStartDates);
-                Debug.Log("[TitleManager] Start button listener added.");
+
             }
             else
             {
@@ -40,7 +40,7 @@ namespace ApprovalMonster.UI
             if (startButton != null)
             {
                 StartPulseAnimation(startButton.transform);
-                Debug.Log("[TitleManager] Pulse animation started on enable.");
+ 
             }
             
             // BGMを再生（タイトルに戻った時用）
@@ -82,7 +82,6 @@ namespace ApprovalMonster.UI
             startButton.transform.DOPunchScale(Vector3.one * -0.1f, 0.2f, 5, 0.5f)
                 .OnComplete(() => {
                     AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
-                    Debug.Log("[TitleManager] Start Button Clicked. Going to Stage Select.");
                     SceneNavigator.Instance.GoToStageSelect();
                 });
         }

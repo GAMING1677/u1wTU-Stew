@@ -126,8 +126,7 @@ namespace ApprovalMonster.UI
             entry.callback.AddListener((data) => { OnPointerClick((PointerEventData)data); });
             trigger.triggers.Add(entry);
             
-            Debug.Log("[MonsterModeCutInUI] Click detection setup complete on targetObject");
-        }
+            }
         
         /// <summary>
         /// IPointerClickHandler - 画面クリック時に呼ばれる
