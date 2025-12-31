@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b340139c9e4d054f904d8b452798652, type: 3}
   m_Name: ES3Defaults
-  m_EditorClassIdentifier: Assembly-CSharp-firstpass::ES3Defaults
+  m_EditorClassIdentifier: ThirdParty::ES3Defaults
   settings:
     _location: 0
     path: SaveFile.es3
@@ -35,11 +35,11 @@ MonoBehaviour:
     referenceMode: 2
     serializationDepthLimit: 64
     assemblyNames:
-    - Assembly-CSharp
     - Lofelt.NiceVibrations
     - Lofelt.NiceVibrations.Demo
     - MoreMountains.Tools
     - Mygame
+    - naichilab.UnityRoomTweet
     - NaughtyAttributes.Core
     - NaughtyAttributes.Test
     - SingularityGroup.HotReload.Runtime
