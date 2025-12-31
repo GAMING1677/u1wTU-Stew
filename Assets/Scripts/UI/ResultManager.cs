@@ -268,6 +268,20 @@ namespace ApprovalMonster.UI
 #if UNITY_WEBGL && !UNITY_EDITOR
             try
             {
+                // unityroomへスコア送信
+                // ボード1: クリアステージ数
+                // ボード2: エンドレスハイスコア合計
+                if (unityroom.Api.UnityroomApiClient.Instance != null)
+                {
+                    int clearedCount = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetClearedStageCount() : 0;
+                    long totalHighScore = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetTotalScoreAttackHighScore() : 0;
+                    
+                    unityroom.Api.UnityroomApiClient.Instance.SendScore(1, clearedCount, unityroom.Api.ScoreboardWriteMode.HighScoreDesc);
+                    unityroom.Api.UnityroomApiClient.Instance.SendScore(2, totalHighScore, unityroom.Api.ScoreboardWriteMode.HighScoreDesc);
+                    
+                    Debug.Log($"[ResultManager] Sent scores to unityroom - Board 1: {clearedCount}, Board 2: {totalHighScore}");
+                }
+
                 // ハッシュタグの数に応じて呼び分け
                 if (hashtags != null && hashtags.Length >= 2)
                 {
@@ -284,10 +298,16 @@ namespace ApprovalMonster.UI
             }
             catch (System.Exception e)
             {
-                Debug.LogWarning($"[ResultManager] Tweet failed: {e.Message}");
+                Debug.LogWarning($"[ResultManager] Tweet/Score failed: {e.Message}");
             }
 #else
             Debug.Log($"[ResultManager] Tweet skipped (not WebGL build). Content: {tweetText}");
+            
+            // エディタ等でのデバッグ送信用ログ
+            int debugClearedCount = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetClearedStageCount() : 0;
+            long debugTotalHighScore = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetTotalScoreAttackHighScore() : 0;
+             Debug.Log($"[ResultManager] (Simulation) Sent scores to unityroom - Board 1: {debugClearedCount}, Board 2: {debugTotalHighScore}");
+
             // エディタではURL出力で確認
             string url = $"https://twitter.com/intent/tweet?text={UnityEngine.Networking.UnityWebRequest.EscapeURL(tweetText)}";
             Debug.Log($"[ResultManager] Tweet URL: {url}");

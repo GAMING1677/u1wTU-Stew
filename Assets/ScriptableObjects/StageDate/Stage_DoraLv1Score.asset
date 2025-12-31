@@ -17,7 +17,7 @@ MonoBehaviour:
     targetScore: 0
   requiredStages:
   - {fileID: 11400000, guid: 19248af1b8f7f9b49b9f9f243423090f, type: 2}
-  stageName: "\u30C9\u30E9\u30B4\u30F3_Lv1"
+  stageName: "\u30C9\u30E9\u30B4\u30F3_Score"
   stageStartPreset: {fileID: 11400000, guid: 758285aff1f19ab47bafc141d93ae994, type: 2}
   motivationLowPreset: {fileID: 0}
   quotaScore: 100

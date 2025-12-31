@@ -60,6 +60,10 @@ namespace ApprovalMonster.UI
         [SerializeField] private float pulseDuration = 1.2f;
         [SerializeField] private float pulseScale = 1.05f;
 
+        [Header("Total High Score")]
+        [Tooltip("スコアアタック合計ハイスコアを表示するテキスト")]
+        [SerializeField] private TextMeshProUGUI totalHighScoreText;
+
         private void Start()
         {
             SetupStageButtons();
@@ -97,6 +101,7 @@ namespace ApprovalMonster.UI
         public void RefreshUnlockStates()
         {
             UpdateButtonStates();
+            UpdateTotalHighScoreDisplay();
         }
 
         /// <summary>
@@ -272,6 +277,25 @@ namespace ApprovalMonster.UI
                 // スコアアタックでない場合は非表示
                 stageButton.highScoreText.gameObject.SetActive(false);
 
+            }
+        }
+        
+        /// <summary>
+        /// 合計ハイスコア表示を更新
+        /// </summary>
+        private void UpdateTotalHighScoreDisplay()
+        {
+            if (totalHighScoreText == null) return;
+            
+            if (SaveDataManager.Instance != null)
+            {
+                long totalScore = SaveDataManager.Instance.GetTotalScoreAttackHighScore();
+                totalHighScoreText.text = $"Total High Score: {totalScore:N0}";
+                totalHighScoreText.gameObject.SetActive(true);
+            }
+            else
+            {
+                totalHighScoreText.gameObject.SetActive(false);
             }
         }
 

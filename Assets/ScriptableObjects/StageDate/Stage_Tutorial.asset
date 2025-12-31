@@ -22,7 +22,6 @@ MonoBehaviour:
   quotaScore: 100
   maxTurnCount: 10
   initialDeck:
-  - {fileID: 11400000, guid: 77ebf3659eb242547975e8475b1bae6a, type: 2}
   - {fileID: 11400000, guid: e9734e7a9043c2d48821c18a9fcc059a, type: 2}
   - {fileID: 11400000, guid: e9734e7a9043c2d48821c18a9fcc059a, type: 2}
   - {fileID: 11400000, guid: 60a555a89d5d295439fa15a1415ab100, type: 2}

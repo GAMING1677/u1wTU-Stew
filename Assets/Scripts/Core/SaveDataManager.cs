@@ -26,12 +26,22 @@ namespace ApprovalMonster.Core
             }
         }
 
+        private void SyncSave()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // WebGLの場合、変更を即座にIndexedDBに同期させる
+            ES3.StoreCachedFile();
+            Debug.Log("[SaveDataManager] Synced to IndexedDB (WebGL)");
+#endif
+        }
+
         public void SaveHighScore(long score)
         {
             long current = LoadHighScore();
             if (score > current)
             {
                 ES3.Save(KEY_HIGHSCORE, score);
+                SyncSave();
             }
         }
 
@@ -47,6 +57,7 @@ namespace ApprovalMonster.Core
             {
                 cleared.Add(stageName);
                 ES3.Save(KEY_CLEARED_STAGES, cleared);
+                SyncSave();
                 Debug.Log($"[SaveDataManager] Stage '{stageName}' saved as cleared. Total cleared: {cleared.Count}");
             }
             else
@@ -59,7 +70,6 @@ namespace ApprovalMonster.Core
         {
              List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>());
              bool isCleared = cleared.Contains(stageName);
-             Debug.Log($"[SaveDataManager] IsStageCleared('{stageName}') = {isCleared}");
              return isCleared;
         }
         
@@ -75,6 +85,7 @@ namespace ApprovalMonster.Core
             if (score > currentHighScore)
             {
                 ES3.Save(key, score);
+                SyncSave();
                 Debug.Log($"[SaveDataManager] New high score for '{stageName}': {score} (previous: {currentHighScore})");
                 return true;
             }
@@ -102,6 +113,35 @@ namespace ApprovalMonster.Core
             List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>());
             return cleared.Count;
         }
+        
+        /// <summary>
+        /// スコアアタック（エンドレス）ステージの合計ハイスコアを取得
+        /// </summary>
+        public long GetTotalScoreAttackHighScore()
+        {
+            if (StageManager.Instance == null)
+            {
+                Debug.LogWarning("[SaveDataManager] StageManager is null, cannot calculate total score");
+                return 0;
+            }
+            
+            long totalScore = 0;
+            
+            foreach (var stage in StageManager.Instance.allStages)
+            {
+                if (stage == null) continue;
+                
+                // クリア条件がない＝スコアアタック/エンドレスステージ
+                if (stage.clearCondition == null)
+                {
+                    long stageScore = LoadStageHighScore(stage.stageName);
+                    totalScore += stageScore;
+                }
+            }
+            
+            return totalScore;
+        }
+
         
         /// <summary>
         /// クリア済みステージ名のリストを取得

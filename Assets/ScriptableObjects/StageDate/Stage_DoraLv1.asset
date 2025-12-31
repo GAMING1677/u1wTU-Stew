@@ -21,7 +21,7 @@ MonoBehaviour:
   stageStartPreset: {fileID: 11400000, guid: 758285aff1f19ab47bafc141d93ae994, type: 2}
   motivationLowPreset: {fileID: 0}
   quotaScore: 100
-  maxTurnCount: 15
+  maxTurnCount: 20
   initialDeck:
   - {fileID: 11400000, guid: 2b0f81735575d534287ffc3477b707cc, type: 2}
   - {fileID: 11400000, guid: 3f296bad1d5fdbf458be2421f7aef0da, type: 2}
