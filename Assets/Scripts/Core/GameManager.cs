@@ -85,6 +85,22 @@ namespace ApprovalMonster.Core
                 {
                     Debug.unityLogger.logEnabled = false;
                 }
+                
+#if UNITY_WEBGL && !UNITY_EDITOR
+                // iPad/スマホでの動作安定化対策
+                // メモリ不足でのクラッシュを防ぐため、画質とフレームレートを落とす
+                if (SystemInfo.deviceType == DeviceType.Handheld || Application.isMobilePlatform)
+                {
+                    QualitySettings.SetQualityLevel(0, true); // 最も低い画質設定を適用
+                    Application.targetFrameRate = 30;         // 30FPSに制限して発熱と負荷を抑える
+                    
+                    // 明示的に未使用アセットを解放
+                    Resources.UnloadUnusedAssets();
+                    System.GC.Collect();
+                    
+                    Debug.Log("[GameManager] Mobile optimization applied (Low Quality, 30FPS)");
+                }
+#endif
             }
             else
             {
