@@ -14,6 +14,14 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI resultLabel;
         [SerializeField] private Button titleButton;
         
+        [Header("Tweet")]
+        [Tooltip("ツイートボタン")]
+        [SerializeField] private Button tweetButton;
+        [Tooltip("unityroomのゲームID（ゲーム設定 > その他 で確認）")]
+        [SerializeField] private string gameId = "YOUR-GAMEID";
+        [Tooltip("ツイートに含めるハッシュタグ（#なしで入力）")]
+        [SerializeField] private string[] hashtags = new string[] { "unityroom", "unity1week" };
+        
         [Header("Background")]
         [SerializeField] private Image backgroundImage;
         [SerializeField] private Sprite clearBackground;
@@ -29,6 +37,8 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI newRecordText;
         
         private Coroutine animationCoroutine;
+        private long currentScore = 0;
+        private bool wasNewRecord = false;
 
         private void OnEnable()
         {
@@ -131,6 +141,17 @@ namespace ApprovalMonster.UI
                 titleButton.onClick.RemoveListener(OnReturnToTitle);
                 titleButton.onClick.AddListener(OnReturnToTitle);
             }
+            
+            // ツイートボタン設定
+            if (tweetButton != null)
+            {
+                tweetButton.onClick.RemoveListener(OnTweetButtonClicked);
+                tweetButton.onClick.AddListener(OnTweetButtonClicked);
+            }
+            
+            // スコアを保存（ツイート用）
+            currentScore = score;
+            wasNewRecord = isNewHighScore;
         }
         
         private void OnDisable()
@@ -226,6 +247,51 @@ namespace ApprovalMonster.UI
         {
             Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
             SceneNavigator.Instance.GoToTitle();
+        }
+        
+        /// <summary>
+        /// ツイートボタンクリック時の処理
+        /// </summary>
+        private void OnTweetButtonClicked()
+        {
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
+            
+            // クリアステージ数を取得
+            int clearedStages = Core.SaveDataManager.Instance?.GetClearedStageCount() ?? 0;
+            
+            // ツイート内容を構築（スコアは丸めずにカンマ区切りで表示）
+            string recordText = wasNewRecord ? "🎉NEW RECORD🎉\n" : "";
+            string tweetText = $"{recordText}インプレッションモンスターガールで遊んだよ！\nクリアステージ数：{clearedStages}\nスコア：{currentScore:N0}";
+            
+            Debug.Log($"[ResultManager] Tweeting: {tweetText}");
+            
+#if UNITY_WEBGL && !UNITY_EDITOR
+            try
+            {
+                // ハッシュタグの数に応じて呼び分け
+                if (hashtags != null && hashtags.Length >= 2)
+                {
+                    naichilab.UnityRoomTweet.Tweet(gameId, tweetText, hashtags[0], hashtags[1]);
+                }
+                else if (hashtags != null && hashtags.Length == 1)
+                {
+                    naichilab.UnityRoomTweet.Tweet(gameId, tweetText, hashtags[0]);
+                }
+                else
+                {
+                    naichilab.UnityRoomTweet.Tweet(gameId, tweetText);
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"[ResultManager] Tweet failed: {e.Message}");
+            }
+#else
+            Debug.Log($"[ResultManager] Tweet skipped (not WebGL build). Content: {tweetText}");
+            // エディタではURL出力で確認
+            string url = $"https://twitter.com/intent/tweet?text={UnityEngine.Networking.UnityWebRequest.EscapeURL(tweetText)}";
+            Debug.Log($"[ResultManager] Tweet URL: {url}");
+#endif
         }
     }
 }
