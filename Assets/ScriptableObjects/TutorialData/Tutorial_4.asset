@@ -16,8 +16,6 @@ MonoBehaviour:
   description: "\u305D\u308C\u3068\u30AB\u30FC\u30C9\u3092\u30D7\u30EC\u30A4\u3059\u308B\u3068<size=120%><b>
     \u30E1\u30F3\u30BF\u30EB</b></size>\u3082\u6E1B\u308B\u3002\n\u3088\u3046\u3059\u308B\u306BHP\u306D\u3002"
   frames:
-  - {fileID: -6136340563027602792, guid: 13cd3b7158d60714cb8ad9534c26076f, type: 3}
-  - {fileID: 6507867368170425288, guid: 76d3006fbe08dbf43af37d253e8df46a, type: 3}
   - {fileID: 1859084181218560397, guid: 27a881a9b1faf964aa274fbdf4b47048, type: 3}
   - {fileID: -6629558650746605131, guid: cbb7e241a6d8e644bb2f6f8adbf362f0, type: 3}
   - {fileID: -5921813488999067894, guid: 6238e8b0a376fc24586f00c5ec8a2c88, type: 3}
