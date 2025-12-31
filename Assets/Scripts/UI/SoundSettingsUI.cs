@@ -7,10 +7,12 @@ namespace ApprovalMonster.UI
 {
     /// <summary>
     /// サウンド設定UIコンポーネント
-    /// シーンごとに配置し、AudioManager.Instanceを参照する
+    /// シングルトンパターン - シーン内に複数あっても1つだけが機能する
     /// </summary>
     public class SoundSettingsUI : MonoBehaviour
     {
+        public static SoundSettingsUI Instance { get; private set; }
+        
         [Header("Panel")]
         [SerializeField] private GameObject settingsPanel;
         [SerializeField] private CanvasGroup canvasGroup;
@@ -33,8 +35,28 @@ namespace ApprovalMonster.UI
         
         private bool isInitialized = false;
         
+        private void Awake()
+        {
+            // シングルトンパターン - 最初のインスタンスのみがInstanceになる
+            if (Instance == null)
+            {
+                Instance = this;
+                Debug.Log($"[SoundSettingsUI] Instance set to: {gameObject.name}");
+            }
+            else if (Instance != this)
+            {
+                // 既に別のインスタンスが存在する場合、このコンポーネントを無効化
+                Debug.Log($"[SoundSettingsUI] Duplicate found, disabling: {gameObject.name}");
+                enabled = false;
+                return;
+            }
+        }
+        
         private void Start()
         {
+            // シングルトンインスタンスでない場合は何もしない
+            if (Instance != this) return;
+            
             // 初期状態で非表示
             if (settingsPanel != null)
             {

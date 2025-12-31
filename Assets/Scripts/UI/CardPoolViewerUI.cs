@@ -11,9 +11,12 @@ namespace ApprovalMonster.UI
 {
     /// <summary>
     /// カードプール（全カード一覧）を表示するパネル
+    /// シングルトンパターン - 複数インスタンス対応
     /// </summary>
     public class CardPoolViewerUI : MonoBehaviour
     {
+        public static CardPoolViewerUI Instance { get; private set; }
+        
         [Header("Panel")]
         [SerializeField] private GameObject panel;
         [SerializeField] private Button closeButton;
@@ -31,6 +34,19 @@ namespace ApprovalMonster.UI
         
         private void Awake()
         {
+            // シングルトンパターン
+            if (Instance == null)
+            {
+                Instance = this;
+                Debug.Log($"[CardPoolViewerUI] Instance set to: {gameObject.name}");
+            }
+            else if (Instance != this)
+            {
+                Debug.Log($"[CardPoolViewerUI] Duplicate found, disabling: {gameObject.name}");
+                enabled = false;
+                return;
+            }
+            
             _canvasGroup = panel.GetComponent<CanvasGroup>();
             if (_canvasGroup == null)
             {

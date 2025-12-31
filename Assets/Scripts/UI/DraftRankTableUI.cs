@@ -11,9 +11,12 @@ namespace ApprovalMonster.UI
     /// <summary>
     /// ドラフトランクテーブルUI
     /// 現在のランクを中心に上下1行ずつ表示し、スクロールアニメーションで切り替える
+    /// シングルトンパターン - 複数インスタンス対応
     /// </summary>
     public class DraftRankTableUI : MonoBehaviour
     {
+        public static DraftRankTableUI Instance { get; private set; }
+        
         [Header("Container References")]
         [Tooltip("スクロールするコンテンツのコンテナ（全ランク行を含む）")]
         [SerializeField] private RectTransform contentContainer;
@@ -46,6 +49,19 @@ namespace ApprovalMonster.UI
         
         private void Awake()
         {
+            // シングルトンパターン
+            if (Instance == null)
+            {
+                Instance = this;
+                Debug.Log($"[DraftRankTableUI] Instance set to: {gameObject.name}");
+            }
+            else if (Instance != this)
+            {
+                Debug.Log($"[DraftRankTableUI] Duplicate found, disabling: {gameObject.name}");
+                enabled = false;
+                return;
+            }
+            
             _canvasGroup = GetComponent<CanvasGroup>();
             if (_canvasGroup == null)
             {
@@ -61,6 +77,9 @@ namespace ApprovalMonster.UI
         
         private void Start()
         {
+            // シングルトンインスタンスでない場合は何もしない
+            if (Instance != this) return;
+            
             // ゲーム開始時は非表示にする
             gameObject.SetActive(false);
         }

@@ -11,9 +11,12 @@ namespace ApprovalMonster.UI
 {
     /// <summary>
     /// 山札・捨て札の内容を一覧表示するパネル
+    /// シングルトンパターン - 複数インスタンス対応
     /// </summary>
     public class DeckViewerUI : MonoBehaviour
     {
+        public static DeckViewerUI Instance { get; private set; }
+        
         [Header("Panel")]
         [SerializeField] private GameObject panel;
         [SerializeField] private Button closeButton;
@@ -37,6 +40,19 @@ namespace ApprovalMonster.UI
         
         private void Awake()
         {
+            // シングルトンパターン
+            if (Instance == null)
+            {
+                Instance = this;
+                Debug.Log($"[DeckViewerUI] Instance set to: {gameObject.name}");
+            }
+            else if (Instance != this)
+            {
+                Debug.Log($"[DeckViewerUI] Duplicate found, disabling: {gameObject.name}");
+                enabled = false;
+                return;
+            }
+            
             _canvasGroup = panel.GetComponent<CanvasGroup>();
             if (_canvasGroup == null)
             {
