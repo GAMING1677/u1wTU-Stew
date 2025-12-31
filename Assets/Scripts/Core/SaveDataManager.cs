@@ -151,8 +151,8 @@ namespace ApprovalMonster.Core
                     continue;
                 }
                 
-                // クリア条件がない＝スコアアタック/エンドレスステージ
-                bool isScoreAttack = stage.clearCondition == null;
+                // スコアアタックステージの判定: clearConditionがあり、hasScoreGoal=falseのステージ
+                bool isScoreAttack = (stage.clearCondition != null && !stage.clearCondition.hasScoreGoal);
                 
                 if (isScoreAttack)
                 {
@@ -163,7 +163,10 @@ namespace ApprovalMonster.Core
                 }
                 else
                 {
-                    Debug.Log($"[SaveDataManager] Skipping '{stage.stageName}' (has clearCondition: {stage.clearCondition != null})");
+                    string reason = stage.clearCondition == null ? "no clearCondition" 
+                                  : stage.clearCondition.hasScoreGoal ? "hasScoreGoal=true" 
+                                  : "unknown";
+                    Debug.Log($"[SaveDataManager] Skipping '{stage.stageName}' ({reason})");
                 }
             }
             
