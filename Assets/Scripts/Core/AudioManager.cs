@@ -57,8 +57,8 @@ namespace ApprovalMonster.Core
             ApplyVolumes();
             
             // Preload all audio clips to prevent lag on first play
-            PreloadAudioClips();
-            
+            // Start coroutine to load sequentially
+            StartCoroutine(PreloadAudioClipsRoutine());
         }
         
         // ... (省略: PlayBGM, PlaySE等は変更なし) ...
@@ -220,23 +220,18 @@ namespace ApprovalMonster.Core
 
         
         /// <summary>
-        /// 全AudioClipを事前ロードして初回再生時のラグを防止
+        /// 全AudioClipを少しずつ事前ロード（フレーム分散）
+        /// iPad等でのメモリスパイク回避のため、1フレームに1つずつロードする
         /// </summary>
-        private void PreloadAudioClips()
+        private System.Collections.IEnumerator PreloadAudioClipsRoutine()
         {
-            if (audioDatabase == null)
-            {
-                Debug.LogWarning("[AudioManager] Cannot preload: AudioDatabase is null");
-                return;
-            }
-            
-            int preloadCount = 0;
-            
+            if (audioDatabase == null) yield break;
+
             // Preload BGM
             if (audioDatabase.mainThemeBGM != null)
             {
                 audioDatabase.mainThemeBGM.LoadAudioData();
-                preloadCount++;
+                yield return null; // 1フレーム待機
             }
             
             // Preload all SE
@@ -247,11 +242,12 @@ namespace ApprovalMonster.Core
                     if (se.clip != null)
                     {
                         se.clip.LoadAudioData();
-                        preloadCount++;
+                        yield return null; // 1フレーム待機
                     }
                 }
             }
             
+            Debug.Log("[AudioManager] Audio preloading completed (Sequential).");
         }
         
         private void SaveVolumes()
