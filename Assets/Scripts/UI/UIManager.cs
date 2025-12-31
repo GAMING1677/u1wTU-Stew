@@ -61,6 +61,7 @@ namespace ApprovalMonster.UI
         
         [Header("Quota")]
         [SerializeField] private TextMeshProUGUI quotaText; // Displays "Remaining: XXX"
+        [SerializeField] private Color quotaClearColor = new Color(0f, 0.75f, 1f); // Rare水色（達成時）
         [SerializeField] private GameObject penaltyRiskContainer; // Container for penalty risk (includes background)
         [SerializeField] private TextMeshProUGUI penaltyRiskText; // Displays "Penalty Risk: XX Mental"
         
@@ -139,6 +140,10 @@ namespace ApprovalMonster.UI
         private float displayedQuotaRemaining = 0;
         private float displayedClearGoalRemaining = 0;
         
+        // ノルマテキストの初期色（エディタで設定した色）
+        private Color _quotaOriginalColor;
+        private bool _quotaIsCleared = false; // ノルマ達成状態を保持
+        
         // アニメーション時間
         private const float COUNT_ANIM_DURATION = 0.5f;
 
@@ -150,6 +155,12 @@ namespace ApprovalMonster.UI
             if (flamingContainer != null)
             {
                 flamingContainer.SetActive(false);
+            }
+            
+            // ノルマテキストの初期色を保存
+            if (quotaText != null)
+            {
+                _quotaOriginalColor = quotaText.color;
             }
         }
 
@@ -831,7 +842,12 @@ namespace ApprovalMonster.UI
                 if (remaining > 0)
                 {
                     // 未達時 - カウントアニメーション
+                    _quotaIsCleared = false;
                     DOTween.Kill("quotaCount");
+                    DOTween.Kill("quotaColorReset");
+                    
+                    // 通常カラーに戻す
+                    quotaText.color = _quotaOriginalColor;
                     
                     long targetRemaining = remaining;
                     DOTween.To(() => displayedQuotaRemaining, x => {
@@ -854,18 +870,26 @@ namespace ApprovalMonster.UI
                 {
                     // 完了時
                     DOTween.Kill("quotaCount");
-                    if (quotaText.text != "OK") // 完了になった瞬間
+                    
+                    if (!_quotaIsCleared) // 完了になった瞬間（1回だけ実行）
                     {
+                        _quotaIsCleared = true;
+                        
+                        // クリアカラー（Epic色）で「OK」を表示
                         quotaText.text = "OK";
+                        quotaText.color = quotaClearColor;
                         
                         // 完了時のアニメーション (強め)
                         quotaText.transform.DOKill();
                         quotaText.transform.localScale = Vector3.one;
                         quotaText.transform.DOPunchScale(Vector3.one * 0.5f, 0.5f, 10, 1);
+                        
+                        // 色はターン開始時にResetQuotaColorで戻す
                     }
+                    // 既に達成済みの場合は何もしない（色を維持）
                 }
             }
-
+        
             if (penaltyRiskText != null)
             {
                 if (remaining > 0)
@@ -932,6 +956,17 @@ namespace ApprovalMonster.UI
                         seq.SetTarget(penaltyRiskContainer.transform); // DOKill用
                     }
                 }
+            }
+        }
+        
+        /// <summary>
+        /// ノルマテキストの色を元に戻す（ターン開始時に呼び出す）
+        /// </summary>
+        public void ResetQuotaColor()
+        {
+            if (quotaText != null)
+            {
+                quotaText.color = _quotaOriginalColor;
             }
         }
         

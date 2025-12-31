@@ -546,6 +546,9 @@ namespace ApprovalMonster.Core
             currentTurnQuota = CalculateTurnQuota();
             UpdateQuotaDisplay();
             
+            // ノルマテキストの色をリセット（前ターンで達成していた場合の色を戻す）
+            FindObjectOfType<UI.UIManager>()?.ResetQuotaColor();
+            
             // Reset flaming state for new turn (seeds persist)
             resourceManager.ResetFlamingTurn();
         }
