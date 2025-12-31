@@ -105,7 +105,6 @@ namespace ApprovalMonster.Core
         /// <returns>アンロック済みならtrue</returns>
         public bool IsStageUnlocked(StageData stage)
         {
-            Debug.Log($"[StageManager] ===== IsStageUnlocked('{stage?.stageName}') START =====");
             
             if (stage == null)
             {
@@ -113,12 +112,9 @@ namespace ApprovalMonster.Core
                 return false;
             }
             
-            // requiredStagesをチェック
-            Debug.Log($"[StageManager] Stage '{stage.stageName}' requiredStages: {(stage.requiredStages != null ? stage.requiredStages.Count.ToString() : "NULL")}");
-            
+         
             if (stage.requiredStages != null && stage.requiredStages.Count > 0)
             {
-                Debug.Log($"[StageManager] Checking {stage.requiredStages.Count} required stages for '{stage.stageName}':");
                 
                 for (int i = 0; i < stage.requiredStages.Count; i++)
                 {

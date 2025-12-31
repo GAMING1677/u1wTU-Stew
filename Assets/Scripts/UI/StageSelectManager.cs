@@ -96,7 +96,6 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void RefreshUnlockStates()
         {
-            Debug.Log("[StageSelectManager] RefreshUnlockStates called - updating button states");
             UpdateButtonStates();
         }
 
@@ -251,33 +250,28 @@ namespace ApprovalMonster.UI
             bool isScoreAttack = (stageButton.stage.clearCondition == null || 
                                   !stageButton.stage.clearCondition.hasScoreGoal);
             
-            Debug.Log($"[StageSelectManager] UpdateHighScoreDisplay for '{stageButton.stage.stageName}': isScoreAttack={isScoreAttack}");
-            
+          
             if (isScoreAttack && SaveDataManager.Instance != null)
             {
                 long highScore = SaveDataManager.Instance.LoadStageHighScore(stageButton.stage.stageName);
-                
-                Debug.Log($"[StageSelectManager] Loaded high score for '{stageButton.stage.stageName}': {highScore}");
                 
                 if (highScore > 0)
                 {
                     stageButton.highScoreText.text = $"{highScore:N0}";
                     stageButton.highScoreText.gameObject.SetActive(true);
-                    Debug.Log($"[StageSelectManager] Displaying high score: {highScore:N0}");
                 }
                 else
                 {
                     // スコアが0の場合は「---」を表示
                     stageButton.highScoreText.text = "---";
                     stageButton.highScoreText.gameObject.SetActive(true);
-                    Debug.Log($"[StageSelectManager] No high score yet, displaying '---'");
                 }
             }
             else
             {
                 // スコアアタックでない場合は非表示
                 stageButton.highScoreText.gameObject.SetActive(false);
-                Debug.Log($"[StageSelectManager] Not a score attack stage, hiding high score text");
+
             }
         }
 
@@ -286,7 +280,6 @@ namespace ApprovalMonster.UI
         /// </summary>
         private void OnStageSelected(StageData stage, Button button, int buttonIndex)
         {
-            Debug.Log($"[StageSelectManager] Stage selected: {stage.stageName}");
             
             // パルスを停止
             if (buttonIndex >= 0 && buttonIndex < stageButtons.Count)

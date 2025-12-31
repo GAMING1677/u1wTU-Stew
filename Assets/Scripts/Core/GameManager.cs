@@ -123,6 +123,7 @@ namespace ApprovalMonster.Core
                 {
                     uiManager.SetupClearGoal();
                     uiManager.RefreshTrackedCardUI(); // 追跡カードUIをステージに合わせて更新
+                    uiManager.SetupFlamingUI(); // 炎上UIをステージに合わせて更新
                 }
             }
             else
@@ -443,8 +444,6 @@ namespace ApprovalMonster.Core
 
         public void ResetGame()
         {
-            Debug.Log("[GameManager] ResetGame called - full state reset");
-            
             // 0. Reset game active flag
             isGameActive = false;
             
@@ -783,17 +782,13 @@ namespace ApprovalMonster.Core
         
         public void OnDraftComplete(CardData selectedCard)
         {
-            Debug.Log($"[GameManager] Draft complete. Selected: {selectedCard.cardName}");
             draftManager.SelectCard(selectedCard);
             turnManager.CompleteDraft();
         }
 
         public void TryPlayCard(CardData card)
         {
-            // Detailed debug logging
-            Debug.Log($"[GameManager] TryPlayCard called for: {card?.cardName ?? "NULL"}");
-            Debug.Log($"[GameManager] State: isGameActive={isGameActive}, isDrawing={deckManager.isDrawing}, isWaitingForMonsterDraft={isWaitingForMonsterDraft}");
-            Debug.Log($"[GameManager] Phase: {turnManager.CurrentPhase}, isMonsterMode={resourceManager.isMonsterMode}, hasPerformedMonsterDraft={hasPerformedMonsterDraft}");
+            // Detailed debug logging}, isMonsterMode={resourceManager.isMonsterMode}, hasPerformedMonsterDraft={hasPerformedMonsterDraft}");
             
             if (!isGameActive)
             {

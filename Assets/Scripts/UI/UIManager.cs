@@ -155,6 +155,11 @@ namespace ApprovalMonster.UI
             if (flamingContainer != null)
             {
                 flamingContainer.SetActive(false);
+                Debug.Log("[UIManager] Awake: flamingContainer set to false");
+            }
+            else
+            {
+                Debug.LogWarning("[UIManager] Awake: flamingContainer is NULL!");
             }
             
             // ノルマテキストの初期色を保存
@@ -166,7 +171,6 @@ namespace ApprovalMonster.UI
 
         public void SetupCharacter(CharacterProfile profile)
         {
-            Debug.Log($"[UIManager] SetupCharacter called with profile: {(profile != null ? profile.name : "NULL")}");
             
             if (characterAnimator != null)
             {
@@ -218,7 +222,7 @@ namespace ApprovalMonster.UI
                 {
                     Destroy(child.gameObject);
                 }
-                Debug.Log("[UIManager] Timeline cleared.");
+
             }
         }
         
@@ -230,18 +234,17 @@ namespace ApprovalMonster.UI
             if (endTurnButtonPulse != null)
             {
                 endTurnButtonPulse.StopPulse();
-                Debug.Log("[UIManager] End turn button pulse reset.");
+
             }
         }
 
         private void OnEnable()
         {
-            Debug.Log("[UIManager] OnEnable called.");
             // Subscribe to managers
             var gm = GameManager.Instance;
             if (gm != null)
             {
-                Debug.Log("[UIManager] GameManager instance found. Subscribing to events.");
+
                 // Remove first to avoid duplicates
                 gm.resourceManager.onFollowersChanged.RemoveListener(UpdateFollowers);
                 gm.resourceManager.onMentalChanged.RemoveListener(UpdateMental);
@@ -286,6 +289,9 @@ namespace ApprovalMonster.UI
                 // Flaming event
                 gm.resourceManager.onFlamingChanged -= UpdateFlamingDisplay;
                 gm.resourceManager.onFlamingChanged += UpdateFlamingDisplay;
+                
+                // Flaming UIの表示設定（ここで確実にステージ情報が取れる）
+                SetupFlamingUI();
             }
             else
             {
@@ -295,7 +301,7 @@ namespace ApprovalMonster.UI
 
         private void Start()
         {
-             Debug.Log("[UIManager] Start called.");
+
              
              // Initial Setup for Character
              if (StageManager.Instance != null && StageManager.Instance.SelectedStage != null)
@@ -644,7 +650,7 @@ namespace ApprovalMonster.UI
         /// <summary>
         /// ステージ設定に基づいてFlaming UIの表示/非表示を設定
         /// </summary>
-        private void SetupFlamingUI()
+        public void SetupFlamingUI()
         {
             if (flamingContainer == null) return;
             
@@ -997,7 +1003,7 @@ namespace ApprovalMonster.UI
         
         private void OnEndTurnButtonClicked()
         {
-            // SE removed per user request (other buttons still have SE)
+            Core.AudioManager.Instance?.PlaySE(Data.SEType.ButtonClick);
             Debug.Log("[UIManager] End Turn button clicked.");
             var gm = GameManager.Instance;
             if (gm != null && gm.turnManager != null)

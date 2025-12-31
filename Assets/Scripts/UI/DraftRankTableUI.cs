@@ -73,6 +73,9 @@ namespace ApprovalMonster.UI
             {
                 closeButton.onClick.AddListener(Hide);
             }
+            
+            // 初期状態で非表示
+            gameObject.SetActive(false);
         }
         
         private void Start()
@@ -80,8 +83,7 @@ namespace ApprovalMonster.UI
             // シングルトンインスタンスでない場合は何もしない
             if (Instance != this) return;
             
-            // ゲーム開始時は非表示にする
-            gameObject.SetActive(false);
+            // 初期化済みの場合は何もしない（Awakeで設定済み）
         }
         
         /// <summary>

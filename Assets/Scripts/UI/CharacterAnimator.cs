@@ -113,12 +113,12 @@ namespace ApprovalMonster.UI
                 StartIdle();
             }
             
-            Debug.Log("[CharacterAnimator] SetProfileWithFlash COMPLETE");
+
         }
         
         public void SetProfile(CharacterProfile profile)
         {
-            Debug.Log($"[CharacterAnimator] SetProfile called with: {(profile != null ? profile.name : "null")}");
+
             currentProfile = profile;
             
             // Stop existing animation
