@@ -64,8 +64,15 @@ namespace ApprovalMonster.UI
         [Tooltip("スコアアタック合計ハイスコアを表示するテキスト")]
         [SerializeField] private TextMeshProUGUI totalHighScoreText;
 
-        private void Start()
+        private System.Collections.IEnumerator Start()
         {
+            // StageManagerの初期化待ち
+            // WebGL等で実行順序によりInstanceがまだnullの場合があるため待機
+            while (Core.StageManager.Instance == null)
+            {
+                yield return null;
+            }
+
             SetupStageButtons();
             SetupComingSoonButtons();
             
@@ -90,6 +97,9 @@ namespace ApprovalMonster.UI
         
         private void OnEnable()
         {
+            // StageManagerがない場合はStartの初期化待ちに任せる（ログ抑制）
+            if (Core.StageManager.Instance == null) return;
+
             // パネルが表示されるたびにパルスアニメーションを再開
             RefreshUnlockStates();
         }
@@ -290,7 +300,7 @@ namespace ApprovalMonster.UI
             if (SaveDataManager.Instance != null)
             {
                 long totalScore = SaveDataManager.Instance.GetTotalScoreAttackHighScore();
-                totalHighScoreText.text = $"Total High Score: {totalScore:N0}";
+                totalHighScoreText.text = $" {totalScore:N0}";
                 totalHighScoreText.gameObject.SetActive(true);
             }
             else
