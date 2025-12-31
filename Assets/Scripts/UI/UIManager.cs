@@ -96,6 +96,15 @@ namespace ApprovalMonster.UI
         // 捨て札アニメーション中かどうか
         private bool isDiscardingHand = false;
         
+        [Header("Draw Animation")]
+        [Tooltip("山札からカードが手札に移動するアニメーションの時間")]
+        [SerializeField] private float drawAnimDuration = 0.35f;
+        [Tooltip("各カード間のドローアニメーション開始遅延")]
+        [SerializeField] private float drawAnimStagger = 0.08f;
+        
+        // ドローアニメーション中のカード数（LayoutCardsでスキップ用）
+        private HashSet<CardView> animatingCards = new HashSet<CardView>();
+        
         [Header("Flaming UI")]
         [Tooltip("種の数を表示するテキスト（オプショナル）")]
         [SerializeField] private TextMeshProUGUI flamingSeedText;
@@ -447,6 +456,12 @@ namespace ApprovalMonster.UI
                 if (card.IsSelected)
                 {
                     Debug.Log($"[UIManager] Skipping layout for selected card: {card.CardName}");
+                    continue;
+                }
+                
+                // Skip layout for cards currently animating from draw pile
+                if (animatingCards.Contains(card))
+                {
                     continue;
                 }
                 
@@ -1032,20 +1047,136 @@ namespace ApprovalMonster.UI
         {
             Debug.Log($"[UIManager] OnCardDrawn called for {data.cardName}");
             var card = Instantiate(cardPrefab, handContainer);
-            if (card == null) Debug.LogError("[UIManager] Failed to instantiate cardPrefab!");
+            if (card == null)
+            {
+                Debug.LogError("[UIManager] Failed to instantiate cardPrefab!");
+                yield break;
+            }
             
             card.gameObject.SetActive(true);
             card.Setup(data);
+            
+            // アニメーション中リストに追加（LayoutCardsでスキップされる）
+            animatingCards.Add(card);
             activeCards.Add(card);
             
-            // Animation
-            card.transform.localScale = Vector3.zero;
-            card.transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack);
+            RectTransform cardRect = card.GetComponent<RectTransform>();
             
-            // Update card layout
+            // 山札の位置を取得
+            Vector3 deckWorldPos = deckPileImage != null 
+                ? deckPileImage.transform.position 
+                : Vector3.zero;
+            
+            // 山札の位置にカードを配置（小さく）
+            card.transform.position = deckWorldPos;
+            card.transform.localScale = Vector3.zero;
+            card.transform.localRotation = Quaternion.Euler(0, 0, 15f); // 少し傾ける
+            
+            // 目標位置を計算（現在のカード枚数に基づく）
+            Vector2 targetPos = CalculateCardTargetPosition(activeCards.Count - 1, activeCards.Count);
+            float targetRotation = CalculateCardTargetRotation(activeCards.Count - 1, activeCards.Count);
+            
+            // 既存のカードのレイアウトを更新（新しいカードはスキップされる）
             LayoutCards();
             
+            // カード間の遅延を適用（複数枚同時ドロー時）
+            int drawIndex = animatingCards.Count - 1;
+            float delay = drawIndex * drawAnimStagger;
+            
+            if (delay > 0)
+            {
+                yield return new WaitForSeconds(delay);
+            }
+            
+            // 山札パイルのパルスアニメーション
+            if (deckPileImage != null && drawIndex == 0)
+            {
+                deckPileImage.transform.DOKill();
+                deckPileImage.transform.localScale = Vector3.one;
+                deckPileImage.transform.DOPunchScale(Vector3.one * 0.15f, 0.3f, 5, 1);
+            }
+            
+            // アニメーション: 山札から目標位置へ移動しながら拡大
+            Sequence seq = DOTween.Sequence();
+            seq.Append(cardRect.DOAnchorPos(targetPos, drawAnimDuration).SetEase(Ease.OutQuad));
+            seq.Join(card.transform.DOScale(1f, drawAnimDuration).SetEase(Ease.OutBack));
+            seq.Join(card.transform.DORotate(new Vector3(0, 0, targetRotation), drawAnimDuration).SetEase(Ease.OutQuad));
+            seq.OnComplete(() =>
+            {
+                // アニメーション完了、通常のレイアウト対象に戻す
+                animatingCards.Remove(card);
+                card.UpdateOriginalPosition();
+                
+                // 全てのアニメーションが完了したらレイアウトを更新
+                if (animatingCards.Count == 0)
+                {
+                    LayoutCards();
+                }
+            });
+            
             yield return null;
+        }
+        
+        /// <summary>
+        /// カードの目標位置を計算（LayoutCardsのロジックを流用）
+        /// </summary>
+        private Vector2 CalculateCardTargetPosition(int cardIndex, int totalCards)
+        {
+            if (totalCards == 0) return Vector2.zero;
+            
+            RectTransform containerRect = handContainer.GetComponent<RectTransform>();
+            float containerWidth = containerRect.rect.width;
+            float cardWidth = cardPrefab.GetComponent<RectTransform>().sizeDelta.x;
+            
+            float totalDefaultWidth = (totalCards * cardWidth) + ((totalCards - 1) * defaultCardSpacing);
+            
+            float spacing;
+            if (totalDefaultWidth > containerWidth && totalCards > 1)
+            {
+                spacing = (containerWidth - cardWidth) / (totalCards - 1);
+                spacing = Mathf.Max(spacing, minCardSpacing);
+            }
+            else
+            {
+                spacing = cardWidth + defaultCardSpacing;
+            }
+            
+            float totalWidth = (totalCards - 1) * spacing + cardWidth;
+            float startX = -totalWidth / 2f + cardWidth / 2f;
+            
+            float baseYPos = cardPrefab.GetComponent<RectTransform>().anchoredPosition.y;
+            
+            float xPos = startX + (cardIndex * spacing);
+            
+            // Arc calculation
+            float centerIndex = (totalCards - 1) / 2f;
+            float relativeIndex = cardIndex - centerIndex;
+            float arcOffset = 0f;
+            if (centerIndex > 0)
+            {
+                arcOffset = -Mathf.Abs(relativeIndex / centerIndex) * arcHeight;
+            }
+            float yPos = baseYPos + arcOffset;
+            
+            return new Vector2(xPos, yPos);
+        }
+        
+        /// <summary>
+        /// カードの目標回転を計算
+        /// </summary>
+        private float CalculateCardTargetRotation(int cardIndex, int totalCards)
+        {
+            if (totalCards <= 1) return 0f;
+            
+            float centerIndex = (totalCards - 1) / 2f;
+            float relativeIndex = cardIndex - centerIndex;
+            
+            if (centerIndex > 0)
+            {
+                float normalizedPos = relativeIndex / centerIndex;
+                return normalizedPos * maxRotationAngle;
+            }
+            return 0f;
         }
 
         private void OnCardDiscarded(CardData data)

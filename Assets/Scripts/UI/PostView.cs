@@ -69,34 +69,47 @@ namespace ApprovalMonster.UI
         {
             // Initial State
             canvasGroup.alpha = 0f;
-            transform.localScale = Vector3.one * 0.5f;
+            transform.localScale = Vector3.one;
             
-            // Get height from RectTransform layout calculation (wait for one frame or force update)
-            // For simplicity, we assume a reasonable height or measure it
-            // LayoutElement height animation
-            layoutElement.minHeight = 0f;
+            // RectTransformから目標の高さを取得
+            RectTransform rectTransform = GetComponent<RectTransform>();
+            float targetHeight = rectTransform.sizeDelta.y;
+            
+            // 高さが0以下の場合はデフォルト値を使用（Content Size Fitter使用時など）
+            if (targetHeight <= 0)
+            {
+                // レイアウトを強制更新して高さを計算
+                LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+                targetHeight = LayoutUtility.GetPreferredHeight(rectTransform);
+            }
+            
+            // それでも0なら固定値を使用
+            if (targetHeight <= 0)
+            {
+                targetHeight = 120f;
+            }
+            
+            // LayoutElementで高さを0からスタート
             layoutElement.preferredHeight = 0f;
+            layoutElement.minHeight = 0f;
             
-            // Note: In a vertical layout group, we want to animate the preferred height specifically
-            // Ideally we need to know the target height. 
-            // A simple trick is to let layout calculate first, then animate.
-            // But to avoid "pop", we will animate scale and alpha primarily, and height secondarily if possible.
-            // Since User reported issues with LayoutGroup, let's keep it robust:
-            // Animate Scale & Alpha is safe for LayoutGroups usually.
-            
+            // アニメーションシーケンス
             Sequence seq = DOTween.Sequence();
             
-            // 1. Expand (Layout workaround)
-            // First we set preferred height to a target value (approximate or measured)
-            // However, a safer approach in Unity UI is to animate Scale from 0 to 1, 
-            // but LayoutGroup only respects Scale if valid.
+            // 1. 高さを広げる（他のアイテムが押し下がる）
+            seq.Append(DOTween.To(
+                () => layoutElement.preferredHeight,
+                x => layoutElement.preferredHeight = x,
+                targetHeight,
+                0.3f
+            ).SetEase(Ease.OutQuad));
             
-            // Simplified Pop Animation
-            transform.DOScale(1f, 0.4f).SetEase(Ease.OutBack).From(Vector3.zero);
-            canvasGroup.DOFade(1f, 0.3f);
+            // 2. フェードインとスケールを同時に
+            seq.Join(canvasGroup.DOFade(1f, 0.3f));
+            seq.Join(transform.DOScale(1f, 0.3f).SetEase(Ease.OutBack).From(0.8f));
             
-            // Optional: Shake effect on appear
-            transform.DOPunchRotation(new Vector3(0, 0, 5f), 0.5f);
+            // 3. 軽いパンチ効果
+            seq.Append(transform.DOPunchRotation(new Vector3(0, 0, 3f), 0.3f));
         }
     }
 }
