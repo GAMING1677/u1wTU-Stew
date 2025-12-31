@@ -29,6 +29,6 @@ MonoBehaviour:
   reactionDuration: 1
   seHappy_1: {fileID: 0}
   seHappy_2: {fileID: 8300000, guid: 1536dfec33f7f42409317f6a18e53aa2, type: 3}
-  seHappy_3: {fileID: 8300000, guid: dd10713f9d592f247a92cf800caba214, type: 3}
+  seHappy_3: {fileID: 8300000, guid: 72a2f03041388bc40a6f9589cc723699, type: 3}
   seSad_1: {fileID: 8300000, guid: a0f19883d8d56324e975d991b9e6a9d9, type: 3}
   seSad_2: {fileID: 8300000, guid: 70c960ee6a90af549a83049482295174, type: 3}
