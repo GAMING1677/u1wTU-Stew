@@ -13,13 +13,22 @@ MonoBehaviour:
   m_Name: Monster_Dora
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CharacterProfile
   idleFrames:
-  - {fileID: 5075049686085735935, guid: 01ccf57dadba1dd4d9475295443c5bb3, type: 3}
+  - {fileID: 3337551846936596062, guid: dc55d8a7dd1ee7c48a661f61386a0e9d, type: 3}
+  - {fileID: -5751497441509603799, guid: 28517d08ce6668d4895e7db44d27be10, type: 3}
+  - {fileID: -7976454601951896202, guid: 06860e1f5ea936e419093fa8f35e7f7d, type: 3}
+  - {fileID: -5751497441509603799, guid: 28517d08ce6668d4895e7db44d27be10, type: 3}
+  - {fileID: 3337551846936596062, guid: dc55d8a7dd1ee7c48a661f61386a0e9d, type: 3}
   frameRate: 0.2
   minIdleWait: 0.5
   maxIdleWait: 2
-  reactionHappy_1: {fileID: 0}
-  reactionHappy_2: {fileID: 0}
-  reactionHappy_3: {fileID: 0}
-  reactionSad_1: {fileID: 0}
-  reactionSad_2: {fileID: 0}
+  reactionHappy_1: {fileID: -8639291039917824112, guid: 4d7d6829194b3804285a1a45b531a3eb, type: 3}
+  reactionHappy_2: {fileID: -8639291039917824112, guid: 4d7d6829194b3804285a1a45b531a3eb, type: 3}
+  reactionHappy_3: {fileID: 3204524309224751436, guid: 3791baf339926b94e941618b9998f391, type: 3}
+  reactionSad_1: {fileID: 7627011466364788026, guid: 5947f60caeffa434e9b95c68e783708e, type: 3}
+  reactionSad_2: {fileID: -3743203747145281234, guid: 3e474dc3612dbe949a955d90d2cbcfa8, type: 3}
   reactionDuration: 1
+  seHappy_1: {fileID: 0}
+  seHappy_2: {fileID: 0}
+  seHappy_3: {fileID: 0}
+  seSad_1: {fileID: 0}
+  seSad_2: {fileID: 0}

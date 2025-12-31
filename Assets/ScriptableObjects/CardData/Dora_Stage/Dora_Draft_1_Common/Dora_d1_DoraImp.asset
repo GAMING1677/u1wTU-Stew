@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dora_d1_DoraImp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u6B63\u7FA9\u306E\u9244\u69CC"
-  cardImage: {fileID: 0}
+  cardImage: {fileID: -7370846112228509550, guid: 75bf769ed349bc246a61292849e825e7, type: 3}
   description: "\u30A4\u30F3\u30D7\u309280\uFF05\u5F97\u308B\n\u706B\u7A2E\uFF0B3\n\u708E\u4E0A\u738712%"
   cardTag: 
   flavorText: "\u4EBA\u304C\u91D8\u306B\u898B\u3048\u308B"

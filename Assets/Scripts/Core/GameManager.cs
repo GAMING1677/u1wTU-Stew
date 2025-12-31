@@ -234,12 +234,27 @@ namespace ApprovalMonster.Core
             
             // Save Score
             long score = resourceManager.totalImpressions;
+            bool isNewHighScore = false;
+            
+            // スコアアタックモード判定
+            bool isScoreAttack = (currentStage == null || 
+                                  currentStage.clearCondition == null || 
+                                  !currentStage.clearCondition.hasScoreGoal);
+            
+            // スコアアタックの場合はゲームオーバーでもハイスコアを保存
+            if (isScoreAttack && SaveDataManager.Instance != null && currentStage != null)
+            {
+                isNewHighScore = SaveDataManager.Instance.SaveStageHighScore(currentStage.stageName, score);
+                Debug.Log($"[GameManager] Score Attack mode (GameOver) - High score check: {score}, New record: {isNewHighScore}");
+            }
+            
             if (SceneNavigator.Instance != null)
             {
                 SceneNavigator.Instance.LastGameScore = score;
                 SceneNavigator.Instance.WasStageCleared = false; // Game over = failed
-                SceneNavigator.Instance.IsScoreAttackMode = (currentStage == null || currentStage.clearCondition == null || !currentStage.clearCondition.hasScoreGoal);
-                Debug.Log($"[GameManager] Saved game over score: {score}, cleared=false");
+                SceneNavigator.Instance.IsScoreAttackMode = isScoreAttack;
+                SceneNavigator.Instance.IsNewHighScore = isNewHighScore;
+                Debug.Log($"[GameManager] Saved game over score: {score}, cleared=false, newRecord={isNewHighScore}");
             }
             
             // Navigate directly to result scene

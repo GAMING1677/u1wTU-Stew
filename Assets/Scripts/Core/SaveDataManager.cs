@@ -93,6 +93,23 @@ namespace ApprovalMonster.Core
             string key = $"HighScore_{stageName}";
             return ES3.Load(key, 0L);
         }
+        
+        /// <summary>
+        /// クリア済みステージの数を取得
+        /// </summary>
+        public int GetClearedStageCount()
+        {
+            List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>());
+            return cleared.Count;
+        }
+        
+        /// <summary>
+        /// クリア済みステージ名のリストを取得
+        /// </summary>
+        public List<string> GetClearedStageNames()
+        {
+            return ES3.Load(KEY_CLEARED_STAGES, new List<string>());
+        }
 
         private void OnApplicationQuit()
         {
