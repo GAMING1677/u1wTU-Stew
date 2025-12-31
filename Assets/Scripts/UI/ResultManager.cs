@@ -152,6 +152,9 @@ namespace ApprovalMonster.UI
             // スコアを保存（ツイート用）
             currentScore = score;
             wasNewRecord = isNewHighScore;
+
+            // 自動スコア送信
+            SendScoreToUnityroom();
         }
         
         private void OnDisable()
@@ -264,24 +267,9 @@ namespace ApprovalMonster.UI
             string tweetText = $"{recordText}インプレッションモンスターガールで遊んだよ！\nクリアステージ数：{clearedStages}\nスコア：{currentScore:N0}";
             
             Debug.Log($"[ResultManager] Tweeting: {tweetText}");
-            
-#if UNITY_WEBGL && !UNITY_EDITOR
+            #if UNITY_WEBGL && !UNITY_EDITOR
             try
             {
-                // unityroomへスコア送信
-                // ボード1: クリアステージ数
-                // ボード2: エンドレスハイスコア合計
-                if (unityroom.Api.UnityroomApiClient.Instance != null)
-                {
-                    int clearedCount = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetClearedStageCount() : 0;
-                    long totalHighScore = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetTotalScoreAttackHighScore() : 0;
-                    
-                    unityroom.Api.UnityroomApiClient.Instance.SendScore(1, clearedCount, unityroom.Api.ScoreboardWriteMode.HighScoreDesc);
-                    unityroom.Api.UnityroomApiClient.Instance.SendScore(2, totalHighScore, unityroom.Api.ScoreboardWriteMode.HighScoreDesc);
-                    
-                    Debug.Log($"[ResultManager] Sent scores to unityroom - Board 1: {clearedCount}, Board 2: {totalHighScore}");
-                }
-
                 // ハッシュタグの数に応じて呼び分け
                 if (hashtags != null && hashtags.Length >= 2)
                 {
@@ -298,7 +286,7 @@ namespace ApprovalMonster.UI
             }
             catch (System.Exception e)
             {
-                Debug.LogWarning($"[ResultManager] Tweet/Score failed: {e.Message}");
+                Debug.LogWarning($"[ResultManager] Tweet failed: {e.Message}");
             }
 #else
             Debug.Log($"[ResultManager] Tweet skipped (not WebGL build). Content: {tweetText}");
@@ -311,6 +299,41 @@ namespace ApprovalMonster.UI
             // エディタではURL出力で確認
             string url = $"https://twitter.com/intent/tweet?text={UnityEngine.Networking.UnityWebRequest.EscapeURL(tweetText)}";
             Debug.Log($"[ResultManager] Tweet URL: {url}");
+#endif
+        }
+
+        /// <summary>
+        /// unityroomへスコアを送信（WebGLのみ、例外安全）
+        /// </summary>
+        private void SendScoreToUnityroom()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            try
+            {
+                if (unityroom.Api.UnityroomApiClient.Instance != null)
+                {
+                    int clearedCount = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetClearedStageCount() : 0;
+                    long totalHighScore = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetTotalScoreAttackHighScore() : 0;
+                    
+                    unityroom.Api.UnityroomApiClient.Instance.SendScore(1, clearedCount, unityroom.Api.ScoreboardWriteMode.HighScoreDesc);
+                    unityroom.Api.UnityroomApiClient.Instance.SendScore(2, totalHighScore, unityroom.Api.ScoreboardWriteMode.HighScoreDesc);
+                    
+                    Debug.Log($"[ResultManager] Sent scores to unityroom - Board 1: {clearedCount}, Board 2: {totalHighScore}");
+                }
+                else
+                {
+                    Debug.LogWarning("[ResultManager] UnityroomApiClient.Instance is null, skipping score submission");
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[ResultManager] Score submission failed: {e.Message}");
+            }
+#else
+            // エディタ等でのデバッグ送信用ログ
+            int debugClearedCount = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetClearedStageCount() : 0;
+            long debugTotalHighScore = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetTotalScoreAttackHighScore() : 0;
+            Debug.Log($"[ResultManager] (Simulation) Sent scores to unityroom - Board 1: {debugClearedCount}, Board 2: {debugTotalHighScore}");
 #endif
         }
     }

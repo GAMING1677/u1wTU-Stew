@@ -21,7 +21,7 @@ namespace ApprovalMonster.Core
         [SerializeField] private AudioSource[] seSources; // 複数同時再生用
         
         [Header("Volume Settings")]
-        [SerializeField] private float defaultMasterVolume = 1.0f;
+        [SerializeField] private float defaultMasterVolume = 0.0f;
         [SerializeField] private float defaultBGMVolume = 0.25f;
         [SerializeField] private float defaultSEVolume = 0.25f;
         
@@ -50,9 +50,9 @@ namespace ApprovalMonster.Core
         private void Initialize()
         {
             // Load volumes from EasySave (fallback to defaults)
-            masterVolume = ES3.Load(KEY_MASTER_VOLUME, defaultMasterVolume);
-            bgmVolume = ES3.Load(KEY_BGM_VOLUME, defaultBGMVolume);
-            seVolume = ES3.Load(KEY_SE_VOLUME, defaultSEVolume);
+            masterVolume = ES3.Load(KEY_MASTER_VOLUME, defaultMasterVolume, GetSaveSettings());
+            bgmVolume = ES3.Load(KEY_BGM_VOLUME, defaultBGMVolume, GetSaveSettings());
+            seVolume = ES3.Load(KEY_SE_VOLUME, defaultSEVolume, GetSaveSettings());
             
             ApplyVolumes();
             
@@ -256,10 +256,30 @@ namespace ApprovalMonster.Core
         
         private void SaveVolumes()
         {
-            ES3.Save(KEY_MASTER_VOLUME, masterVolume);
-            ES3.Save(KEY_BGM_VOLUME, bgmVolume);
-            ES3.Save(KEY_SE_VOLUME, seVolume);
+            ES3.Save(KEY_MASTER_VOLUME, masterVolume, GetSaveSettings());
+            ES3.Save(KEY_BGM_VOLUME, bgmVolume, GetSaveSettings());
+            ES3.Save(KEY_SE_VOLUME, seVolume, GetSaveSettings());
+            SyncSave();
+        }
+
+        // WebGLでの永続化を確実にするため、明示的にCacheを使用する設定
+        private ES3Settings GetSaveSettings()
+        {
+            return new ES3Settings(ES3.Location.Cache);
+        }
+
+        private void SyncSave()
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            try
+            {
+                ES3.StoreCachedFile();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[AudioManager] SyncSave failed: {e.Message}");
+            }
+#endif
         }
     }
 }
-

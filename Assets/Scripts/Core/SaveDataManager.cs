@@ -29,10 +29,23 @@ namespace ApprovalMonster.Core
         private void SyncSave()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            // WebGLの場合、変更を即座にIndexedDBに同期させる
-            ES3.StoreCachedFile();
-            Debug.Log("[SaveDataManager] Synced to IndexedDB (WebGL)");
+            try
+            {
+                // WebGLの場合、変更を即座にIndexedDBに同期させる
+                ES3.StoreCachedFile();
+                Debug.Log("[SaveDataManager] Synced to IndexedDB (WebGL)");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[SaveDataManager] SyncSave failed: {e.Message}");
+            }
 #endif
+        }
+
+        // WebGLでの永続化を確実にするため、明示的にCacheを使用する設定
+        private ES3Settings GetSaveSettings()
+        {
+            return new ES3Settings(ES3.Location.Cache);
         }
 
         public void SaveHighScore(long score)
@@ -40,23 +53,23 @@ namespace ApprovalMonster.Core
             long current = LoadHighScore();
             if (score > current)
             {
-                ES3.Save(KEY_HIGHSCORE, score);
+                ES3.Save(KEY_HIGHSCORE, score, GetSaveSettings());
                 SyncSave();
             }
         }
 
         public long LoadHighScore()
         {
-            return ES3.Load(KEY_HIGHSCORE, 0L);
+            return ES3.Load(KEY_HIGHSCORE, 0L, GetSaveSettings());
         }
 
         public void SaveStageClear(string stageName)
         {
-            List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>());
+            List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>(), GetSaveSettings());
             if (!cleared.Contains(stageName))
             {
                 cleared.Add(stageName);
-                ES3.Save(KEY_CLEARED_STAGES, cleared);
+                ES3.Save(KEY_CLEARED_STAGES, cleared, GetSaveSettings());
                 SyncSave();
                 Debug.Log($"[SaveDataManager] Stage '{stageName}' saved as cleared. Total cleared: {cleared.Count}");
             }
@@ -68,7 +81,7 @@ namespace ApprovalMonster.Core
 
         public bool IsStageCleared(string stageName)
         {
-             List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>());
+             List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>(), GetSaveSettings());
              bool isCleared = cleared.Contains(stageName);
              return isCleared;
         }
@@ -84,7 +97,7 @@ namespace ApprovalMonster.Core
             
             if (score > currentHighScore)
             {
-                ES3.Save(key, score);
+                ES3.Save(key, score, GetSaveSettings());
                 SyncSave();
                 Debug.Log($"[SaveDataManager] New high score for '{stageName}': {score} (previous: {currentHighScore})");
                 return true;
@@ -102,7 +115,7 @@ namespace ApprovalMonster.Core
         public long LoadStageHighScore(string stageName)
         {
             string key = $"HighScore_{stageName}";
-            return ES3.Load(key, 0L);
+            return ES3.Load(key, 0L, GetSaveSettings());
         }
         
         /// <summary>
@@ -110,7 +123,7 @@ namespace ApprovalMonster.Core
         /// </summary>
         public int GetClearedStageCount()
         {
-            List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>());
+            List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>(), GetSaveSettings());
             return cleared.Count;
         }
         
