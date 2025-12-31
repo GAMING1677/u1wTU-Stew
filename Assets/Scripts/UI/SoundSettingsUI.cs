@@ -53,40 +53,53 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void Show()
         {
-            if (settingsPanel == null) return;
+            Debug.Log("[SoundSettingsUI] Show() called");
+            
+            if (settingsPanel == null)
+            {
+                Debug.LogError("[SoundSettingsUI] settingsPanel is null!");
+                return;
+            }
             
             var audio = Core.AudioManager.Instance;
             if (audio == null)
             {
                 Debug.LogError("[SoundSettingsUI] AudioManager.Instance is null!");
+                // AudioManagerがなくても開けるようにする（仮）
+                settingsPanel.SetActive(true);
+                Debug.Log("[SoundSettingsUI] Panel opened without AudioManager");
                 return;
             }
+            
+            Debug.Log("[SoundSettingsUI] Opening panel with AudioManager");
+            Debug.Log($"[SoundSettingsUI] settingsPanel: name={settingsPanel.name}, InstanceID={settingsPanel.GetInstanceID()}");
+            Debug.Log($"[SoundSettingsUI] Before: panel.active={settingsPanel.activeSelf}, canvasGroup.alpha={(canvasGroup != null ? canvasGroup.alpha.ToString() : "null")}, scale={(panelTransform != null ? panelTransform.localScale.ToString() : "null")}");
             
             settingsPanel.SetActive(true);
             
             // スライダーの初期値を設定
             InitializeSliders(audio);
             
+            // アニメーションを一時的に無効化してテスト
             // スケールアニメーション（ポップイン）
             if (panelTransform != null)
             {
                 panelTransform.DOKill();
-                panelTransform.localScale = Vector3.one * closeScale;
-                panelTransform.DOScale(openScale, fadeDuration).SetEase(openEase);
+                panelTransform.localScale = Vector3.one * openScale; // 即座に最終サイズに
             }
             
-            // フェードイン
+            // フェードイン - 一時的にアニメーションなしで即座に表示
             if (canvasGroup != null)
             {
-                canvasGroup.alpha = 0f;
-                canvasGroup.blocksRaycasts = false;
                 canvasGroup.DOKill();
-                canvasGroup.DOFade(1f, fadeDuration).OnComplete(() => {
-                    canvasGroup.blocksRaycasts = true;
-                });
+                canvasGroup.alpha = 1f; // 即座に不透明に
+                canvasGroup.blocksRaycasts = true;
             }
             
+            Debug.Log($"[SoundSettingsUI] After: panel.active={settingsPanel.activeSelf}, canvasGroup.alpha={(canvasGroup != null ? canvasGroup.alpha.ToString() : "null")}");
+            
             audio.PlaySE(Data.SEType.ButtonClick);
+            Debug.Log("[SoundSettingsUI] Show() completed");
         }
         
         /// <summary>
@@ -94,6 +107,9 @@ namespace ApprovalMonster.UI
         /// </summary>
         public void Hide()
         {
+            Debug.Log("[SoundSettingsUI] Hide() called!");
+            Debug.Log($"[SoundSettingsUI] Hide() StackTrace:\n{System.Environment.StackTrace}");
+            
             if (settingsPanel == null) return;
             
             // 閉じるボタンのリアクション
@@ -116,6 +132,7 @@ namespace ApprovalMonster.UI
                 canvasGroup.DOKill();
                 canvasGroup.DOFade(0f, fadeDuration).OnComplete(() => {
                     settingsPanel.SetActive(false);
+                    Debug.Log("[SoundSettingsUI] Panel set to inactive via DOFade.OnComplete");
                 });
             }
             else
