@@ -78,7 +78,7 @@ namespace ApprovalMonster.Core
         // ========== 無限ターン防止システム ==========
         private int turnCardPlayCount = 0; // 今ターンのカードプレイ総回数
         private int totalCardsPlayed = 0; // 全体カードプレイ回数
-        private const int MAX_CARD_PLAYS_PER_TURN = 20; // ターン内最大使用回数
+        private const int MAX_CARD_PLAYS_PER_TURN = 10; // ターン内最大使用回数
 
         private void Awake()
         {
