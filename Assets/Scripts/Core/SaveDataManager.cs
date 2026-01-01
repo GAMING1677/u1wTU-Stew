@@ -120,11 +120,34 @@ namespace ApprovalMonster.Core
         
         /// <summary>
         /// クリア済みステージの数を取得
+        /// 実際にStageManagerに存在するステージのみをカウントすることで、
+        /// ゴミデータや不正なデータの混入を防ぐ
         /// </summary>
         public int GetClearedStageCount()
         {
             List<string> cleared = ES3.Load(KEY_CLEARED_STAGES, new List<string>(), GetSaveSettings());
-            return cleared.Count;
+            
+            if (StageManager.Instance == null)
+            {
+                // フォールバック: StageManagerがない場合はそのまま数を返す
+                // (通常はありえないが、単体テスト時などへの配慮)
+                return cleared.Count;
+            }
+            
+            int validClearCount = 0;
+            
+            // 全ステージリストと照合
+            foreach (var stage in StageManager.Instance.allStages)
+            {
+                if (stage == null) continue;
+                
+                if (cleared.Contains(stage.stageName))
+                {
+                    validClearCount++;
+                }
+            }
+            
+            return validClearCount;
         }
         
         /// <summary>
