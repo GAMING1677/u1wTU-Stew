@@ -27,6 +27,8 @@ namespace ApprovalMonster.Core
         public bool WasStageCleared { get; set; }
         public bool IsScoreAttackMode { get; set; } // clearConditionがnullまたはhasScoreGoal=false
         public bool IsNewHighScore { get; set; } // 新記録達成フラグ
+        public bool IsMaxScore { get; set; } // カンスト達成フラグ
+        public int TotalCardsPlayed { get; set; } // 総カードプレイ回数
 
         private void Awake()
         {

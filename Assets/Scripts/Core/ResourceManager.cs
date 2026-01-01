@@ -29,6 +29,10 @@ namespace ApprovalMonster.Core
         public int MaxMental => settings != null ? settings.maxMental : 10;
 
         private bool hasTriggeredMonsterMode = false;
+        
+        // ========== スコア上限システム ==========
+        public const long MAX_SCORE = 999_999_999L; // カンスト値
+        private bool hasNotifiedMaxScore = false;
 
         [Header("Events")]
         public UnityEvent<int> onFollowersChanged;
@@ -66,6 +70,7 @@ namespace ApprovalMonster.Core
             // Re-initialize flags
             isMonsterMode = false;
             hasTriggeredMonsterMode = false;
+            hasNotifiedMaxScore = false; // スコア上限通知フラグリセット
             
             // Reset flaming
             flamingSeeds = 0;
@@ -104,6 +109,21 @@ namespace ApprovalMonster.Core
             
             long gained = (long)(currentFollowers * finalRate);
             totalImpressions += gained;
+            
+            // ========== スコア上限チェック ==========
+            if (totalImpressions >= MAX_SCORE)
+            {
+                totalImpressions = MAX_SCORE;
+                
+                // 初回到達時のみ通知
+                if (!hasNotifiedMaxScore)
+                {
+                    hasNotifiedMaxScore = true;
+                    GameManager.Instance?.NotifyMaxScoreReached();
+                    Debug.Log($"[ResourceManager] MAX SCORE REACHED: {MAX_SCORE:N0}");
+                }
+            }
+            
             onImpressionsChanged?.Invoke(totalImpressions);
             
             // Notify gain if positive
@@ -272,6 +292,15 @@ namespace ApprovalMonster.Core
             flamingLevel = 0;
             isOnFire = false;
             onFlamingChanged?.Invoke(0, 0, false);
+        }
+        
+        /// <summary>
+        /// スコア上限通知フラグのリセット（デバッグ用）
+        /// </summary>
+        public void ResetMaxScoreFlag()
+        {
+            hasNotifiedMaxScore = false;
+            Debug.Log("[ResourceManager] Max score flag reset");
         }
     }
 }

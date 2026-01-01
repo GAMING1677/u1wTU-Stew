@@ -1,6 +1,7 @@
 using UnityEngine;
 using ApprovalMonster.Data;
 using NaughtyAttributes;
+using System.Collections.Generic;
 #if UNITY_WEBGL && !UNITY_EDITOR
 using unityroom.Api;
 #endif
@@ -73,6 +74,11 @@ namespace ApprovalMonster.Core
             GUIUtility.systemCopyBuffer = statsTextOutput;
             Debug.Log("[GameManager] Stats copied to clipboard!");
         }
+
+        // ========== 無限ターン防止システム ==========
+        private int turnCardPlayCount = 0; // 今ターンのカードプレイ総回数
+        private int totalCardsPlayed = 0; // 全体カードプレイ回数
+        private const int MAX_CARD_PLAYS_PER_TURN = 20; // ターン内最大使用回数
 
         private void Awake()
         {
@@ -283,7 +289,9 @@ namespace ApprovalMonster.Core
                 SceneNavigator.Instance.WasStageCleared = false; // Game over = failed
                 SceneNavigator.Instance.IsScoreAttackMode = isScoreAttack;
                 SceneNavigator.Instance.IsNewHighScore = isNewHighScore;
-                Debug.Log($"[GameManager] Saved game over score: {score}, cleared=false, newRecord={isNewHighScore}");
+                SceneNavigator.Instance.TotalCardsPlayed = totalCardsPlayed;
+                SceneNavigator.Instance.IsMaxScore = (score >= ResourceManager.MAX_SCORE);
+                Debug.Log($"[GameManager] Saved game over score: {score}, cleared=false, newRecord={isNewHighScore}, totalCards={totalCardsPlayed}");
             }
             
             // Navigate directly to result scene
@@ -402,7 +410,9 @@ namespace ApprovalMonster.Core
                 SceneNavigator.Instance.WasStageCleared = wasCleared;
                 SceneNavigator.Instance.IsScoreAttackMode = isScoreAttack;
                 SceneNavigator.Instance.IsNewHighScore = isNewHighScore;
-                Debug.Log($"[GameManager] Saved finish score: {score}, cleared={wasCleared}, isScoreAttack={isScoreAttack}, newRecord={isNewHighScore}");
+                SceneNavigator.Instance.TotalCardsPlayed = totalCardsPlayed;
+                SceneNavigator.Instance.IsMaxScore = (score >= ResourceManager.MAX_SCORE);
+                Debug.Log($"[GameManager] Saved finish score: {score}, cleared={wasCleared}, isScoreAttack={isScoreAttack}, newRecord={isNewHighScore}, totalCards={totalCardsPlayed}");
             }
             
             // Navigate directly to result scene
@@ -462,6 +472,31 @@ namespace ApprovalMonster.Core
                 ClearStage();
             }
         }
+        
+        /// <summary>
+        /// スコア上限（カンスト）到達時の通知（ResourceManagerから呼ばれる）
+        /// ゲームは終了せず続行
+        /// </summary>
+        public void NotifyMaxScoreReached()
+        {
+            Debug.Log($"[GameManager] NotifyMaxScoreReached called. totalCardsPlayed={totalCardsPlayed}");
+            
+            var uiManager = FindObjectOfType<UI.UIManager>();
+            
+            // 一時的なポップアップ通知（6秒表示）
+            string message = $"★スコア上限達成！★\nスコア: {ResourceManager.MAX_SCORE:N0}\nNEXTボタンを連打するなどしてゲームを終了させてください\n(時間経過でこのカットインは自動で消えます)";
+            uiManager?.ShowNotification(message, 6f);
+            
+            // 常時表示UI（ゲーム終了まで表示し続ける）
+            uiManager?.ShowMaxScoreIndicator(totalCardsPlayed);
+            
+            // リザルト用に保存
+            if (SceneNavigator.Instance != null)
+            {
+                SceneNavigator.Instance.IsMaxScore = true;
+                SceneNavigator.Instance.TotalCardsPlayed = totalCardsPlayed;
+            }
+        }
 
 
         public void ResetGame()
@@ -504,6 +539,10 @@ namespace ApprovalMonster.Core
             isMonsterModeFromTurnEnd = false;
             shouldTriggerMonsterModeAfterCutIn = false;
             
+            // 7. Reset card play counters
+            totalCardsPlayed = 0;
+            turnCardPlayCount = 0;
+            
             // 7. Remove event listeners to prevent duplicates on next StartGame
             if (turnManager != null)
             {
@@ -528,6 +567,7 @@ namespace ApprovalMonster.Core
                 uiManager.StopCharacterReaction(); // Stop any playing animations
                 uiManager.ClearTimeline(); // Clear timeline posts
                 uiManager.ResetEndTurnButtonPulse(); // Reset pulse animation
+                uiManager.HideMaxScoreIndicator(); // カンスト表示をリセット
                 // NOTE: RefreshTrackedCardUI is called in StartGame after currentStage is updated
                 Debug.Log("[GameManager] Reset UI state (character, timeline, pulse)");
             }
@@ -572,6 +612,10 @@ namespace ApprovalMonster.Core
             
             // Reset flaming state for new turn (seeds persist)
             resourceManager.ResetFlamingTurn();
+            
+            // ========== ターン内カードプレイカウンターをリセット ==========
+            turnCardPlayCount = 0;
+            Debug.Log("[GameManager] Card play counter reset for new turn");
         }
 
         private void OnTurnEnd()
@@ -830,6 +874,17 @@ namespace ApprovalMonster.Core
             if (turnManager.CurrentPhase != TurnManager.TurnPhase.PlayerAction)
             {
                 Debug.Log($"[GameManager] BLOCKED: Wrong phase ({turnManager.CurrentPhase} != PlayerAction)");
+                return;
+            }
+
+            // ========== Turn Limit Check (無限ターン防止) ==========
+            if (turnCardPlayCount >= MAX_CARD_PLAYS_PER_TURN)
+            {
+                Debug.Log($"[GameManager] BLOCKED: Turn limit reached ({turnCardPlayCount}/{MAX_CARD_PLAYS_PER_TURN})");
+                
+                var uiManager = FindObjectOfType<UI.UIManager>();
+                uiManager?.ShowNotification($"1ターンのカードプレイ回数上限に到達しました（{MAX_CARD_PLAYS_PER_TURN}/{MAX_CARD_PLAYS_PER_TURN}）");
+                
                 return;
             }
 
@@ -1241,6 +1296,12 @@ namespace ApprovalMonster.Core
             // スコアクリア条件をチェック（カードプレイ後）
             CheckScoreClear();
             
+            // ========== カードプレイカウンター増加 ==========
+            turnCardPlayCount++;
+            totalCardsPlayed++;
+            
+            Debug.Log($"[GameManager] Card played: {card.cardName}. This turn: {turnCardPlayCount}, Total: {totalCardsPlayed}");
+            
             // Player must click End Turn button to proceed (no automatic turn end)
 
 
@@ -1391,7 +1452,7 @@ namespace ApprovalMonster.Core
         {
             switch (risk)
             {
-                case RiskType.Flaming:
+                 case RiskType.Flaming:
                     resourceManager.DamageMental(value);
                     break;
                 case RiskType.LoseFollower:
@@ -1404,6 +1465,70 @@ namespace ApprovalMonster.Core
             }
         }
         
+        // ========== Inspectorテストメソッド ==========
+        
+        [ContextMenu("Test: Add 10 Cards This Turn")]
+        private void Test_Add10Cards()
+        {
+            turnCardPlayCount += 10;
+            totalCardsPlayed += 10;
+            Debug.Log($"[TEST] Added 10 cards. This turn: {turnCardPlayCount}, Total: {totalCardsPlayed}");
+        }
+        
+        [ContextMenu("Test: Reset Card Counter")]
+        private void Test_ResetCardCounter()
+        {
+            totalCardsPlayed = 0;
+            turnCardPlayCount = 0;
+            Debug.Log("[TEST] Card counters reset");
+        }
+        
+        [ContextMenu("Test: Set Turn Count to 29 (30回制限テスト)")]
+        private void Test_SetTurnCountTo29()
+        {
+            turnCardPlayCount = 29;
+            Debug.Log($"[TEST] turnCardPlayCount set to 29. Next card will be 30/30, then blocked.");
+        }
+        
+        [ContextMenu("Test: Show Turn Limit Notification")]
+        private void Test_ShowTurnLimitNotification()
+        {
+            var uiManager = FindObjectOfType<UI.UIManager>();
+            uiManager?.ShowNotification($"1ターンのカードプレイ回数上限に到達しました（上限：{MAX_CARD_PLAYS_PER_TURN}回）");
+        }
+        
+        [ContextMenu("Test: Set Score Near Max (999,999,990)")]
+        private void Test_SetScoreNearMax()
+        {
+            if (resourceManager != null)
+            {
+                resourceManager.totalImpressions = ResourceManager.MAX_SCORE - 10;
+                Debug.Log($"[TEST] Score set to {resourceManager.totalImpressions:N0}. Play a card to reach max.");
+            }
+        }
+        
+        [ContextMenu("Test: Trigger Max Score Notification")]
+        private void Test_TriggerMaxScoreNotification()
+        {
+            NotifyMaxScoreReached();
+        }
+        
+        [ContextMenu("Test: Damage Mental 10")]
+        private void Test_DamageMental10()
+        {
+            if (resourceManager != null)
+            {
+                resourceManager.DamageMental(10);
+                Debug.Log($"[TEST] Damaged 10 mental. Current: {resourceManager.currentMental}");
+            }
+        }
+        
+        [ContextMenu("Test: Reset Max Score Flag")]
+        private void Test_ResetMaxScoreFlag()
+        {
+            resourceManager?.ResetMaxScoreFlag();
+            Debug.Log("[TEST] Max score flag reset");
+        }
 
     }
     

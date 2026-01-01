@@ -129,6 +129,18 @@ namespace ApprovalMonster.UI
         // 追跡対象カード（ステージから設定）
         private CardData trackedCard;
         
+        [Header("Notification Banner")]
+        [Tooltip("通知バナーのパネル（ターン制限・カンスト通知用）")]
+        [SerializeField] private GameObject notificationPanel;
+        [Tooltip("通知バナーのテキスト")]
+        [SerializeField] private TextMeshProUGUI notificationText;
+        
+        [Header("Max Score Indicator")]
+        [Tooltip("カンスト時に常時表示するUI")]
+        [SerializeField] private GameObject maxScoreIndicatorPanel;
+        [Tooltip("カンスト常時表示のテキスト")]
+        [SerializeField] private TextMeshProUGUI maxScoreIndicatorText;
+        
         private bool isSetup = false;
 
         private List<CardView> activeCards = new List<CardView>();
@@ -1589,6 +1601,59 @@ namespace ApprovalMonster.UI
             else
             {
                 Debug.LogWarning("[UIManager] TutorialPlayer is not assigned!");
+            }
+        }
+        
+        // ========== 通知バナーシステム ==========
+        
+        /// <summary>
+        /// 通知バナーを表示（自動非表示）
+        /// </summary>
+        public void ShowNotification(string message, float duration = 2.5f)
+        {
+            if (notificationPanel == null || notificationText == null)
+            {
+                Debug.LogWarning("[UIManager] Notification UI is not assigned!");
+                return;
+            }
+            
+            notificationText.text = message;
+            notificationPanel.SetActive(true);
+            
+            // 指定時間後に非表示
+            DOVirtual.DelayedCall(duration, () => {
+                if (notificationPanel != null)
+                {
+                    notificationPanel.SetActive(false);
+                }
+            });
+        }
+        
+        // ========== カンスト常時表示UI ==========
+        
+        /// <summary>
+        /// カンスト達成後に常時表示するUI
+        /// </summary>
+        public void ShowMaxScoreIndicator(int totalCardsPlayed)
+        {
+            if (maxScoreIndicatorPanel == null) return;
+            
+            if (maxScoreIndicatorText != null)
+            {
+                maxScoreIndicatorText.text = $"カンスト！";
+            }
+            maxScoreIndicatorPanel.SetActive(true);
+            Debug.Log($"[UIManager] Max score indicator shown. Cards: {totalCardsPlayed}");
+        }
+        
+        /// <summary>
+        /// カンスト表示UIを非表示（ゲームリセット時）
+        /// </summary>
+        public void HideMaxScoreIndicator()
+        {
+            if (maxScoreIndicatorPanel != null)
+            {
+                maxScoreIndicatorPanel.SetActive(false);
             }
         }
     }

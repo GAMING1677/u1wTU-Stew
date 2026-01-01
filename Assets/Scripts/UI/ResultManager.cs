@@ -36,9 +36,15 @@ namespace ApprovalMonster.UI
         [Tooltip("ハイスコア更新時に表示するテキスト")]
         [SerializeField] private TextMeshProUGUI newRecordText;
         
+        [Header("Max Score")]
+        [Tooltip("カンスト時のみ表示する追加情報テキスト")]
+        [SerializeField] private TextMeshProUGUI maxScoreInfoText;
+        
         private Coroutine animationCoroutine;
         private long currentScore = 0;
         private bool wasNewRecord = false;
+        private bool wasMaxScore = false;
+        private int totalCardsPlayed = 0;
 
         private void OnEnable()
         {
@@ -55,7 +61,9 @@ namespace ApprovalMonster.UI
                 wasCleared = SceneNavigator.Instance.WasStageCleared;
                 isScoreAttackMode = SceneNavigator.Instance.IsScoreAttackMode;
                 isNewHighScore = SceneNavigator.Instance.IsNewHighScore;
-                Debug.Log($"[ResultManager] Score: {score}, Cleared: {wasCleared}, ScoreAttack: {isScoreAttackMode}, NewRecord: {isNewHighScore}");
+                wasMaxScore = SceneNavigator.Instance.IsMaxScore;
+                totalCardsPlayed = SceneNavigator.Instance.TotalCardsPlayed;
+                Debug.Log($"[ResultManager] Score: {score}, Cleared: {wasCleared}, ScoreAttack: {isScoreAttackMode}, NewRecord: {isNewHighScore}, MaxScore: {wasMaxScore}, TotalCards: {totalCardsPlayed}");
             }
             else
             {
@@ -149,6 +157,9 @@ namespace ApprovalMonster.UI
                 tweetButton.onClick.AddListener(OnTweetButtonClicked);
             }
             
+            // カンスト時の追加情報表示
+            SetupMaxScoreDisplay(wasMaxScore, totalCardsPlayed);
+            
             // スコアを保存（ツイート用）
             currentScore = score;
             wasNewRecord = isNewHighScore;
@@ -213,6 +224,27 @@ namespace ApprovalMonster.UI
             }
         }
         
+        private void SetupMaxScoreDisplay(bool isMaxScore, int cardCount)
+        {
+            if (maxScoreInfoText == null) return;
+            
+            if (isMaxScore)
+            {
+                maxScoreInfoText.gameObject.SetActive(true);
+                maxScoreInfoText.text = $"★カンスト達成★\nカードプレイ枚数: {cardCount}枚";
+                
+                // アニメーション
+                maxScoreInfoText.transform.localScale = Vector3.zero;
+                maxScoreInfoText.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBack);
+                
+                Debug.Log($"[ResultManager] Displaying max score info: {cardCount} cards");
+            }
+            else
+            {
+                maxScoreInfoText.gameObject.SetActive(false);
+            }
+        }
+        
         private void StartSpriteAnimation()
         {
             if (animatedObject1 == null || animatedObject2 == null)
@@ -262,9 +294,20 @@ namespace ApprovalMonster.UI
             // クリアステージ数を取得
             int clearedStages = Core.SaveDataManager.Instance?.GetClearedStageCount() ?? 0;
             
-            // ツイート内容を構築（スコアは丸めずにカンマ区切りで表示）
+            // ツイート内容を構築
             string recordText = wasNewRecord ? "🎉NEW RECORD🎉\n" : "";
-            string tweetText = $"{recordText}インプレッションモンスターガールで遊んだよ！\nクリアステージ数：{clearedStages}\nスコア：{currentScore:N0}";
+            string tweetText;
+            
+            if (wasMaxScore)
+            {
+                // カンスト時の特別ツイート
+                tweetText = $"★カンスト達成！★\nインプレッションモンスターガールで遊んだよ！\nスコア：{currentScore:N0}\nカードプレイ回数：{totalCardsPlayed}枚";
+            }
+            else
+            {
+                // 通常ツイート
+                tweetText = $"{recordText}インプレッションモンスターガールで遊んだよ！\nクリアステージ数：{clearedStages}\nスコア：{currentScore:N0}";
+            }
             
             Debug.Log($"[ResultManager] Tweeting: {tweetText}");
             #if UNITY_WEBGL && !UNITY_EDITOR
