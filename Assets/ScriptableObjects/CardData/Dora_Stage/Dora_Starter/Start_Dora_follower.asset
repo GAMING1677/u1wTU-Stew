@@ -15,7 +15,7 @@ MonoBehaviour:
   cardName: "\u5DE8\u5927\u5316"
   cardImage: {fileID: -7370846112228509550, guid: 75bf769ed349bc246a61292849e825e7, type: 3}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC100\u4EBA\u5897\n\u706B\u7A2E\uFF0B2\n\u708E\u4E0A\u7387
-    5%"
+    3%"
   cardTag: 
   flavorText: "\u4E3B\u8A9E\u306E\u30C7\u30AB\u3055\u306F\u529B\u306E\u5F37\u3055"
   postComments:
@@ -53,6 +53,6 @@ MonoBehaviour:
   minPileCountImpressionRate: 0
   minPileCountFollowerRate: 0
   flamingSeedCount: 2
-  flamingRate: 0.05
+  flamingRate: 0.03
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
