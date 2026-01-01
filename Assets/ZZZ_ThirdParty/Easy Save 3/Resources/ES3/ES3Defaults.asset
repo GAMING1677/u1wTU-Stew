@@ -46,6 +46,11 @@ MonoBehaviour:
     - SingularityGroup.HotReload.Runtime.Public
     - ThirdParty
     - unityroom
+    - Utage
+    - Utage.RenderPipeline
+    - UtageForUrp
+    - UtageInputSystem
+    - UtageSample
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1

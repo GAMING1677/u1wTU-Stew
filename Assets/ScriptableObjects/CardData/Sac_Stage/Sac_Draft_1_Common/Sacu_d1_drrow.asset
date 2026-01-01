@@ -56,12 +56,6 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
-  drawPileCountImpressionRate: 0
-  discardPileCountImpressionRate: 0
-  drawPileCountFollowerRate: 0
-  discardPileCountFollowerRate: 0
-  minPileCountImpressionRate: 0
-  minPileCountFollowerRate: 0
   flamingSeedCount: 0
   flamingRate: 0
   seedToFollowerMultiplier: 0
