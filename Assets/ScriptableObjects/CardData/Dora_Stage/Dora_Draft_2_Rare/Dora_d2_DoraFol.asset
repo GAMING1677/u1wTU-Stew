@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u795E\u306F\u898B\u3066\u3044\u308B"
   cardImage: {fileID: -7370846112228509550, guid: 75bf769ed349bc246a61292849e825e7, type: 3}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C6\u4E07\u4EBA\u5897\u3048\u308B\n\u706B\u7A2E\uFF0B3\n\u708E\u4E0A\u738730%"
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C6\u4E07\u4EBA\u5897\u3048\u308B\n\u706B\u7A2E\uFF0B3\n\u708E\u4E0A\u738712%"
   cardTag: 
   flavorText: "\u795E\u69D8\u306F\u3044\u3064\u3082\u96A3\u306B\u3044\u308B\u3088"
   postComments:
@@ -54,6 +54,6 @@ MonoBehaviour:
   minPileCountImpressionRate: 0
   minPileCountFollowerRate: 0
   flamingSeedCount: 3
-  flamingRate: 0.3
+  flamingRate: 0.12
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
