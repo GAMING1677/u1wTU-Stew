@@ -1,13 +1,17 @@
-# Project Status: u1wTU-Stew
+# プロジェクトステータス: Approval Monster (u1wTU-Stew)
 
-## Current Phase: 1. Planning & Concept
-The project is in its initial setup phase. We are currently waiting to define the core game concept.
+## 現在のフェーズ: 2. 実装 & 調整 (Implementation & Tuning)
+コアメカニクス（カードバトル、リソース管理）の実装が完了し、現在UIのブラッシュアップとコンテンツ（カード、ステージ）の拡充、ゲームバランスの調整を行っている段階です。
 
-## Todo List
-- [ ] **Define Game Concept** (Genre, Core Mechanics, Target)
-- [ ] Create MVP Feature List
-- [ ] Draft Implementation Plan
-- [ ] Begin Development (Phase 3)
+## Todo リスト
+- [x] **ゲームコンセプト定義** (SNS承認欲求 x デッキ構築)
+- [x] MVP機能の実装 (カードプレイ、ターン進行)
+- [x] UIシステムの構築 (デッキ確認、チュートリアル、設定)
+- [x] リポジトリ・開発環境セットアップ
+- [ ] ゲームバランス調整 (カード効果、ノルマ設定)
+- [ ] コンテンツ拡充 (カード種類、ステージ追加)
+- [ ] バグ修正とポリッシュ
 
-## Log
-- **2025-12-21**: Project initialized. Git setup complete. Previous project context ("Annual Income Game") discarded in favor of a fresh start.
+## 開発ログ
+- **2026-01-02**: ドキュメント整備 (`game_design_spec.md`, `scripts_documentation.md` 作成). 既存コードの解析完了.
+- **2025-12-21**: プロジェクト初期化. Gitセットアップ完了. "Annual Income Game" のコンセプトを破棄し、新規プロジェクトとして開始.

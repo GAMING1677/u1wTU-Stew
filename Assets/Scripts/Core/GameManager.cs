@@ -988,6 +988,8 @@ namespace ApprovalMonster.Core
                             resourceManager.TryTriggerFlaming(1.0f);
                             flamingTriggeredThisCard = true;
                             Debug.Log("[GameManager] Gamble card: FLAMING TRIGGERED! No score.");
+                            // 炎上カットイン表示
+                            FindObjectOfType<UI.UIManager>()?.ShowCutIn("炎上！", $"ターン終了時に {resourceManager.flamingLevel} ダメージ");
                         }
                         else
                         {
@@ -1034,6 +1036,20 @@ namespace ApprovalMonster.Core
                         flamingTriggeredThisCard = true;
                         // TODO: 炎上カットイン表示
                         FindObjectOfType<UI.UIManager>()?.ShowCutIn("炎上！", $"ターン終了時に {resourceManager.flamingLevel} ダメージ");
+                    }
+                }
+            }
+            // 4. flamingRateのみを持つカード（種加算なし）での炎上判定
+            else if (card.flamingRate > 0 && !resourceManager.isOnFire)
+            {
+                // 既存の種があれば炎上判定を行う
+                if (resourceManager.flamingSeeds > 0)
+                {
+                    if (resourceManager.TryTriggerFlaming(card.flamingRate))
+                    {
+                        flamingTriggeredThisCard = true;
+                        FindObjectOfType<UI.UIManager>()?.ShowCutIn("炎上！", $"ターン終了時に {resourceManager.flamingLevel} ダメージ");
+                        Debug.Log($"[GameManager] FlamingRate-only card triggered flaming!");
                     }
                 }
             }

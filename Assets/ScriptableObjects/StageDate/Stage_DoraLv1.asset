@@ -32,16 +32,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 65d7f74469fa00c43b4df11c4b296018, type: 2}
   - {fileID: 11400000, guid: 6b5b5bd4bf632f74688cf9a4ffc08e8b, type: 2}
   - {fileID: 11400000, guid: fcf63e9b65708a345a6300b5cc9ededd, type: 2}
-  - {fileID: 11400000, guid: 6b5b5bd4bf632f74688cf9a4ffc08e8b, type: 2}
   - {fileID: 11400000, guid: dfc4565706c5c0b439f4e2ce83c01c1e, type: 2}
   - {fileID: 11400000, guid: cdc8b5729b3424f429d3664d777a1396, type: 2}
-  - {fileID: 11400000, guid: 9abd6eb2a22648f469c11903f7198983, type: 2}
+  - {fileID: 11400000, guid: 2dbeb21e513c49747877a747be014ac1, type: 2}
   - {fileID: 11400000, guid: b13f29ddd470205448ff84c5f0e406a5, type: 2}
   - {fileID: 11400000, guid: bfd6e3aefa3d3314f9eb339ea5302a0d, type: 2}
   - {fileID: 11400000, guid: 228faca90a700a74393232f155fbd8a6, type: 2}
   - {fileID: 11400000, guid: 26d2e408aadb99e4495df518355bd7ab, type: 2}
   - {fileID: 11400000, guid: bfed7d988106a0f49ae7fd3cb794fa12, type: 2}
   - {fileID: 11400000, guid: 0b2fd745e79c3a94c8adcf4c8fa934ad, type: 2}
+  - {fileID: 11400000, guid: 9abd6eb2a22648f469c11903f7198983, type: 2}
   - {fileID: 11400000, guid: bf1f60d204b1613438c827f0aabc6d6d, type: 2}
   - {fileID: 11400000, guid: b6c2bf33d3f17614fbbf5942be8b4d97, type: 2}
   monsterDeck:
