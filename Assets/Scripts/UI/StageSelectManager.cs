@@ -33,6 +33,9 @@ namespace ApprovalMonster.UI
             [Tooltip("ハイスコアを表示するテキスト（スコアアタック用）")]
             public TextMeshProUGUI highScoreText;
             
+            [Tooltip("ロック中に表示する鍵アイコン")]
+            public GameObject lockIcon;
+            
             [HideInInspector]
             public Tween pulseTween;
         }
@@ -147,6 +150,12 @@ namespace ApprovalMonster.UI
                 bool isUnlocked = CheckUnlockState(stageButton.stage);
                 stageButton.button.interactable = isUnlocked;
                 
+                // 鍵アイコンの表示/非表示（ロック中のみ表示）
+                if (stageButton.lockIcon != null)
+                {
+                    stageButton.lockIcon.SetActive(!isUnlocked);
+                }
+                
                 // アンロック済みならパルスアニメーション開始
                 if (isUnlocked)
                 {
@@ -214,6 +223,12 @@ namespace ApprovalMonster.UI
 
                 bool isUnlocked = CheckUnlockState(stageButton.stage);
                 stageButton.button.interactable = isUnlocked;
+                
+                // 鍵アイコンの表示/非表示（ロック中のみ表示）
+                if (stageButton.lockIcon != null)
+                {
+                    stageButton.lockIcon.SetActive(!isUnlocked);
+                }
                 
                 // アンロック状態に応じてパルスを制御
                 if (isUnlocked)

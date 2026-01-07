@@ -25,6 +25,71 @@ namespace ApprovalMonster.Core
                 Destroy(gameObject);
             }
         }
+        
+        private void Start()
+        {
+            // 起動時に異常スコアをクリーンアップ
+            // StageManagerの初期化後に実行するため、遅延呼び出し
+            StartCoroutine(CleanupAfterDelay());
+        }
+        
+        private System.Collections.IEnumerator CleanupAfterDelay()
+        {
+            // StageManagerの初期化を待つ
+            yield return null;
+            CleanupInvalidScores();
+        }
+        
+        /// <summary>
+        /// 異常なスコアデータを削除
+        /// </summary>
+        private void CleanupInvalidScores()
+        {
+            if (StageManager.Instance == null)
+            {
+                Debug.LogWarning("[SaveDataManager] StageManager not ready, skipping cleanup");
+                return;
+            }
+            
+            int deletedCount = 0;
+            
+            // ステージ別ハイスコアをチェック
+            foreach (var stage in StageManager.Instance.allStages)
+            {
+                if (stage == null) continue;
+                
+                string key = $"HighScore_{stage.stageName}";
+                if (ES3.KeyExists(key, GetSaveSettings()))
+                {
+                    long score = ES3.Load<long>(key, GetSaveSettings());
+                    if (score > ResourceManager.MAX_SCORE)
+                    {
+                        ES3.DeleteKey(key, GetSaveSettings());
+                        Debug.Log($"[SaveDataManager] Deleted invalid score {score} for '{stage.stageName}'");
+                        deletedCount++;
+                    }
+                }
+            }
+            
+            // グローバルハイスコアもチェック
+            long globalScore = LoadHighScore();
+            if (globalScore > ResourceManager.MAX_SCORE)
+            {
+                ES3.DeleteKey(KEY_HIGHSCORE, GetSaveSettings());
+                Debug.Log($"[SaveDataManager] Deleted invalid global high score {globalScore}");
+                deletedCount++;
+            }
+            
+            if (deletedCount > 0)
+            {
+                SyncSave();
+                Debug.Log($"[SaveDataManager] Cleanup complete. Deleted {deletedCount} invalid scores.");
+            }
+            else
+            {
+                Debug.Log("[SaveDataManager] Cleanup complete. No invalid scores found.");
+            }
+        }
 
         private void SyncSave()
         {
@@ -111,11 +176,23 @@ namespace ApprovalMonster.Core
         
         /// <summary>
         /// ステージ別ハイスコアを読み込み
+        /// MAX_SCOREを超える異常値は自動削除
         /// </summary>
         public long LoadStageHighScore(string stageName)
         {
             string key = $"HighScore_{stageName}";
-            return ES3.Load(key, 0L, GetSaveSettings());
+            long score = ES3.Load(key, 0L, GetSaveSettings());
+            
+            // 異常値チェック: MAX_SCOREを超えていたら0にリセット
+            if (score > ResourceManager.MAX_SCORE)
+            {
+                Debug.LogWarning($"[SaveDataManager] Invalid score {score} for '{stageName}', resetting to 0");
+                ES3.DeleteKey(key, GetSaveSettings());
+                SyncSave();
+                return 0;
+            }
+            
+            return score;
         }
         
         /// <summary>

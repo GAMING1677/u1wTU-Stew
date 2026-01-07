@@ -358,6 +358,43 @@ namespace ApprovalMonster.UI
                     int clearedCount = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetClearedStageCount() : 0;
                     long totalHighScore = Core.SaveDataManager.Instance != null ? Core.SaveDataManager.Instance.GetTotalScoreAttackHighScore() : 0;
                     
+                    // クリア可能ステージ数（hasScoreGoal=true）とスコアアタックステージ数をカウント
+                    int clearableStageCount = 0;
+                    int scoreAttackStageCount = 0;
+                    if (Core.StageManager.Instance != null)
+                    {
+                        foreach (var stage in Core.StageManager.Instance.allStages)
+                        {
+                            if (stage?.clearCondition != null)
+                            {
+                                if (stage.clearCondition.hasScoreGoal)
+                                {
+                                    clearableStageCount++; // クリア可能ステージ
+                                }
+                                else
+                                {
+                                    scoreAttackStageCount++; // スコアアタックステージ
+                                }
+                            }
+                        }
+                    }
+                    int maxStages = clearableStageCount > 0 ? clearableStageCount : 100;
+                    long maxTotalScore = Core.ResourceManager.MAX_SCORE * scoreAttackStageCount;
+                    
+                    // 異常値チェック: 合計上限を超えるスコアは送信しない
+                    if (totalHighScore > maxTotalScore)
+                    {
+                        Debug.LogError($"[ResultManager] Invalid totalHighScore {totalHighScore} exceeds max {maxTotalScore}, skipping submission");
+                        return;
+                    }
+                    
+                    // クリア数の上限チェック（ステージ数を超えていたら上限値に補正）
+                    if (clearedCount > maxStages)
+                    {
+                        Debug.LogWarning($"[ResultManager] clearedCount {clearedCount} exceeds max stages {maxStages}, clamping to max");
+                        clearedCount = maxStages;
+                    }
+                    
                     unityroom.Api.UnityroomApiClient.Instance.SendScore(1, clearedCount, unityroom.Api.ScoreboardWriteMode.HighScoreDesc);
                     unityroom.Api.UnityroomApiClient.Instance.SendScore(2, totalHighScore, unityroom.Api.ScoreboardWriteMode.HighScoreDesc);
                     
