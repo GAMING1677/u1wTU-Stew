@@ -374,8 +374,9 @@ namespace ApprovalMonster.Core
                 Debug.Log($"[GameManager] Score goal check: {resourceManager.totalImpressions} >= {currentStage.clearCondition.targetScore} = {scoreAchieved}");
             }
             
-            // クリア判定：スコアゴールがない、またはスコアゴール達成した場合のみクリア
-            bool wasCleared = !hasScoreGoal || scoreAchieved;
+            // クリア判定：スコアゴールがあり、かつ達成した場合のみクリア
+            // スコアアタックステージ（hasScoreGoal=false）はクリア扱いにしない
+            bool wasCleared = hasScoreGoal && scoreAchieved;
             
             // セーブ：クリアした場合のみ記録
             if (wasCleared && SaveDataManager.Instance != null && currentStage != null)
