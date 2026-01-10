@@ -79,6 +79,21 @@ namespace ApprovalMonster.Core
         private int turnCardPlayCount = 0; // 今ターンのカードプレイ総回数
         private int totalCardsPlayed = 0; // 全体カードプレイ回数
         private const int MAX_CARD_PLAYS_PER_TURN = 10; // ターン内最大使用回数
+        
+        // ========== Zombie Deck Play Count Tracking ==========
+        private Dictionary<CardData, int> zombiePlayCounts = new Dictionary<CardData, int>();
+        
+        private int GetZombiePlayCount(CardData card)
+        {
+            return zombiePlayCounts.TryGetValue(card, out int count) ? count : 0;
+        }
+        
+        private void IncrementZombiePlayCount(CardData card)
+        {
+            if (!zombiePlayCounts.ContainsKey(card))
+                zombiePlayCounts[card] = 0;
+            zombiePlayCounts[card]++;
+        }
 
         private void Awake()
         {
@@ -152,6 +167,7 @@ namespace ApprovalMonster.Core
                     uiManager.SetupClearGoal();
                     uiManager.RefreshTrackedCardUI(); // 追跡カードUIをステージに合わせて更新
                     uiManager.SetupFlamingUI(); // 炎上UIをステージに合わせて更新
+                    uiManager.SetupInfectionUI(); // 感染度UIをステージに合わせて更新
                 }
             }
             else
@@ -543,6 +559,7 @@ namespace ApprovalMonster.Core
             // 7. Reset card play counters
             totalCardsPlayed = 0;
             turnCardPlayCount = 0;
+            zombiePlayCounts.Clear(); // Reset zombie play count tracking
             
             // 7. Remove event listeners to prevent duplicates on next StartGame
             if (turnManager != null)
@@ -642,6 +659,12 @@ namespace ApprovalMonster.Core
             int penalty = quotaMet ? 0 : CalculateQuotaPenalty(turnManager.CurrentTurnCount);
             int flamingDamage = resourceManager.ConsumeFlamingLevel();
             int totalDamage = penalty + flamingDamage;
+            
+            // ========== Infection Penalty (Zombie Deck) ==========
+            if (currentStage != null && currentStage.enableInfection)
+            {
+                resourceManager.ApplyInfectionPenalty();
+            }
             
             if (totalDamage > 0)
             {
@@ -1055,6 +1078,103 @@ namespace ApprovalMonster.Core
                 }
             }
             // ========== Flaming System End ==========
+            
+            // ========== Infection System (Zombie Deck) ==========
+            if (currentStage != null && currentStage.enableInfection)
+            {
+                // Apply infection change from card
+                if (card.infectionChange != 0)
+                {
+                    resourceManager.AddInfection(card.infectionChange);
+                }
+                
+                // Zombie Monster Card A: Reset infection and convert to impressions + followers
+                if (card.zombieResetInfection)
+                {
+                    float currentInfection = resourceManager.infectionRate;
+                    if (currentInfection > 0)
+                    {
+                        // Impression bonus
+                        if (card.zombieImpressionPerInfection > 0)
+                        {
+                            float bonusRate = currentInfection * card.zombieImpressionPerInfection;
+                            long gained = resourceManager.AddImpression(bonusRate);
+                            Debug.Log($"[GameManager] Zombie Card A: {currentInfection}% × {card.zombieImpressionPerInfection} = {bonusRate}% rate = {gained} impressions");
+                        }
+                        
+                        // Follower bonus
+                        if (card.zombieFollowerPerInfection > 0)
+                        {
+                            int followerGain = Mathf.FloorToInt(currentInfection * card.zombieFollowerPerInfection);
+                            if (followerGain > 0)
+                            {
+                                resourceManager.AddFollowers(followerGain);
+                                Debug.Log($"[GameManager] Zombie Card A: {currentInfection}% × {card.zombieFollowerPerInfection} = +{followerGain} followers");
+                            }
+                        }
+                        
+                        resourceManager.ResetInfection(card.zombieInfectionResetRate);
+                        Debug.Log($"[GameManager] Zombie Card A: Infection reduced by {card.zombieInfectionResetRate}% (from {currentInfection}%)");
+                    }
+                }
+                
+                // Zombie Monster Card B: Duplicate to draw pile based on infection %
+                if (card.zombieDuplicateOnPlay)
+                {
+                    float chance = resourceManager.infectionRate / 100f;
+                    if (Random.value < chance)
+                    {
+                        deckManager.AddCardToDrawPile(card);
+                        Debug.Log($"[GameManager] Zombie Card B: Duplicated! ({resourceManager.infectionRate}% chance)");
+                    }
+                    else
+                    {
+                        Debug.Log($"[GameManager] Zombie Card B: No duplication ({resourceManager.infectionRate}% chance, roll failed)");
+                    }
+                }
+                
+                // Zombie Monster Card C: Transform hand card based on infection %
+                if (card.zombieTransformOnPlay)
+                {
+                    float chance = resourceManager.infectionRate / 100f;
+                    if (Random.value < chance && deckManager.hand.Count > 1)
+                    {
+                        // Find a card other than this one to transform
+                        var candidates = new List<CardData>();
+                        foreach (var c in deckManager.hand)
+                        {
+                            if (c != card) candidates.Add(c);
+                        }
+                        
+                        if (candidates.Count > 0)
+                        {
+                            var target = candidates[Random.Range(0, candidates.Count)];
+                            deckManager.RemoveCardFromHand(target);
+                            deckManager.AddCardToHand(card);
+                            Debug.Log($"[GameManager] Zombie Card C: Transformed {target.cardName} into {card.cardName}!");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log($"[GameManager] Zombie Card C: No transformation ({resourceManager.infectionRate}% chance)");
+                    }
+                }
+                
+                // Zombie Stacking Effect: Impression based on play count
+                if (card.zombieStackingImpressionRate > 0)
+                {
+                    // Increment FIRST so first play = 1 (not 0)
+                    IncrementZombiePlayCount(card);
+                    int playCount = GetZombiePlayCount(card);
+                    float stackedRate = playCount * card.zombieStackingImpressionRate;
+                    if (stackedRate > 0)
+                    {
+                        long gained = resourceManager.AddImpression(stackedRate);
+                        Debug.Log($"[GameManager] Zombie Stacking: {playCount} plays × {card.zombieStackingImpressionRate} = {stackedRate}% rate = {gained} impressions");
+                    }
+                }
+            }
+            // ========== Infection System End ==========
 
             // Mental cost (positive = hurt)
             if (card.mentalCost > 0)

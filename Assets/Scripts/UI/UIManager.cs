@@ -129,6 +129,18 @@ namespace ApprovalMonster.UI
         // 追跡対象カード（ステージから設定）
         private CardData trackedCard;
         
+        [Header("Infection UI")]
+        [Tooltip("感染度ゲージのFill Image（0-1でfillAmount設定）")]
+        [SerializeField] private Image infectionFillImage;
+        [Tooltip("感染度のテキスト表示（例: 25%）")]
+        [SerializeField] private TextMeshProUGUI infectionText;
+        [Tooltip("予測されるフォロワー減少数のテキスト")]
+        [SerializeField] private TextMeshProUGUI infectionPenaltyText;
+        [Tooltip("感染度UIのコンテナ（表示/非表示制御用）")]
+        [SerializeField] private GameObject infectionContainer;
+        [Tooltip("感染度リセット時のエフェクトUI")]
+        [SerializeField] private GainEffectUI infectionResetEffectUI;
+        
         [Header("Notification Banner")]
         [Tooltip("通知バナーのパネル（ターン制限・カンスト通知用）")]
         [SerializeField] private GameObject notificationPanel;
@@ -302,8 +314,19 @@ namespace ApprovalMonster.UI
                 gm.resourceManager.onFlamingChanged -= UpdateFlamingDisplay;
                 gm.resourceManager.onFlamingChanged += UpdateFlamingDisplay;
                 
+                // Infection event
+                gm.resourceManager.onInfectionChanged -= UpdateInfectionDisplay;
+                gm.resourceManager.onInfectionChanged += UpdateInfectionDisplay;
+                
+                // Infection reset event (for reshuffle effect)
+                gm.resourceManager.onInfectionReset -= ShowInfectionResetEffect;
+                gm.resourceManager.onInfectionReset += ShowInfectionResetEffect;
+                
                 // Flaming UIの表示設定（ここで確実にステージ情報が取れる）
                 SetupFlamingUI();
+                Debug.Log("[UIManager] OnEnable: About to call SetupInfectionUI()");
+                SetupInfectionUI();
+                Debug.Log("[UIManager] OnEnable: SetupInfectionUI() completed");
             }
             else
             {
@@ -321,6 +344,7 @@ namespace ApprovalMonster.UI
                  SetupCharacter(StageManager.Instance.SelectedStage.normalProfile);
                  SetupClearGoal(); // クリア目標の表示を設定
                  SetupFlamingUI(); // Flaming UIの表示/非表示を設定
+                 SetupInfectionUI(); // Infection UIの表示/非表示を設定
                  SetupTrackedCardUI(); // 追跡カードUIの設定
              }
              
@@ -410,6 +434,12 @@ namespace ApprovalMonster.UI
                  
                  // Flaming event
                  gm.resourceManager.onFlamingChanged -= UpdateFlamingDisplay;
+                 
+                 // Infection event
+                 gm.resourceManager.onInfectionChanged -= UpdateInfectionDisplay;
+                 
+                 // Infection reset event
+                 gm.resourceManager.onInfectionReset -= ShowInfectionResetEffect;
              }
         }
         
@@ -671,6 +701,99 @@ namespace ApprovalMonster.UI
             
             flamingContainer.SetActive(showFlaming);
             Debug.Log($"[UIManager] Flaming UI visibility set to: {showFlaming} (stage: {stage?.stageName ?? "null"})");
+        }
+        
+        // ========== Infection UI ==========
+        
+        /// <summary>
+        /// 感染度の表示を更新
+        /// </summary>
+        private void UpdateInfectionDisplay(float infectionRate)
+        {
+            // Fill image (0-100% -> 0-1)
+            if (infectionFillImage != null)
+            {
+                float fillAmount = infectionRate / 100f;
+                infectionFillImage.DOKill();
+                infectionFillImage.DOFillAmount(fillAmount, 0.3f);
+            }
+            
+            // Text display
+            if (infectionText != null)
+            {
+                infectionText.text = $"{infectionRate:F0}%";
+            }
+            
+            // Penalty prediction
+            if (infectionPenaltyText != null)
+            {
+                var gm = GameManager.Instance;
+                if (gm != null && gm.resourceManager != null)
+                {
+                    int penalty = gm.resourceManager.CalculateInfectionPenalty();
+                    infectionPenaltyText.text = penalty > 0 ? $"-{penalty:N0}" : "";
+                }
+            }
+            
+            Debug.Log($"[UIManager] Infection UI Updated: {infectionRate}%");
+        }
+        
+        /// <summary>
+        /// ステージ設定に基づいて感染度UIの表示/非表示を設定
+        /// </summary>
+        public void SetupInfectionUI()
+        {
+            Debug.Log($"[UIManager] SetupInfectionUI() CALLED. infectionContainer null? {infectionContainer == null}");
+            
+            if (infectionContainer == null)
+            {
+                Debug.LogWarning("[UIManager] SetupInfectionUI: infectionContainer is NULL, returning early");
+                return;
+            }
+            
+            var stage = StageManager.Instance?.SelectedStage;
+            Debug.Log($"[UIManager] SetupInfectionUI: StageManager.Instance null? {StageManager.Instance == null}, stage null? {stage == null}");
+            
+            if (stage != null)
+            {
+                Debug.Log($"[UIManager] SetupInfectionUI: stage.enableInfection = {stage.enableInfection}");
+            }
+            
+            bool showInfection = stage != null && stage.enableInfection;
+            
+            infectionContainer.SetActive(showInfection);
+            Debug.Log($"[UIManager] Infection UI visibility set to: {showInfection} (stage: {stage?.stageName ?? "null"})");
+            
+            // 初期値を表示
+            if (showInfection)
+            {
+                var gm = GameManager.Instance;
+                if (gm != null && gm.resourceManager != null)
+                {
+                    UpdateInfectionDisplay(gm.resourceManager.infectionRate);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 感染度リセット時のエフェクトを表示
+        /// </summary>
+        /// <param name="previousRate">リセット前の感染度</param>
+        /// <param name="reducedAmount">減少した量</param>
+        private void ShowInfectionResetEffect(float previousRate, float reducedAmount)
+        {
+            if (infectionResetEffectUI == null)
+            {
+                Debug.Log($"[UIManager] Infection reset: -{reducedAmount:F0}% (no effect UI assigned)");
+                return;
+            }
+            
+            // フォロワー増減と同様のエフェクト表示
+            string mainText = $"-{reducedAmount:F0}%";
+            string subText = "感染度リセット";
+            
+            infectionResetEffectUI.PlayEffect(mainText, subText);
+            Debug.Log($"[UIManager] Infection reset effect: {mainText} ({subText})");
         }
         
         /// <summary>

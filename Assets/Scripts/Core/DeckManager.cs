@@ -104,8 +104,47 @@ namespace ApprovalMonster.Core
             discardPile.Clear();
             ShuffleDrawPile();
             
+            // Infection reset on reshuffle (Zombie deck mechanic)
+            var currentStage = StageManager.Instance?.SelectedStage;
+            if (currentStage != null && currentStage.enableInfection)
+            {
+                var resourceManager = FindObjectOfType<ResourceManager>();
+                if (resourceManager != null)
+                {
+                    resourceManager.ResetInfection(currentStage.infectionResetRate);
+                    Debug.Log($"[DeckManager] Infection reduced by {currentStage.infectionResetRate}% on deck reshuffle");
+                }
+            }
+            
             // Notify deck count change
             OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
+        }
+        
+        /// <summary>
+        /// カードを山札のランダムな位置に追加（ゾンビカード増殖用）
+        /// </summary>
+        public void AddCardToDrawPile(CardData card)
+        {
+            int randomIndex = Random.Range(0, drawPile.Count + 1);
+            drawPile.Insert(randomIndex, card);
+            Debug.Log($"[DeckManager] Card added to draw pile at index {randomIndex}: {card.cardName}");
+            
+            // Notify deck count change
+            OnDeckCountChanged?.Invoke(drawPile.Count, discardPile.Count);
+        }
+        
+        /// <summary>
+        /// 手札のカードを削除（変質用）
+        /// </summary>
+        public bool RemoveCardFromHand(CardData card)
+        {
+            if (hand.Contains(card))
+            {
+                hand.Remove(card);
+                OnCardDiscarded?.Invoke(card);
+                return true;
+            }
+            return false;
         }
 
         public void DiscardHand()

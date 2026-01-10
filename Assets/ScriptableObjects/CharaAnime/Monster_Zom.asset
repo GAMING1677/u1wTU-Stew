@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb9c5475ef563924faa1fa463a384015, type: 3}
+  m_Name: Monster_Zom
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CharacterProfile
+  idleFrames: []
+  frameRate: 0.2
+  minIdleWait: 0.5
+  maxIdleWait: 2
+  reactionHappy_1: {fileID: 0}
+  reactionHappy_2: {fileID: 0}
+  reactionHappy_3: {fileID: 0}
+  reactionSad_1: {fileID: 0}
+  reactionSad_2: {fileID: 0}
+  reactionDuration: 1
+  seHappy_1: {fileID: 0}
+  seHappy_2: {fileID: 8300000, guid: 1536dfec33f7f42409317f6a18e53aa2, type: 3}
+  seHappy_3: {fileID: 8300000, guid: 72a2f03041388bc40a6f9589cc723699, type: 3}
+  seSad_1: {fileID: 8300000, guid: a0f19883d8d56324e975d991b9e6a9d9, type: 3}
+  seSad_2: {fileID: 8300000, guid: 70c960ee6a90af549a83049482295174, type: 3}

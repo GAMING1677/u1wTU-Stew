@@ -18,7 +18,7 @@ MonoBehaviour:
   requiredStages:
   - {fileID: 11400000, guid: 19248af1b8f7f9b49b9f9f243423090f, type: 2}
   stageName: "\u30C9\u30E9\u30B4\u30F3_Score"
-  stageStartPreset: {fileID: 11400000, guid: 758285aff1f19ab47bafc141d93ae994, type: 2}
+  stageStartPreset: {fileID: 11400000, guid: 409fd9526b5669f4281c45e492e86eaa, type: 2}
   motivationLowPreset: {fileID: 0}
   quotaScore: 100
   maxTurnCount: 30
@@ -49,6 +49,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3d1565b763ac0c948887ff3debb5bd60, type: 2}
   - {fileID: 11400000, guid: d8535f2c0acabd641b1f7640629c7669, type: 2}
   enableFlaming: 1
+  enableInfection: 0
+  infectionResetRate: 100
   monsterModePreset: {fileID: 11400000, guid: 3b8b2b8dd9a73744fad9b54db3ac55f6, type: 2}
   background: {fileID: 0}
   themeColor: {r: 1, g: 1, b: 1, a: 1}

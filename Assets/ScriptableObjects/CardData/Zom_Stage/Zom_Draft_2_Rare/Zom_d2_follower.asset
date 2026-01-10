@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
+  m_Name: Zom_d2_follower
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
+  cardName: "\u4EBA\u985E\u306E\u9AD8\u307F\u3078"
+  cardImage: {fileID: -6262493579803738195, guid: d0f58e86399a9de42b72af5e9107b676, type: 3}
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\u304C10\u4E07\u4EBA\u5897\u52A0"
+  cardTag: 
+  flavorText: "\u306A\u3093\u304B\u7159\u3044\u305E"
+  postComments:
+  - "\u6E7E\u5CB8\u306E\u666F\u8272\u3081\u3063\u3061\u3083\u7DBA\u9E97\uFF01"
+  - "\u9AD8\u5C64\u3060\u3068\u708A\u98EF\u5668\u306E\u304A\u7C73\u304A\u3044\u3057\u304F\u306A\u304F\u306A\u308B\u3093\u3060\u3088\u306D"
+  - "\u6D17\u6FEF\u7269\u3092\u5916\u306B\u5E72\u305B\u306A\u3044\u306E\u5730\u5473\u306B\u4E0D\u4FBF\u3060\u306A\u3041"
+  - "\u30A8\u30EC\u30D9\u30FC\u30BF\u30FC\u6DF7\u3093\u3067\u3066\u5BB6\u7740\u304F\u307E\u30675\u5206\u304B\u304B\u3063\u305F"
+  - "\u4E0A\u3082\u4E0B\u3082\u6A2A\u3082\u9759\u304B\u3059\u304E\u3066\u3001\u9006\u306B\u81EA\u5206\u306E\u751F\u6D3B\u97F3\u304C\u6C17\u306B\u306A\u308B\u300D"
+  - "\u300C\u5171\u7528\u90E8\u304C\u7DBA\u9E97\u3059\u304E\u3066\u9006\u306B\u6C17\u3092\u4F7F\u3046\u2026"
+  - "\u96F2\u304C\u8FD1\u3044\u65E5\u306E\u6E7F\u6C17\u3001\u5730\u4E0A\u3068\u9055\u3044\u3059\u304E\u3066\u7B11\u3046"
+  - "\u30B2\u30B9\u30C8\u30EB\u30FC\u30E0\u4FBF\u5229\u306A\u306E\u306B\u8AB0\u3082\u6CCA\u307E\u308A\u306B\u6765\u3066\u304F\u308C\u306A\u3044"
+  - "\u99C5\u8FD1\u3059\u304E\u3066\u904B\u52D5\u4E0D\u8DB3\u306B\u306A\u308A\u305D\u3046"
+  - "\u30AB\u30FC\u30C6\u30F3\u9589\u3081\u3066\u3082\u5149\u304C\u5F37\u3044\u306E\u3069\u3046\u306B\u304B\u306A\u3089\u306A\u3044\u304B\u306A"
+  postIcon: {fileID: 0}
+  motivationCost: 1
+  mentalCost: 3
+  followerGain: 80000
+  isTurnMultiplierEffect: 0
+  drawCount: 0
+  motivationRecovery: 0
+  turnDrawBonus: 0
+  maxMotivationBonus: 0
+  impressionRate: 0
+  isTurnImpressionEffect: 0
+  cardType: 0
+  isExhaust: 0
+  rarity: 2
+  playCondition: 0
+  riskType: 0
+  riskProbability: 1
+  riskValue: 0
+  generatedCards: []
+  handEffectTargetCard: {fileID: 0}
+  exhaustAllTargetCards: 0
+  handCountImpressionRate: 0
+  drawByHandCount: 0
+  handCountFollowerRate: 0
+  handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
+  flamingSeedCount: 0
+  flamingRate: 0
+  seedToFollowerMultiplier: 0
+  healMentalBySeeds: 0
+  infectionChange: 0
+  zombieResetInfection: 0
+  zombieImpressionPerInfection: 0
+  zombieDuplicateOnPlay: 0
+  zombieTransformOnPlay: 0
+  zombieStackingImpressionRate: 0
