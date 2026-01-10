@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
+  m_Name: Zom_MonAdd
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
+  cardName: "\u30BE\u30F3\u30D3\u4E2D\u7D1A"
+  cardImage: {fileID: 0}
+  description: "\u611F\u67D3\u5EA6%\u306E\u78BA\u7387\u3067\u5C71\u672D\u306B\u3053\u306E\u30AB\u30FC\u30C9\u30921\u679A\u52A0\u3048\u308B\n\u3053\u306E\u30AB\u30FC\u30C9\u306E\u30D7\u30EC\u30A4\u56DE\u6570\xD710%\u306E\u30A4\u30F3\u30D7\u3092\u5F97\u308B\n1\u679A\u30C9\u30ED\u30FC\u3059\u308B"
+  cardTag: "\u4E0A\u7D1A\u8005\u5411\u3051"
+  flavorText: 
+  postComments: []
+  postIcon: {fileID: 0}
+  motivationCost: 0
+  mentalCost: 0
+  followerGain: 0
+  isTurnMultiplierEffect: 0
+  drawCount: 1
+  motivationRecovery: 0
+  turnDrawBonus: 0
+  maxMotivationBonus: 0
+  impressionRate: 0
+  isTurnImpressionEffect: 0
+  cardType: 2
+  isExhaust: 0
+  rarity: 3
+  playCondition: 0
+  riskType: 0
+  riskProbability: 1
+  riskValue: 0
+  generatedCards: []
+  handEffectTargetCard: {fileID: 0}
+  exhaustAllTargetCards: 0
+  handCountImpressionRate: 0
+  drawByHandCount: 0
+  handCountFollowerRate: 0
+  handEffectMinCount: 0
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
+  flamingSeedCount: 0
+  flamingRate: 0
+  seedToFollowerMultiplier: 0
+  healMentalBySeeds: 0
+  infectionChange: 0
+  zombieResetInfection: 0
+  zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
+  zombieDuplicateOnPlay: 1
+  zombieTransformOnPlay: 0
+  zombieStackingImpressionRate: 0.1

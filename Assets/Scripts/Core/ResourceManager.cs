@@ -76,6 +76,9 @@ namespace ApprovalMonster.Core
             flamingSeeds = 0;
             flamingLevel = 0;
             isOnFire = false;
+            
+            // Reset infection
+            infectionRate = 0f;
 
             BroadcastAll();
         }
@@ -301,6 +304,78 @@ namespace ApprovalMonster.Core
         {
             hasNotifiedMaxScore = false;
             Debug.Log("[ResourceManager] Max score flag reset");
+        }
+        
+        // ========== Infection System (Zombie Deck) ==========
+        
+        [Header("Infection")]
+        [ReadOnly] public float infectionRate = 0f;
+        
+        public System.Action<float> onInfectionChanged;
+        /// <summary>
+        /// 感染度がリセットされた時に発火（previousRate, reducedAmount）
+        /// </summary>
+        public System.Action<float, float> onInfectionReset;
+        
+        /// <summary>
+        /// 感染度を増減する
+        /// </summary>
+        public void AddInfection(float amount)
+        {
+            infectionRate = Mathf.Clamp(infectionRate + amount, 0f, 100f);
+            Debug.Log($"[ResourceManager] Infection changed by {amount}, now: {infectionRate}%");
+            onInfectionChanged?.Invoke(infectionRate);
+        }
+        
+        /// <summary>
+        /// 感染度をリセット（リシャッフル時、モンスターカードA使用時）
+        /// </summary>
+        /// <param name="reductionRate">減少率（0-100%、100%=完全リセット、50%=半減）</param>
+        public float ResetInfection(float reductionRate = 100f)
+        {
+            float previousRate = infectionRate;
+            float reduction = infectionRate * (reductionRate / 100f);
+            infectionRate = Mathf.Clamp(infectionRate - reduction, 0f, 100f);
+            Debug.Log($"[ResourceManager] Infection reduced by {reductionRate}%: {previousRate}% -> {infectionRate}%");
+            onInfectionChanged?.Invoke(infectionRate);
+            
+            // 減少があった場合のみイベント発火
+            if (reduction > 0)
+            {
+                onInfectionReset?.Invoke(previousRate, reduction);
+            }
+            
+            return previousRate;
+        }
+        
+        /// <summary>
+        /// 感染度によるフォロワー減少量を計算
+        /// </summary>
+        public int CalculateInfectionPenalty()
+        {
+            if (infectionRate <= 0) return 0;
+            return Mathf.FloorToInt(currentFollowers * (infectionRate / 100f));
+        }
+        
+        /// <summary>
+        /// 感染度ペナルティを適用（フォロワー減少）
+        /// </summary>
+        public void ApplyInfectionPenalty()
+        {
+            Debug.Log($"[ResourceManager] ApplyInfectionPenalty CALLED. infectionRate={infectionRate}, followers={currentFollowers}");
+            int penalty = CalculateInfectionPenalty();
+            Debug.Log($"[ResourceManager] ApplyInfectionPenalty: calculated penalty = {penalty}");
+            if (penalty > 0)
+            {
+                currentFollowers -= penalty;
+                if (currentFollowers < 0) currentFollowers = 0;
+                Debug.Log($"[ResourceManager] Infection penalty: -{penalty} followers (rate: {infectionRate}%)");
+                onFollowersChanged?.Invoke(currentFollowers);
+            }
+            else
+            {
+                Debug.Log($"[ResourceManager] ApplyInfectionPenalty: penalty is 0 or less, skipping");
+            }
         }
     }
 }

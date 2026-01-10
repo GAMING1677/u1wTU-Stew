@@ -163,6 +163,39 @@ namespace ApprovalMonster.Data
         [BoxGroup("Flaming Special")]
         [Tooltip("種でメンタル回復、種消費")]
         public bool healMentalBySeeds = false;
+        
+        [BoxGroup("Infection")]
+        [Tooltip("プレイ時の感染度増減（%）正で増加、負で減少")]
+        public float infectionChange = 0f;
+        
+        [BoxGroup("Zombie Monster Card")]
+        [Tooltip("モンスターカードA: 感染度をリセットして換金")]
+        public bool zombieResetInfection = false;
+        
+        [BoxGroup("Zombie Monster Card")]
+        [Tooltip("感染度1%あたりのインプ率（例: 100 = 感染度20%で2000%インプ）")]
+        public float zombieImpressionPerInfection = 0f;
+        
+        [BoxGroup("Zombie Monster Card")]
+        [Tooltip("感染度1%あたりのフォロワー増加数（例: 10 = 感染度20%で200人増加）")]
+        public int zombieFollowerPerInfection = 0;
+        
+        [BoxGroup("Zombie Monster Card")]
+        [Tooltip("感染度を減少させる割合（0-100%）100%=完全リセット、50%=半減")]
+        [Range(0f, 100f)]
+        public float zombieInfectionResetRate = 100f;
+        
+        [BoxGroup("Zombie Monster Card")]
+        [Tooltip("モンスターカードB: 感染度%の確率で山札に複製")]
+        public bool zombieDuplicateOnPlay = false;
+        
+        [BoxGroup("Zombie Monster Card")]
+        [Tooltip("モンスターカードC: 感染度%の確率で手札のカードを変質")]
+        public bool zombieTransformOnPlay = false;
+        
+        [BoxGroup("Zombie Monster Card")]
+        [Tooltip("累積効果: プレイ回数×この値でインプ率獲得")]
+        public float zombieStackingImpressionRate = 0f;
 
         public bool HasRisk() => cardType == CardType.Risk || riskType != RiskType.None;
     }

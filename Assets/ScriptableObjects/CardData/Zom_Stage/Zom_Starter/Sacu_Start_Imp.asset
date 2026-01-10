@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
+  m_Name: Sacu_Start_Imp
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
+  cardName: "\u304A\u306F\u3088\u3046"
+  cardImage: {fileID: 8197717262057524853, guid: 6be99caa1a50447468bda40f49639a0d, type: 3}
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\xD710%\u30A4\u30F3\u30D7\u7372\u5F97\n\u611F\u67D3\u7387+3%"
+  cardTag: 
+  flavorText: "\u6328\u62F6\u306F\u5927\u5207\u306B"
+  postComments:
+  - "\u3084\u3063\u307B\u30FC"
+  - "\u304A\u306F\u3088"
+  - "\u3082\u3046\u671D\u3060\u306D"
+  - "\u663C\u3058\u3083\u3093"
+  - "\u7720\u6C17\u3068\u6226\u3063\u3066\u307E\u3059"
+  - "\u671D\u304B\u3089\u30D0\u30BF\u30D0\u30BF\u3059\u304E\u3066\u8349"
+  - "\u3082\u3046\u3059\u3067\u306B\u5E30\u308A\u305F\u3044"
+  - "\u4ECA\u65E5\u3082\u3088\u308D\u3057\u304F"
+  - "\u307E\u3060\u982D\u8D77\u304D\u3066\u306A\u3044"
+  - "\u4ECA\u65E5\u3082\u304C\u3093\u3070\u308D"
+  - "\u591C\u66F4\u304B\u3057\u904E\u304E\u3066\u9854\u3080\u304F\u3093\u3067\u308B"
+  - "\u4ECA\u65E5\u5BD2\u3059\u304E\u3066\u5E03\u56E3\u304B\u3089\u51FA\u308C\u3093"
+  postIcon: {fileID: 0}
+  motivationCost: 0
+  mentalCost: 1
+  followerGain: 0
+  isTurnMultiplierEffect: 0
+  drawCount: 0
+  motivationRecovery: 0
+  turnDrawBonus: 0
+  maxMotivationBonus: 0
+  impressionRate: 0.1
+  isTurnImpressionEffect: 0
+  cardType: 0
+  isExhaust: 0
+  rarity: 0
+  playCondition: 0
+  riskType: 0
+  riskProbability: 1
+  riskValue: 0
+  generatedCards: []
+  handEffectTargetCard: {fileID: 0}
+  exhaustAllTargetCards: 0
+  handCountImpressionRate: 0
+  drawByHandCount: 0
+  handCountFollowerRate: 0
+  handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
+  flamingSeedCount: 0
+  flamingRate: 0
+  seedToFollowerMultiplier: 0
+  healMentalBySeeds: 0
+  infectionChange: 3
+  zombieResetInfection: 0
+  zombieImpressionPerInfection: 0
+  zombieDuplicateOnPlay: 0
+  zombieTransformOnPlay: 0
+  zombieStackingImpressionRate: 0

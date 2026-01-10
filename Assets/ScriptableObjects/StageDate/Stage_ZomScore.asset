@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32c8f3617824a64bb41f5a00b165acf, type: 3}
+  m_Name: Stage_ZomScore
+  m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.StageData
+  clearCondition:
+    hasScoreGoal: 0
+    targetScore: 0
+  requiredStages: []
+  stageName: "\u30BE\u30F3\u30D3_\u30B9\u30B3\u30A2"
+  stageStartPreset: {fileID: 11400000, guid: 409fd9526b5669f4281c45e492e86eaa, type: 2}
+  motivationLowPreset: {fileID: 0}
+  quotaScore: 100
+  maxTurnCount: 30
+  initialDeck:
+  - {fileID: 11400000, guid: c0184c943d124dc46a639045151474a6, type: 2}
+  - {fileID: 11400000, guid: 0e895dd8d051ef441a83d37ce5dc778c, type: 2}
+  - {fileID: 11400000, guid: b85ecbb3b0f1c864ab07060249b106ab, type: 2}
+  - {fileID: 11400000, guid: cfd9c18d56c71db45b3a16320944084f, type: 2}
+  - {fileID: 11400000, guid: 929a96b3f8ff60d498d68e627a0f6ca8, type: 2}
+  draftPool:
+  - {fileID: 11400000, guid: 10a0585bf85b61e49a050f4177c32e8e, type: 2}
+  - {fileID: 11400000, guid: b64721a355b670443ac1bc04f4ad67c2, type: 2}
+  - {fileID: 11400000, guid: 6dbe04a5eb6bb084d83b5a963c0f1ba3, type: 2}
+  - {fileID: 11400000, guid: e59f5705e6f7f24409a8c564678a34f2, type: 2}
+  - {fileID: 11400000, guid: af288093846dce04490c4998756229de, type: 2}
+  - {fileID: 11400000, guid: b15d5344db1b5914e8f88002a449c80f, type: 2}
+  - {fileID: 11400000, guid: 20d35fbb4df4e604caeeb911ffbee241, type: 2}
+  - {fileID: 11400000, guid: dfdf799c3f8102941978b53cd42f3f18, type: 2}
+  - {fileID: 11400000, guid: aaf0b44b5b6937346a77dc29912e4ac8, type: 2}
+  - {fileID: 11400000, guid: 5ee015e0c014e77409db1cbd32bdf94f, type: 2}
+  - {fileID: 11400000, guid: 07f7dd2013ff0f84cb072b905da0aa64, type: 2}
+  - {fileID: 11400000, guid: 18554d574dc5a7b4ca6b184b2570d149, type: 2}
+  - {fileID: 11400000, guid: 53c1a993a992f68409817cda23ea8a58, type: 2}
+  - {fileID: 11400000, guid: b6982feae3b0f4148bc483c052d28e11, type: 2}
+  - {fileID: 11400000, guid: faf09f035074f524a98de73c1760f558, type: 2}
+  monsterDeck:
+  - {fileID: 11400000, guid: cd4da4faabf90a548a373832bb30eb65, type: 2}
+  - {fileID: 11400000, guid: ed1acbba769e5154ea31daf6aee7b3c5, type: 2}
+  - {fileID: 11400000, guid: d40658cf1ab1c0649a07627e6ef17c0a, type: 2}
+  enableFlaming: 0
+  enableInfection: 1
+  infectionResetRate: 100
+  monsterModePreset: {fileID: 11400000, guid: f687e2d4b2082544aae317cf992732f9, type: 2}
+  background: {fileID: 0}
+  themeColor: {r: 1, g: 1, b: 1, a: 1}
+  normalProfile: {fileID: 11400000, guid: bbf5041c48e695243b3a8e6db9f21938, type: 2}
+  monsterProfile: {fileID: 11400000, guid: 6b4679c5e99efe043b5592aa1c139806, type: 2}
+  showTrackedCardUI: 0
+  trackedCard: {fileID: 0}

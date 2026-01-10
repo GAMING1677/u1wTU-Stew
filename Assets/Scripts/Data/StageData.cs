@@ -40,6 +40,14 @@ namespace ApprovalMonster.Data
         [Tooltip("このステージでフレーミング（炎上）システムを有効にするか")]
         public bool enableFlaming = false;
         
+        [Header("Infection System")]
+        [Tooltip("このステージで感染システム（ゾンビデッキ）を有効にするか")]
+        public bool enableInfection = false;
+        
+        [Tooltip("デッキリシャッフル時に感染度を減少させる割合（0-100%）\n100%=完全リセット、50%=半減")]
+        [Range(0f, 100f)]
+        public float infectionResetRate = 100f;
+        
         [Header("Monster Mode")]
         [Tooltip("このステージ専用のモンスターモードカットイン設定")]
         public MonsterModePreset monsterModePreset;
