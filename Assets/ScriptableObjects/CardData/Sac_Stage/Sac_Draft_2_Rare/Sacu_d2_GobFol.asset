@@ -45,6 +45,10 @@ MonoBehaviour:
   generatedCards:
   - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
     destination: 0
+  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
+    destination: 0
+  - card: {fileID: 11400000, guid: bacda04193091e54e9ea4f772b381b39, type: 2}
+    destination: 0
   handEffectTargetCard: {fileID: 0}
   exhaustAllTargetCards: 0
   handCountImpressionRate: 0
@@ -61,3 +65,11 @@ MonoBehaviour:
   flamingRate: 0
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
+  infectionChange: 0
+  zombieResetInfection: 0
+  zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
+  zombieDuplicateOnPlay: 0
+  zombieTransformOnPlay: 0
+  zombieStackingImpressionRate: 0

@@ -30,7 +30,7 @@ MonoBehaviour:
   followerGain: 0
   isTurnMultiplierEffect: 0
   drawCount: 0
-  motivationRecovery: 0
+  motivationRecovery: 2
   turnDrawBonus: 0
   maxMotivationBonus: 1
   impressionRate: 0
@@ -59,3 +59,11 @@ MonoBehaviour:
   flamingRate: 0
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
+  infectionChange: 0
+  zombieResetInfection: 0
+  zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
+  zombieDuplicateOnPlay: 0
+  zombieTransformOnPlay: 0
+  zombieStackingImpressionRate: 0

@@ -34,6 +34,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 26c5bd662e84a824889caedf25a62c28, type: 2}
   - {fileID: 11400000, guid: a78f5e8b27b9fd144a55265976298521, type: 2}
   - {fileID: 11400000, guid: 36d4136e72960b74fb5e54cf8591b849, type: 2}
+  - {fileID: 11400000, guid: 77ebf3659eb242547975e8475b1bae6a, type: 2}
   - {fileID: 11400000, guid: 2e79aee01dd3b8a478b8a761f25fd265, type: 2}
   - {fileID: 11400000, guid: f2daa3b4944b0dd49888543f109fd064, type: 2}
   - {fileID: 11400000, guid: a66ba1fa76372044f96c7427031444ea, type: 2}
@@ -43,12 +44,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6842498b8386e4e4fb369442a660761f, type: 2}
   - {fileID: 11400000, guid: e03d69c8a634cd24f96142db1411e4e9, type: 2}
   - {fileID: 11400000, guid: d5b36ae9134fc0443bea93191efecd72, type: 2}
-  - {fileID: 11400000, guid: 77ebf3659eb242547975e8475b1bae6a, type: 2}
   monsterDeck:
   - {fileID: 11400000, guid: 3ec7bc6cd92a03d48a785ef20516c1b4, type: 2}
   - {fileID: 11400000, guid: 891d161a2b889ba41a1e9a6a9868c1a2, type: 2}
   - {fileID: 11400000, guid: c33fef5c681dbd04f9c2fc68062207f2, type: 2}
   enableFlaming: 0
+  enableInfection: 0
+  infectionResetRate: 100
   monsterModePreset: {fileID: 11400000, guid: 10a7b9b7d7c0e474e9d720a113ccb2d1, type: 2}
   background: {fileID: 0}
   themeColor: {r: 1, g: 1, b: 1, a: 1}

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u30E9\u30A4\u30D5\u30CF\u30C3\u30AF\u767A\u898B"
   cardImage: {fileID: -3359916698839239071, guid: 98730b001cd100e4084498cb022fc780, type: 3}
-  description: "3\u679A\u30C9\u30ED\u30FC\u3059\u308B"
+  description: "3\u679A\u30C9\u30ED\u30FC\u3059\u308B\n\u6368\u3066\u672D\u306B\u30B4\u30D6\u30EA\u30F3\u3092\uFF11\u679A\u8FFD\u52A0\u3059\u308B"
   cardTag: 
   flavorText: "\u5FC5\u8981\u306A\u6642\u306B\u306F\u5FD8\u308C\u3066\u308B"
   postComments:
@@ -56,7 +56,21 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
   flamingSeedCount: 0
   flamingRate: 0
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
+  infectionChange: 0
+  zombieResetInfection: 0
+  zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
+  zombieDuplicateOnPlay: 0
+  zombieTransformOnPlay: 0
+  zombieStackingImpressionRate: 0

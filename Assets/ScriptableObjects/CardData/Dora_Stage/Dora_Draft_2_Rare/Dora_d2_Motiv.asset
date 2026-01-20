@@ -40,7 +40,7 @@ MonoBehaviour:
   impressionRate: 0
   isTurnImpressionEffect: 0
   cardType: 0
-  isExhaust: 1
+  isExhaust: 0
   rarity: 2
   playCondition: 0
   riskType: 0
@@ -53,7 +53,21 @@ MonoBehaviour:
   drawByHandCount: 0
   handCountFollowerRate: 0
   handEffectMinCount: 1
+  drawPileCountImpressionRate: 0
+  discardPileCountImpressionRate: 0
+  drawPileCountFollowerRate: 0
+  discardPileCountFollowerRate: 0
+  minPileCountImpressionRate: 0
+  minPileCountFollowerRate: 0
   flamingSeedCount: 0
   flamingRate: 0
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
+  infectionChange: 0
+  zombieResetInfection: 0
+  zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
+  zombieDuplicateOnPlay: 0
+  zombieTransformOnPlay: 0
+  zombieStackingImpressionRate: 0
