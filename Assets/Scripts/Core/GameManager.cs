@@ -1666,6 +1666,44 @@ namespace ApprovalMonster.Core
             resourceManager?.ResetMaxScoreFlag();
             Debug.Log("[TEST] Max score flag reset");
         }
+        
+        // ========== デバッグ：カードドロー ==========
+        [Header("Debug: Test Card Draw")]
+        [Tooltip("テスト用にドローするカードリスト")]
+        [SerializeField] private List<Data.CardData> debugCardsToDraw = new List<Data.CardData>();
+        
+        [ContextMenu("Test: Draw All Debug Cards")]
+        private void Test_DrawAllDebugCards()
+        {
+            if (debugCardsToDraw == null || debugCardsToDraw.Count == 0)
+            {
+                Debug.LogWarning("[TEST] debugCardsToDraw is empty!");
+                return;
+            }
+            
+            if (deckManager == null)
+            {
+                Debug.LogError("[TEST] DeckManager is null!");
+                return;
+            }
+            
+            var uiManager = FindObjectOfType<UI.UIManager>();
+            int drawnCount = 0;
+            
+            foreach (var card in debugCardsToDraw)
+            {
+                if (card == null) continue;
+                
+                // 手札に追加
+                deckManager.hand.Add(card);
+                
+                // UIに通知
+                uiManager?.OnCardDrawn(card);
+                drawnCount++;
+            }
+            
+            Debug.Log($"[TEST] Drew {drawnCount} debug cards");
+        }
 
     }
     
