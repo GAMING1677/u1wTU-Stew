@@ -165,9 +165,18 @@ namespace ApprovalMonster.UI
             }
 
             // Impression Rate - percentage (hide if 0)
+            // Zombie stacking cards show current stacking rate instead
             if (impressionRateText != null)
             {
-                if (data.impressionRate > 0)
+                if (data.zombieStackingImpressionRate > 0)
+                {
+                    // ゾンビスタッキング: 現在のプレイ回数+1（次回使用時）の倍率を表示
+                    int playCount = GameManager.Instance?.GetZombiePlayCount(data) ?? 0;
+                    float nextRate = (playCount + 1) * data.zombieStackingImpressionRate * 100f;
+                    impressionRateText.text = $"{nextRate:F0}%";
+                    impressionRateText.gameObject.SetActive(true);
+                }
+                else if (data.impressionRate > 0)
                 {
                     float percentage = data.impressionRate * 100f;
                     impressionRateText.text = $"{percentage:F0}%";
@@ -476,21 +485,32 @@ namespace ApprovalMonster.UI
                 return;
             }
             
-            // インプ率が0の場合はパネルごと非表示
-            if (_data.impressionRate <= 0)
-            {
-                predictedImpressionPanel.SetActive(false);
-                return;
-            }
-            
             // 現在のフォロワー数を取得
             long currentFollowers = gm.resourceManager.currentFollowers;
             
             // このカードのフォロワー増減を加味
             long followersAfterCard = currentFollowers + _data.followerGain;
             
-            // 獲得予定インプ数を計算（カードプレイ後のフォロワー数 × インプ率）
-            long predictedImpression = (long)(followersAfterCard * _data.impressionRate);
+            long predictedImpression = 0;
+            
+            // ゾンビスタッキングカードの場合
+            if (_data.zombieStackingImpressionRate > 0)
+            {
+                int playCount = gm.GetZombiePlayCount(_data);
+                float stackedRate = (playCount + 1) * _data.zombieStackingImpressionRate;
+                predictedImpression = (long)(followersAfterCard * stackedRate);
+            }
+            // 通常のインプ率カードの場合
+            else if (_data.impressionRate > 0)
+            {
+                predictedImpression = (long)(followersAfterCard * _data.impressionRate);
+            }
+            else
+            {
+                // インプ率が0の場合はパネルを非表示
+                predictedImpressionPanel.SetActive(false);
+                return;
+            }
             
             // フォーマットして表示（K/M表記、矢印なし）
             string formattedValue = FormatNumber(predictedImpression);

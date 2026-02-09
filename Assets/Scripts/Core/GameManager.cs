@@ -83,7 +83,7 @@ namespace ApprovalMonster.Core
         // ========== Zombie Deck Play Count Tracking ==========
         private Dictionary<CardData, int> zombiePlayCounts = new Dictionary<CardData, int>();
         
-        private int GetZombiePlayCount(CardData card)
+        public int GetZombiePlayCount(CardData card)
         {
             return zombiePlayCounts.TryGetValue(card, out int count) ? count : 0;
         }

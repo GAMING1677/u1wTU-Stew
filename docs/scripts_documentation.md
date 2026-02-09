@@ -20,21 +20,30 @@
     *   **機能**:
         *   `StartGame()`, `EndGame()`: ゲームの開始・終了処理。
         *   `StartTurn()`, `EndTurn()`: ターンの切り替わり処理。
-        *   `DrawCard()`, `PlayCard()`: カード操作の処理委譲。
-        *   `CheckQuota()`: ノルマ達成状況の監視。
+        *   `TryPlayCard()`: カードプレイの条件判定と実行、モンスターモードの制御。
+        *   `CheckScoreClear()`: ノルマ達成状況の監視とステージクリア判定。
 *   **ResourceManager** (`ResourceManager.cs`)
     *   **役割**: ゲーム内リソース（数値）の管理。
     *   **管理項目**:
         *   `CurrentImpression`: 現在の獲得インプレッション。
         *   `CurrentFollowers`: 現在のフォロワー数。
         *   `CurrentMental`: 現在のメンタル値。
+        *   `Flaming`: 炎上システム（火種、炎上レベル、炎上状態）の管理。
+        *   `Infection`: ゾンビデッキ用感染度の管理・ペナルティ計算。
 *   **StageManager** (`StageManager.cs`)
     *   **役割**: ステージ進行の管理。
-    *   **機能**: 現在のステージデータの保持、次のステージへの遷移。
+    *   **機能**: 全ステージリストの保持、ステージ選択、次のステージへの遷移。現在および将来のアンロック機能の基盤。
 *   **AudioManager** (`AudioManager.cs`)
     *   **役割**: BGMとSE（効果音）の再生管理。
 *   **DraftManager** (`DraftManager.cs`)
     *   **役割**: カードドラフト（報酬選択）シーンのロジック管理。
+    *   **機能**: インプレッション数に応じた確率テーブル（DraftTierProbability）に基づき、Common/Rare/Epicの出現率を変動させる。
+*   **SaveDataManager** (`SaveDataManager.cs`)
+    *   **役割**: データの永続化管理（Easy Save 3 使用）。
+    *   **管理項目**: ステージごとのハイスコア、クリア済みステージ、グローバルハイスコア。
+*   **DeckManager** (`DeckManager.cs`)
+    *   **役割**: デッキ（山札、手札、捨て札）の状態管理。
+    *   **機能**: シャッフル、ドロー、カードの移動（手札→捨て札など）、特定カードのカウント。
 
 ### Data Structures (`Data/`)
 ゲームの静的データ定義。ScriptableObjectを活用し、Unityエディタ上で調整可能になっている。

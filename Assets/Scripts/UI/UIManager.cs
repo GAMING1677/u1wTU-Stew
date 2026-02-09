@@ -705,6 +705,9 @@ namespace ApprovalMonster.UI
         
         // ========== Infection UI ==========
         
+        // 現在表示中の感染度（カウントアニメーション用）
+        private float _displayedInfectionRate = 0f;
+        
         /// <summary>
         /// 感染度の表示を更新
         /// </summary>
@@ -718,10 +721,19 @@ namespace ApprovalMonster.UI
                 infectionFillImage.DOFillAmount(fillAmount, 0.3f);
             }
             
-            // Text display
+            // Text display with count animation
             if (infectionText != null)
             {
-                infectionText.text = $"{infectionRate:F0}%";
+                DOTween.Kill(infectionText); // 重複するアニメーションを停止
+                DOTween.To(
+                    () => _displayedInfectionRate,
+                    x => {
+                        _displayedInfectionRate = x;
+                        infectionText.text = $"{x:F0}%";
+                    },
+                    infectionRate,
+                    0.3f
+                ).SetEase(Ease.OutQuad).SetTarget(infectionText);
             }
             
             // Penalty prediction

@@ -13,15 +13,19 @@ MonoBehaviour:
   m_Name: Monster_Zom
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CharacterProfile
   idleFrames:
-  - {fileID: -6510592953731408236, guid: 1a0274c6613fd33488bbfe44e748b359, type: 3}
+  - {fileID: 1218061384226874428, guid: 3d555d4830037b34a94ceb55587b4ad9, type: 3}
+  - {fileID: 8664679404376444039, guid: 0a1bc74b5c4ae7848adca98e363ac576, type: 3}
+  - {fileID: -8262608769741303393, guid: a939172568342ee4bb9e1e239c478e45, type: 3}
+  - {fileID: 8664679404376444039, guid: 0a1bc74b5c4ae7848adca98e363ac576, type: 3}
+  - {fileID: 1218061384226874428, guid: 3d555d4830037b34a94ceb55587b4ad9, type: 3}
   frameRate: 0.2
   minIdleWait: 0.5
   maxIdleWait: 2
-  reactionHappy_1: {fileID: 0}
-  reactionHappy_2: {fileID: 0}
-  reactionHappy_3: {fileID: 0}
-  reactionSad_1: {fileID: 0}
-  reactionSad_2: {fileID: 0}
+  reactionHappy_1: {fileID: 7007315504599152632, guid: c5ce24cee52fccd4481efe64d0cd1728, type: 3}
+  reactionHappy_2: {fileID: -6235098705072974386, guid: a7a9db77ec4fd9446b4b021ffbf8bd30, type: 3}
+  reactionHappy_3: {fileID: -8942112439776997984, guid: ae38b00f462d41c489b7fd988a6302da, type: 3}
+  reactionSad_1: {fileID: -4527186311642292293, guid: ae7839aa28ce0dc4ab6fdd6a45aedd4c, type: 3}
+  reactionSad_2: {fileID: -6444058727446013755, guid: ea5ea171fddfc364d850d6b3051df998, type: 3}
   reactionDuration: 1
   seHappy_1: {fileID: 0}
   seHappy_2: {fileID: 8300000, guid: 1536dfec33f7f42409317f6a18e53aa2, type: 3}
