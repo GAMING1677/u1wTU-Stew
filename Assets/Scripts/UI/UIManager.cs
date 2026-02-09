@@ -819,7 +819,7 @@ namespace ApprovalMonster.UI
         private void ShowInfectionResetEffect(float previousRate, float reducedAmount)
         {
             string title = "感染度リセット";
-            string message = $"-{reducedAmount:F0}%（リシャッフル）";
+            string message = $"-{reducedAmount:F0}%（山札0枚！リシャッフル！）";
             
             // カットイン表示
             if (cutInUI != null)

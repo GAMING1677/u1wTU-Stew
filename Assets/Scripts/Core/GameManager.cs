@@ -1129,7 +1129,7 @@ namespace ApprovalMonster.Core
                         
                         // カットイン表示
                         var uiManager = FindObjectOfType<ApprovalMonster.UI.UIManager>();
-                        uiManager?.ShowCutIn("カード複製！", $"「{card.cardName}」が山札に追加された");
+                        uiManager?.ShowCutIn("ゾンビが増えちゃった！", $"「{card.cardName}」が山札に追加された");
                     }
                     else
                     {
@@ -1159,7 +1159,7 @@ namespace ApprovalMonster.Core
                             
                             // カットイン表示
                             var uiManager = FindObjectOfType<ApprovalMonster.UI.UIManager>();
-                            uiManager?.ShowCutIn("カード変質！", $"「{target.cardName}」→「{card.cardName}」");
+                            uiManager?.ShowCutIn("ゾンビになっちゃった！", $"「{target.cardName}」→「{card.cardName}」");
                         }
                     }
                     else
