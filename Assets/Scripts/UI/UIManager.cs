@@ -788,24 +788,25 @@ namespace ApprovalMonster.UI
         }
         
         /// <summary>
-        /// 感染度リセット時のエフェクトを表示
+        /// 感染度リセット時のカットインを表示
         /// </summary>
         /// <param name="previousRate">リセット前の感染度</param>
         /// <param name="reducedAmount">減少した量</param>
         private void ShowInfectionResetEffect(float previousRate, float reducedAmount)
         {
-            if (infectionResetEffectUI == null)
+            string title = "感染度リセット";
+            string message = $"-{reducedAmount:F0}%（リシャッフル）";
+            
+            // カットイン表示
+            if (cutInUI != null)
             {
-                Debug.Log($"[UIManager] Infection reset: -{reducedAmount:F0}% (no effect UI assigned)");
-                return;
+                cutInUI.Show(title, message);
+                Debug.Log($"[UIManager] Infection reset cut-in: {title} / {message}");
             }
-            
-            // フォロワー増減と同様のエフェクト表示
-            string mainText = $"-{reducedAmount:F0}%";
-            string subText = "感染度リセット";
-            
-            infectionResetEffectUI.PlayEffect(mainText, subText);
-            Debug.Log($"[UIManager] Infection reset effect: {mainText} ({subText})");
+            else
+            {
+                Debug.LogWarning($"[UIManager] Infection reset: {message} (cutInUI not assigned)");
+            }
         }
         
         /// <summary>
