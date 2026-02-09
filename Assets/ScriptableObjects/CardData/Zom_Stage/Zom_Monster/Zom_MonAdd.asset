@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Zom_MonAdd
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u30BE\u30F3\u30D3\u4E2D\u7D1A"
+  cardName: "\u4EA1\u8005\u306E\u8ECD\u52E2"
   cardImage: {fileID: 0}
   description: "\u611F\u67D3\u5EA6%\u306E\u78BA\u7387\u3067\u5C71\u672D\u306B\u3053\u306E\u30AB\u30FC\u30C9\u30921\u679A\u52A0\u3048\u308B\n\u3053\u306E\u30AB\u30FC\u30C9\u306E\u30D7\u30EC\u30A4\u56DE\u6570\xD710%\u306E\u30A4\u30F3\u30D7\u3092\u5F97\u308B\n1\u679A\u30C9\u30ED\u30FC\u3059\u308B"
-  cardTag: "\u4E0A\u7D1A\u8005\u5411\u3051"
-  flavorText: 
+  cardTag: "\u4E2D\u7D1A\u8005\u5411\u3051"
+  flavorText: "\u30BE\u30F3\u30D3\u306A\u3093\u3066\u306A\u3093\u307C\u3042\u3063\u3066\u3082\u826F\u3044\u3067\u3059\u304B\u3089\u306D"
   postComments: []
   postIcon: {fileID: 0}
   motivationCost: 0

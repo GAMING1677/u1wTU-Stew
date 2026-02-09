@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb9c5475ef563924faa1fa463a384015, type: 3}
   m_Name: Monster_Zom
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CharacterProfile
-  idleFrames: []
+  idleFrames:
+  - {fileID: -6510592953731408236, guid: 1a0274c6613fd33488bbfe44e748b359, type: 3}
   frameRate: 0.2
   minIdleWait: 0.5
   maxIdleWait: 2

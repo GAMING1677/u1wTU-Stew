@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Sacu_Start_ZomFol
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: ZomFol
+  cardName: "\u5C01\u5370\u306E\u8853"
   cardImage: {fileID: 0}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC100\u4EBA\u5897\n\u611F\u67D3\u7387-5%"
   cardTag: 
-  flavorText: 
+  flavorText: "\u8CE2\u4EBA\u306F\u30DF\u30E5\u30FC\u30C8\uFF06\u30D6\u30ED\u30C3\u30AF"
   postComments: []
   postIcon: {fileID: 0}
   motivationCost: 1
@@ -56,6 +56,8 @@ MonoBehaviour:
   infectionChange: -5
   zombieResetInfection: 0
   zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
   zombieDuplicateOnPlay: 0
   zombieTransformOnPlay: 0
   zombieStackingImpressionRate: 0

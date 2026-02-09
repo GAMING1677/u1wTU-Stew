@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: ZombiPreset
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.MonsterModePreset
   backgroundImage: {fileID: 0}
-  characterImage: {fileID: 0}
+  characterImage: {fileID: -6510592953731408236, guid: 1a0274c6613fd33488bbfe44e748b359, type: 3}
   characterSize: {x: 400, y: 600}
   titleText: MONSTER MODE
   messageText: "\u7121\u9650\u5897\u6B96\n\u30A4\u30F3\u30D7\u30EC\u30BE\u30F3\u30D3"
   showSound: {fileID: 0}
   clickSound: {fileID: 0}
-  monsterBGM: {fileID: 0}
+  monsterBGM: {fileID: 8300000, guid: 5ad37dfc9a8e4aa45a96a8c7be222c6b, type: 3}

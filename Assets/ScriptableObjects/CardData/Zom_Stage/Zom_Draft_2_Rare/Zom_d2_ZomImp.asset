@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Zom_d2_ZomImp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: ZomImp
+  cardName: "\u7570\u90A6\u306E\u546A\u6587"
   cardImage: {fileID: 0}
   description: "\u30A4\u30F3\u30D7\u7387120%\n\u611F\u67D3\u7387+20%"
   cardTag: 
@@ -56,6 +56,8 @@ MonoBehaviour:
   infectionChange: 20
   zombieResetInfection: 0
   zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
   zombieDuplicateOnPlay: 0
   zombieTransformOnPlay: 0
   zombieStackingImpressionRate: 0

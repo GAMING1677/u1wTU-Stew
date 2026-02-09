@@ -45,8 +45,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: faf09f035074f524a98de73c1760f558, type: 2}
   monsterDeck:
   - {fileID: 11400000, guid: cd4da4faabf90a548a373832bb30eb65, type: 2}
-  - {fileID: 11400000, guid: ed1acbba769e5154ea31daf6aee7b3c5, type: 2}
   - {fileID: 11400000, guid: d40658cf1ab1c0649a07627e6ef17c0a, type: 2}
+  - {fileID: 11400000, guid: ed1acbba769e5154ea31daf6aee7b3c5, type: 2}
   enableFlaming: 0
   enableInfection: 1
   infectionResetRate: 100

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Sacu_d1_ZomFol
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: ZomFol
+  cardName: "\u7D50\u754C"
   cardImage: {fileID: 0}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC1\u4E07\u4EBA\u5897\n\u611F\u67D3\u7387-5%"
   cardTag: 
-  flavorText: 
+  flavorText: "\u3053\u3063\u304B\u3089\u5148\u306F\u30EA\u30D7\u30E9\u30A4\u7981\u6B62"
   postComments: []
   postIcon: {fileID: 0}
   motivationCost: 1

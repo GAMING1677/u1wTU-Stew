@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Sacu_Start_ZomImp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: ZomImp
+  cardName: "\u30CF\u30A4\u30A8\u30CA"
   cardImage: {fileID: 0}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC\xD740%\u30A4\u30F3\u30D7\u7372\u5F97\n\u611F\u67D3\u7387+10%"
   cardTag: 
-  flavorText: 
+  flavorText: "\u3044\u307E\u3060\uFF01\u4FBF\u4E57\u3060\uFF01"
   postComments: []
   postIcon: {fileID: 0}
   motivationCost: 1
@@ -56,6 +56,8 @@ MonoBehaviour:
   infectionChange: 10
   zombieResetInfection: 0
   zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
   zombieDuplicateOnPlay: 0
   zombieTransformOnPlay: 0
   zombieStackingImpressionRate: 0
