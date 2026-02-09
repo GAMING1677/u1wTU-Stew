@@ -322,6 +322,10 @@ namespace ApprovalMonster.UI
                 gm.resourceManager.onInfectionReset -= ShowInfectionResetEffect;
                 gm.resourceManager.onInfectionReset += ShowInfectionResetEffect;
                 
+                // Infection penalty applied event (for shake animation)
+                gm.resourceManager.onInfectionPenaltyApplied -= OnInfectionPenaltyApplied;
+                gm.resourceManager.onInfectionPenaltyApplied += OnInfectionPenaltyApplied;
+                
                 // Flaming UIの表示設定（ここで確実にステージ情報が取れる）
                 SetupFlamingUI();
                 Debug.Log("[UIManager] OnEnable: About to call SetupInfectionUI()");
@@ -707,6 +711,7 @@ namespace ApprovalMonster.UI
         
         // 現在表示中の感染度（カウントアニメーション用）
         private float _displayedInfectionRate = 0f;
+        private int _displayedInfectionPenalty = 0;
         
         /// <summary>
         /// 感染度の表示を更新
@@ -736,14 +741,33 @@ namespace ApprovalMonster.UI
                 ).SetEase(Ease.OutQuad).SetTarget(infectionText);
             }
             
-            // Penalty prediction
+            // Penalty prediction with count animation
             if (infectionPenaltyText != null)
             {
                 var gm = GameManager.Instance;
                 if (gm != null && gm.resourceManager != null)
                 {
-                    int penalty = gm.resourceManager.CalculateInfectionPenalty();
-                    infectionPenaltyText.text = penalty > 0 ? $"-{penalty:N0}" : "";
+                    int targetPenalty = gm.resourceManager.CalculateInfectionPenalty();
+                    
+                    if (targetPenalty > 0)
+                    {
+                        DOTween.Kill(infectionPenaltyText);
+                        DOTween.To(
+                            () => _displayedInfectionPenalty,
+                            x => {
+                                _displayedInfectionPenalty = x;
+                                infectionPenaltyText.text = $"-{x:N0}";
+                            },
+                            targetPenalty,
+                            0.3f
+                        ).SetEase(Ease.OutQuad).SetTarget(infectionPenaltyText);
+                    }
+                    else
+                    {
+                        DOTween.Kill(infectionPenaltyText);
+                        _displayedInfectionPenalty = 0;
+                        infectionPenaltyText.text = "";
+                    }
                 }
             }
             
@@ -807,6 +831,26 @@ namespace ApprovalMonster.UI
             {
                 Debug.LogWarning($"[UIManager] Infection reset: {message} (cutInUI not assigned)");
             }
+        }
+        
+        /// <summary>
+        /// 感染度ペナルティ適用時のシェイクアニメーション
+        /// </summary>
+        private void OnInfectionPenaltyApplied(int penalty)
+        {
+            if (infectionPenaltyText == null) return;
+            
+            // DOShakePositionでガタガタ震えるアニメーション
+            var rectTransform = infectionPenaltyText.rectTransform;
+            rectTransform.DOKill();
+            rectTransform.DOShakePosition(
+                duration: 0.5f,
+                strength: new Vector3(10f, 5f, 0f),
+                vibrato: 20,
+                randomness: 90
+            ).SetEase(Ease.OutQuad);
+            
+            Debug.Log($"[UIManager] Infection penalty shake: -{penalty}");
         }
         
         /// <summary>

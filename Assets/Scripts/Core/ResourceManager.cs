@@ -316,6 +316,10 @@ namespace ApprovalMonster.Core
         /// 感染度がリセットされた時に発火（previousRate, reducedAmount）
         /// </summary>
         public System.Action<float, float> onInfectionReset;
+        /// <summary>
+        /// 感染度ペナルティが適用された時に発火（penalty amount）
+        /// </summary>
+        public System.Action<int> onInfectionPenaltyApplied;
         
         /// <summary>
         /// 感染度を増減する
@@ -371,6 +375,7 @@ namespace ApprovalMonster.Core
                 if (currentFollowers < 0) currentFollowers = 0;
                 Debug.Log($"[ResourceManager] Infection penalty: -{penalty} followers (rate: {infectionRate}%)");
                 onFollowersChanged?.Invoke(currentFollowers);
+                onInfectionPenaltyApplied?.Invoke(penalty); // UIにシェイクアニメーション用のイベント
             }
             else
             {
