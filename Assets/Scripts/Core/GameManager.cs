@@ -1126,6 +1126,10 @@ namespace ApprovalMonster.Core
                     {
                         deckManager.AddCardToDrawPile(card);
                         Debug.Log($"[GameManager] Zombie Card B: Duplicated! ({resourceManager.infectionRate}% chance)");
+                        
+                        // カットイン表示
+                        var uiManager = FindObjectOfType<ApprovalMonster.UI.UIManager>();
+                        uiManager?.ShowCutIn("カード複製！", $"「{card.cardName}」が山札に追加された");
                     }
                     else
                     {
@@ -1152,6 +1156,10 @@ namespace ApprovalMonster.Core
                             deckManager.RemoveCardFromHand(target);
                             deckManager.AddCardToHand(card);
                             Debug.Log($"[GameManager] Zombie Card C: Transformed {target.cardName} into {card.cardName}!");
+                            
+                            // カットイン表示
+                            var uiManager = FindObjectOfType<ApprovalMonster.UI.UIManager>();
+                            uiManager?.ShowCutIn("カード変質！", $"「{target.cardName}」→「{card.cardName}」");
                         }
                     }
                     else
