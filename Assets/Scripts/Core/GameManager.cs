@@ -1130,6 +1130,8 @@ namespace ApprovalMonster.Core
                         // カットイン表示
                         var uiManager = FindObjectOfType<ApprovalMonster.UI.UIManager>();
                         uiManager?.ShowCutIn("ゾンビが増えちゃった！", $"「{card.cardName}」が山札に追加された");
+                        // ゾンビアイコンアニメーション（増殖）
+                        uiManager?.ShowZombieEffectAnimation(false);
                     }
                     else
                     {
@@ -1160,6 +1162,8 @@ namespace ApprovalMonster.Core
                             // カットイン表示
                             var uiManager = FindObjectOfType<ApprovalMonster.UI.UIManager>();
                             uiManager?.ShowCutIn("ゾンビになっちゃった！", $"「{target.cardName}」→「{card.cardName}」");
+                            // ゾンビアイコンアニメーション（変質）
+                            uiManager?.ShowZombieEffectAnimation(true);
                         }
                     }
                     else

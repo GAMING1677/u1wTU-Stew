@@ -875,6 +875,33 @@ namespace ApprovalMonster.UI
         }
         
         /// <summary>
+        /// ゾンビ効果演出時のアイコンアニメーション
+        /// </summary>
+        /// <param name="isTransform">True: 変質（回転拡大）, False: 増殖（パルス）</param>
+        public void ShowZombieEffectAnimation(bool isTransform)
+        {
+            if (infectionTagIcon == null) return;
+            
+            infectionTagIcon.DOKill(true);
+            
+            if (isTransform)
+            {
+                // 変質：回転拡大10回。素早く大きく
+                // 1回転しながら拡大縮小を繰り返すイメージ
+                var seq = DOTween.Sequence();
+                seq.Append(infectionTagIcon.DORotate(new Vector3(0, 0, 360 * 3), 1.0f, RotateMode.FastBeyond360).SetEase(Ease.OutQuad));
+                seq.Join(infectionTagIcon.DOPunchScale(Vector3.one * 1.5f, 1.0f, 10, 1.0f));
+            }
+            else
+            {
+                // 増殖：10回のパルス。素早く強く。
+                infectionTagIcon.DOPunchScale(Vector3.one * 0.8f, 1.0f, 10, 1.0f);
+            }
+            
+            Debug.Log($"[UIManager] Zombie Effect Animation: {(isTransform ? "Transform" : "Duplicate")}");
+        }
+        
+        /// <summary>
         /// ステージに基づいて追跡カードUIを設定
         /// </summary>
         private void SetupTrackedCardUI()
