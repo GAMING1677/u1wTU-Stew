@@ -138,6 +138,8 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI infectionPenaltyText;
         [Tooltip("感染ペナルティ表示の親コンテナ（シェイクアニメーション用）")]
         [SerializeField] private RectTransform infectionPenaltyContainer;
+        [Tooltip("感染タグのアイコン（パルスアニメーション用）")]
+        [SerializeField] private RectTransform infectionTagIcon;
         [Tooltip("感染度UIのコンテナ（表示/非表示制御用）")]
         [SerializeField] private GameObject infectionContainer;
         [Tooltip("感染度リセット時のエフェクトUI")]
@@ -741,6 +743,24 @@ namespace ApprovalMonster.UI
                     infectionRate,
                     0.3f
                 ).SetEase(Ease.OutQuad).SetTarget(infectionText);
+                
+                // 感染率が増減した場合、アイコンをアニメーションさせる
+                // _displayedInfectionRateはtween前の値なので、それと比較して増減を判定
+                if (infectionTagIcon != null)
+                {
+                    if (infectionRate > _displayedInfectionRate)
+                    {
+                        // 増加：拡大パルス（心臓の鼓動風）
+                        infectionTagIcon.DOKill(true); // complete=trueで元のスケールに戻す
+                        infectionTagIcon.DOPunchScale(Vector3.one * 0.3f, 0.4f, 4, 0.5f);
+                    }
+                    else if (infectionRate < _displayedInfectionRate)
+                    {
+                        // 減少：縮小バウンス（毒が抜けるイメージ）
+                        infectionTagIcon.DOKill(true);
+                        infectionTagIcon.DOPunchScale(Vector3.one * -0.2f, 0.4f, 4, 0.5f);
+                    }
+                }
             }
             
             // Penalty prediction with count animation
