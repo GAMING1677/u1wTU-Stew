@@ -1837,6 +1837,11 @@ namespace ApprovalMonster.UI
         /// <summary>
         /// 通知バナーを表示（自動非表示）
         /// </summary>
+        private Tween _notificationTween;
+
+        /// <summary>
+        /// 通知バナーを表示（自動非表示）
+        /// </summary>
         public void ShowNotification(string message, float duration = 2.5f)
         {
             if (notificationPanel == null || notificationText == null)
@@ -1845,16 +1850,37 @@ namespace ApprovalMonster.UI
                 return;
             }
             
+            // 既存の非表示タイマーがあればキャンセル
+            if (_notificationTween != null && _notificationTween.IsActive())
+            {
+                _notificationTween.Kill();
+            }
+            
             notificationText.text = message;
             notificationPanel.SetActive(true);
             
             // 指定時間後に非表示
-            DOVirtual.DelayedCall(duration, () => {
-                if (notificationPanel != null)
-                {
-                    notificationPanel.SetActive(false);
-                }
+            _notificationTween = DOVirtual.DelayedCall(duration, () => {
+                HideNotification();
             });
+        }
+
+        /// <summary>
+        /// 通知バナーを非表示にする（クリック時などに呼ぶ）
+        /// </summary>
+        public void HideNotification()
+        {
+            // 既存の非表示タイマーをキャンセル
+            if (_notificationTween != null && _notificationTween.IsActive())
+            {
+                _notificationTween.Kill();
+            }
+            _notificationTween = null;
+
+            if (notificationPanel != null)
+            {
+                notificationPanel.SetActive(false);
+            }
         }
         
         // ========== カンスト常時表示UI ==========

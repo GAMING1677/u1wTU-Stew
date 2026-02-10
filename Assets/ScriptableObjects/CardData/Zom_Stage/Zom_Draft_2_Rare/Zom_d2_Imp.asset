@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u932C\u91D1\u8853"
   cardImage: {fileID: 5128498613293078906, guid: 020495ecb042a7b4f916eff499cff38f, type: 3}
-  description: "\u30A4\u30F3\u30D740%\u3092\u7372\u5F97\n\u611F\u67D3\u7387+10%"
+  description: "\u30A4\u30F3\u30D760%\u3092\u7372\u5F97\n\u611F\u67D3\u7387+12%"
   cardTag: 
   flavorText: "\u91D1\u306F\u5929\u4E0B\u306E\u56DE\u308A\u7269"
   postComments:
@@ -60,9 +60,11 @@ MonoBehaviour:
   flamingRate: 0
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
-  infectionChange: 10
+  infectionChange: 12
   zombieResetInfection: 0
   zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
   zombieDuplicateOnPlay: 0
   zombieTransformOnPlay: 0
   zombieStackingImpressionRate: 0
