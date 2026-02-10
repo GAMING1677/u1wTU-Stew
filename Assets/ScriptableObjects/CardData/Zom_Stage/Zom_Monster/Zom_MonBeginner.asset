@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
   m_Name: Zom_MonBeginner
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
-  cardName: "\u795E\u3078\u306E\u5606\u9858"
+  cardName: "\u795E\u306E\u5BF5\u611B"
   cardImage: {fileID: 0}
-  description: "\u611F\u67D3\u5EA6\xD710\u4E07\u4EBA\u30D5\u30A9\u30ED\u30EF\u30FC\u5897\n\u30A4\u30F3\u30D7\u738710%\n\u611F\u67D3\u5EA6\u3092\u534A\u5206\u306B\u3059\u308B\n1\u679A\u30C9\u30ED\u30FC"
+  description: "\u611F\u67D3\u7387\xD710\u4E07\u4EBA\u30D5\u30A9\u30ED\u30EF\u30FC\u5897\n\u30A4\u30F3\u30D7\u738710%\n\u611F\u67D3\u5EA6\u3092\u534A\u5206\u306B\u3059\u308B\n1\u679A\u30C9\u30ED\u30FC"
   cardTag: "\u521D\u5FC3\u8005\u5411\u3051"
   flavorText: Help me, EloNNNNN!!
   postComments: []

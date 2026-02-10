@@ -60,9 +60,11 @@ MonoBehaviour:
   flamingRate: 0
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
-  infectionChange: 0
+  infectionChange: 30
   zombieResetInfection: 0
-  zombieImpressionPerInfection: 30
+  zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
   zombieDuplicateOnPlay: 0
   zombieTransformOnPlay: 0
   zombieStackingImpressionRate: 0

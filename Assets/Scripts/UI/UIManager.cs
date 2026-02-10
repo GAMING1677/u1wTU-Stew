@@ -136,6 +136,8 @@ namespace ApprovalMonster.UI
         [SerializeField] private TextMeshProUGUI infectionText;
         [Tooltip("予測されるフォロワー減少数のテキスト")]
         [SerializeField] private TextMeshProUGUI infectionPenaltyText;
+        [Tooltip("感染ペナルティ表示の親コンテナ（シェイクアニメーション用）")]
+        [SerializeField] private RectTransform infectionPenaltyContainer;
         [Tooltip("感染度UIのコンテナ（表示/非表示制御用）")]
         [SerializeField] private GameObject infectionContainer;
         [Tooltip("感染度リセット時のエフェクトUI")]
@@ -766,7 +768,7 @@ namespace ApprovalMonster.UI
                     {
                         DOTween.Kill(infectionPenaltyText);
                         _displayedInfectionPenalty = 0;
-                        infectionPenaltyText.text = "";
+                        infectionPenaltyText.text = "0";
                     }
                 }
             }
@@ -818,8 +820,8 @@ namespace ApprovalMonster.UI
         /// <param name="reducedAmount">減少した量</param>
         private void ShowInfectionResetEffect(float previousRate, float reducedAmount)
         {
-            string title = "感染度リセット";
-            string message = $"-{reducedAmount:F0}%（山札0枚！リシャッフル！）";
+            string title = "感染率リセット";
+            string message = "山札0枚！リシャッフル！";
             
             // カットイン表示
             if (cutInUI != null)
@@ -838,12 +840,11 @@ namespace ApprovalMonster.UI
         /// </summary>
         private void OnInfectionPenaltyApplied(int penalty)
         {
-            if (infectionPenaltyText == null) return;
+            if (infectionPenaltyContainer == null) return;
             
-            // DOShakePositionでガタガタ震えるアニメーション
-            var rectTransform = infectionPenaltyText.rectTransform;
-            rectTransform.DOKill();
-            rectTransform.DOShakePosition(
+            // 親コンテナをDOShakePositionでガタガタ震えるアニメーション
+            infectionPenaltyContainer.DOKill();
+            infectionPenaltyContainer.DOShakePosition(
                 duration: 0.5f,
                 strength: new Vector3(10f, 5f, 0f),
                 vibrato: 20,
