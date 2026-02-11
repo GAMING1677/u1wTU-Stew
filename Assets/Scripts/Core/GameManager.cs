@@ -1113,7 +1113,7 @@ namespace ApprovalMonster.Core
                             }
                         }
                         
-                        resourceManager.ResetInfection(card.zombieInfectionResetRate);
+                        resourceManager.ResetInfection(card.zombieInfectionResetRate, suppressEffect: true);
                         Debug.Log($"[GameManager] Zombie Card A: Infection reduced by {card.zombieInfectionResetRate}% (from {currentInfection}%)");
                     }
                 }

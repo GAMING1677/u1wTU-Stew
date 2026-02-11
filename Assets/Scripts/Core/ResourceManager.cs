@@ -335,16 +335,16 @@ namespace ApprovalMonster.Core
         /// 感染度をリセット（リシャッフル時、モンスターカードA使用時）
         /// </summary>
         /// <param name="reductionRate">減少率（0-100%、100%=完全リセット、50%=半減）</param>
-        public float ResetInfection(float reductionRate = 100f)
+        public float ResetInfection(float reductionRate = 100f, bool suppressEffect = false)
         {
             float previousRate = infectionRate;
             float reduction = infectionRate * (reductionRate / 100f);
             infectionRate = Mathf.Clamp(infectionRate - reduction, 0f, 100f);
-            Debug.Log($"[ResourceManager] Infection reduced by {reductionRate}%: {previousRate}% -> {infectionRate}%");
+            Debug.Log($"[ResourceManager] Infection reduced by {reductionRate}%: {previousRate}% -> {infectionRate}% (suppressEffect: {suppressEffect})");
             onInfectionChanged?.Invoke(infectionRate);
             
-            // 減少があった場合のみイベント発火
-            if (reduction > 0)
+            // 減少があった場合のみイベント発火（suppressEffectがtrueなら発火しない）
+            if (reduction > 0 && !suppressEffect)
             {
                 onInfectionReset?.Invoke(previousRate, reduction);
             }
