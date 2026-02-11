@@ -1216,7 +1216,11 @@ namespace ApprovalMonster.UI
             }
         }
         
-        public void AddPost(string text, long impressionCount, Sprite icon = null)
+        [Header("Font Settings")]
+        [Tooltip("アラビア語用フォントアセット")]
+        [SerializeField] private TMP_FontAsset arabicFont;
+
+        public void AddPost(string text, long impressionCount, Sprite icon = null, bool useArabicFont = false)
         {
             if (postPrefab == null || timelineContainer == null) return;
 
@@ -1224,7 +1228,9 @@ namespace ApprovalMonster.UI
             ApprovalMonster.UI.PostView view = postObj.GetComponent<ApprovalMonster.UI.PostView>();
             if (view != null)
             {
-                view.SetContent(text, impressionCount, icon);
+                TMP_FontAsset fontToUse = useArabicFont ? arabicFont : null;
+                bool isRTL = useArabicFont;
+                view.SetContent(text, impressionCount, icon, fontToUse, isRTL);
             }
             
             // 投稿SE再生

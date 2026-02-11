@@ -28,11 +28,26 @@ namespace ApprovalMonster.UI
             layoutElement = GetComponent<LayoutElement>();
         }
 
-        public void SetContent(string text, long impressionCount, Sprite icon = null)
+        public void SetContent(string text, long impressionCount, Sprite icon = null, TMP_FontAsset font = null, bool isRTL = false)
         {
             if (contentText != null)
             {
                 contentText.text = text;
+                
+                // フォント指定があれば適用
+                if (font != null)
+                {
+                    contentText.font = font;
+                }
+                
+                // RTL（右から左）設定
+                contentText.isRightToLeftText = isRTL;
+                
+                // RTLの場合はアライメントも右寄せにするのが一般的だが、デザインによる
+                if (isRTL)
+                {
+                    contentText.alignment = TextAlignmentOptions.Right;
+                }
             }
             
             // アイコン設定（指定があれば変更＆表示）

@@ -19365,6 +19365,7 @@ MonoBehaviour:
   notificationText: {fileID: 375973163}
   maxScoreIndicatorPanel: {fileID: 2030980949}
   maxScoreIndicatorText: {fileID: 723161449}
+  arabicFont: {fileID: 11400000, guid: d8ca0e8513f861148aead7e2186c9cdf, type: 2}
 --- !u!4 &1571167610
 Transform:
   m_ObjectHideFlags: 0

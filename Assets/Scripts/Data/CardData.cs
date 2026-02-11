@@ -35,6 +35,10 @@ namespace ApprovalMonster.Data
         [ShowAssetPreview]
         public Sprite postIcon;
 
+        [BoxGroup("Basic Info")]
+        [Tooltip("ポストのフォントをアラビア語にするか")]
+        public bool useArabicFont;
+
         [BoxGroup("Costs")]
         [MinValue(0)]
         public int motivationCost;

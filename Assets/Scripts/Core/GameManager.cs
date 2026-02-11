@@ -1439,7 +1439,7 @@ namespace ApprovalMonster.Core
                 string comment = card.postComments[Random.Range(0, card.postComments.Count)];
                 // gainedImpressionsが0の場合、フォロワー数×1%を使用
                 long displayImpressions = gainedImpressions > 0 ? gainedImpressions : (long)(resourceManager.currentFollowers * 0.01f);
-                FindObjectOfType<UI.UIManager>()?.AddPost(comment, displayImpressions, card.postIcon);
+                FindObjectOfType<UI.UIManager>()?.AddPost(comment, displayImpressions, card.postIcon, card.useArabicFont);
             }
             
             // スコアクリア条件をチェック（カードプレイ後）
