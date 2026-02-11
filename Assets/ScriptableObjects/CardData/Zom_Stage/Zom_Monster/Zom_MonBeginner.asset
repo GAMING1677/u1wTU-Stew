@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u795E\u306E\u5BF5\u611B"
   cardImage: {fileID: 0}
-  description: "\u611F\u67D3\u7387\xD720\u4E07\u4EBA\u30D5\u30A9\u30ED\u30EF\u30FC\u5897\n\u30A4\u30F3\u30D7\u738710%\n\u611F\u67D3\u7387\u30920%\u306B\u3059\u308B\n1\u679A\u30C9\u30ED\u30FC"
+  description: "\u611F\u67D3\u7387\xD710\u4E07\u4EBA\u30D5\u30A9\u30ED\u30EF\u30FC\u5897\n\u30A4\u30F3\u30D7\u738710%\n\u611F\u67D3\u7387\u30920%\u306B\u3059\u308B\n1\u679A\u30C9\u30ED\u30FC"
   cardTag: "\u521D\u5FC3\u8005\u5411\u3051"
   flavorText: Help me, EloNNNNN!!
   postComments: []
@@ -57,7 +57,7 @@ MonoBehaviour:
   infectionChange: 0
   zombieResetInfection: 1
   zombieImpressionPerInfection: 0
-  zombieFollowerPerInfection: 200000
+  zombieFollowerPerInfection: 100000
   zombieInfectionResetRate: 100
   zombieDuplicateOnPlay: 0
   zombieTransformOnPlay: 0
