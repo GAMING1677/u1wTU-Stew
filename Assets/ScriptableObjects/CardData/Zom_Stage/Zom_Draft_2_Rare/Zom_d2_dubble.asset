@@ -26,6 +26,7 @@ MonoBehaviour:
   - "\u3064\u3044\u8CA2\u3044\u3058\u3083\u3046\u308F"
   - "\u3053\u306E\u4E16\u306E\u5929\u4F7F\uFF01"
   postIcon: {fileID: -4937016980448437836, guid: ff56100bbcacb6446bb349ff2ed093fc, type: 3}
+  useArabicFont: 0
   motivationCost: 1
   mentalCost: 5
   followerGain: 60000
@@ -63,6 +64,8 @@ MonoBehaviour:
   infectionChange: 0
   zombieResetInfection: 0
   zombieImpressionPerInfection: 0
+  zombieFollowerPerInfection: 0
+  zombieInfectionResetRate: 100
   zombieDuplicateOnPlay: 0
   zombieTransformOnPlay: 0
   zombieStackingImpressionRate: 0

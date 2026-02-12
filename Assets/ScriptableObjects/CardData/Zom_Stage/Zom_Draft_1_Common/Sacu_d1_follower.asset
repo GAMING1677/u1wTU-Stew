@@ -24,6 +24,7 @@ MonoBehaviour:
   - "\u53EF\u611B\u3044\u4EBA\u307F\u3064\u3051\u3061\u3083\u3063\u305F"
   - "\u9762\u767D\u3044\u4EBA\u307F\u3063\u3051\uFF01"
   postIcon: {fileID: 0}
+  useArabicFont: 0
   motivationCost: 1
   mentalCost: 2
   followerGain: 200
@@ -58,7 +59,7 @@ MonoBehaviour:
   flamingRate: 0
   seedToFollowerMultiplier: 0
   healMentalBySeeds: 0
-  infectionChange: -4
+  infectionChange: -3
   zombieResetInfection: 0
   zombieImpressionPerInfection: 0
   zombieFollowerPerInfection: 0

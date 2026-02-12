@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u8907\u88FD\u9B54\u6CD5"
   cardImage: {fileID: -1482574715470509984, guid: e47b25ad0a64b1f4a836fd340e38018c, type: 3}
-  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\xD780\uFF05\u30A4\u30F3\u30D7\u3092\u5F97\u308B\n\u611F\u67D3\u7387+10%"
+  description: "\u30D5\u30A9\u30ED\u30EF\u30FC\xD780\uFF05\u30A4\u30F3\u30D7\u3092\u5F97\u308B\n\u611F\u67D3\u7387+15%"
   cardTag: 
   flavorText: "\u5F15\u7528\u3067\u3059\u3051\u3069\u6587\u53E5\u3042\u308B\u306E\uFF1F"
   postComments:
