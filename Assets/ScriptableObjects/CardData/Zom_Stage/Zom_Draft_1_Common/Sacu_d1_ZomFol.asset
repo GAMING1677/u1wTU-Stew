@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sacu_d1_ZomFol
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u7D50\u754C"
-  cardImage: {fileID: 0}
+  cardImage: {fileID: -2241582527394794920, guid: 88745b65c0ab7cf468a23cb0278c93a4, type: 3}
   description: "\u30D5\u30A9\u30ED\u30EF\u30FC1\u4E07\u4EBA\u5897\n\u611F\u67D3\u7387-5%"
   cardTag: 
   flavorText: "\u3053\u3063\u304B\u3089\u5148\u306F\u30EA\u30D7\u30E9\u30A4\u7981\u6B62"
@@ -27,6 +27,7 @@ MonoBehaviour:
   - "\u8352\u308C\u904E\u304E\u3060\u308F\u3002\u30EA\u30D7\u505C\u6B62\u3057\u3088\u3002"
   - "\u5909\u306A\u5974\u3089\u304C\u96C6\u307E\u3063\u3066\u304D\u305F\u304B\u3089\u30EA\u30D7\u9589\u3058\u308B\u308F\u3002"
   postIcon: {fileID: 0}
+  useArabicFont: 0
   motivationCost: 1
   mentalCost: 2
   followerGain: 10000

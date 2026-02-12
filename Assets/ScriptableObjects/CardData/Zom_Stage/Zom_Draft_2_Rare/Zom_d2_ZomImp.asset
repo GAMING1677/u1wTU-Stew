@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Zom_d2_ZomImp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u7570\u90A6\u306E\u546A\u6587"
-  cardImage: {fileID: 0}
+  cardImage: {fileID: -1685904627923869618, guid: 34256c1197ffb074c9c293d5b8a063bc, type: 3}
   description: "\u30A4\u30F3\u30D7\u7387120%\n\u611F\u67D3\u7387+20%"
   cardTag: 
   flavorText: "\u7570\u6587\u5316\u4EA4\u6D41"

@@ -404,7 +404,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &27866523
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2283,7 +2283,7 @@ MonoBehaviour:
     highScoreText: {fileID: 0}
     lockIcon: {fileID: 81220228}
   - button: {fileID: 1527814461}
-    stage: {fileID: 11400000, guid: 3676c5d1c02f7b24fabcdfad3b4d7c40, type: 2}
+    stage: {fileID: 0}
     descriptionText: {fileID: 0}
     highScoreText: {fileID: 663767128}
     lockIcon: {fileID: 1832124826}
@@ -9618,7 +9618,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &755220077
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21059,7 +21059,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ver2.0.6
+  m_text: ver1.3.0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
   m_sharedMaterial: {fileID: 6904993892817679551, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
