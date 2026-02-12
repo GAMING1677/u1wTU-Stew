@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56db87e86fdd83e48bb998caba6a0cf9, type: 3}
-  m_Name: Sacu_d1_ZomImp
+  m_Name: Zom_d1_ZomImp
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.CardData
   cardName: "\u8907\u88FD\u9B54\u6CD5"
   cardImage: {fileID: -1482574715470509984, guid: e47b25ad0a64b1f4a836fd340e38018c, type: 3}
