@@ -145,7 +145,108 @@ namespace ApprovalMonster.UI
         [Tooltip("感染度リセット時のエフェクトUI")]
         [SerializeField] private GainEffectUI infectionResetEffectUI;
         
-        [Header("Notification Banner")]
+        [Header("Zombie Failure Effect")]
+        [Tooltip("効果不発時に表示するオブジェクトのPrefab")]
+        [SerializeField] private GameObject zombieFailureEffectPrefab;
+        [Tooltip("増殖不発時の出現位置起点")]
+        [SerializeField] private Transform duplicateFailureOrigin;
+        [Tooltip("変化不発時の出現位置起点")]
+        [SerializeField] private Transform transformFailureOrigin;
+        [Tooltip("不発エフェクトの上昇距離")]
+        [SerializeField] private float failureFloatDistance = 100f;
+        [Tooltip("不発エフェクトの表示時間")]
+        [SerializeField] private float failureAnimDuration = 1.5f;
+
+        /// <summary>
+        /// ゾンビ効果不発時の演出を表示
+        /// </summary>
+        /// <param name="isTransform">true: 変化不発, false: 増殖不発</param>
+        public void ShowZombieEffectFailure(bool isTransform)
+        {
+            if (zombieFailureEffectPrefab == null) return;
+
+            Transform origin = isTransform ? transformFailureOrigin : duplicateFailureOrigin;
+            if (origin == null)
+            {
+                // Fallback to center if origin is not set
+                origin = transform; 
+            }
+
+            // Create container for separation of axes (Container moves Y, Effect shakes X/Rot)
+            GameObject container = new GameObject("FailureEffectContainer");
+            RectTransform containerRect = container.AddComponent<RectTransform>();
+            container.transform.SetParent(origin, false);
+            container.transform.localPosition = Vector3.zero;
+            container.transform.localScale = Vector3.one;
+
+            // Create effect object inside container
+            GameObject effectObj = Instantiate(zombieFailureEffectPrefab, container.transform);
+            
+            // Ensure container is in front
+            container.transform.SetAsLastSibling();
+
+            // Initial state
+            CanvasGroup cg = effectObj.GetComponent<CanvasGroup>();
+            if (cg == null) cg = effectObj.AddComponent<CanvasGroup>();
+            cg.alpha = 1f;
+            
+            // Reset local position
+            effectObj.transform.localPosition = Vector3.zero;
+            
+            // Animation Sequence
+            Sequence seq = DOTween.Sequence();
+            
+            // 1. Float Up (Container handles Y movement)
+            seq.Join(container.transform.DOLocalMoveY(failureFloatDistance, failureAnimDuration).SetEase(Ease.OutQuad));
+            
+            // 2. Shake (EffectObj handles shake - effectively X/Reaction)
+            // Using ShakeAnchorPos to be UI safe
+            RectTransform effectRect = effectObj.GetComponent<RectTransform>();
+            
+            // Randomize shake direction (positive or negative X) and slightly vary intensity
+            float randomX = Random.Range(8f, 15f) * (Random.value > 0.5f ? 1f : -1f);
+            float randomStrength = Random.Range(80f, 100f);
+            
+            seq.Join(effectRect.DOShakeAnchorPos(failureAnimDuration, new Vector2(randomX, 0), 10, randomStrength, false, true));
+            
+            // 3. Fade Out (starts halfway)
+            seq.Insert(failureAnimDuration * 0.5f, cg.DOFade(0f, failureAnimDuration * 0.5f));
+            
+            // 4. Destroy container on complete
+            seq.OnComplete(() => Destroy(container));
+        }
+        
+        [Header("Card Play Limit")]
+        [SerializeField] private TextMeshProUGUI turnCardPlayLimitText;
+        private Color? initialLimitTextColor; // Nullable to check if initialized
+
+        /// <summary>
+        /// ターン内のカードプレイ回数制限表示を更新
+        /// </summary>
+        public void UpdateCardPlayLimit(int current, int max)
+        {
+            if (turnCardPlayLimitText != null)
+            {
+                // Store initial color on first use
+                if (initialLimitTextColor == null)
+                {
+                    initialLimitTextColor = turnCardPlayLimitText.color;
+                }
+
+                turnCardPlayLimitText.text = $"{current}/{max}";
+                
+                // Change color ONLY if limit reached
+                if (current >= max)
+                {
+                    turnCardPlayLimitText.color = Color.red;
+                }
+                else
+                {
+                    // Revert to original color
+                    turnCardPlayLimitText.color = initialLimitTextColor.Value;
+                }
+            }
+        }
         [Tooltip("通知バナーのパネル（ターン制限・カンスト通知用）")]
         [SerializeField] private GameObject notificationPanel;
         [Tooltip("通知バナーのテキスト")]

@@ -634,6 +634,8 @@ namespace ApprovalMonster.Core
             // ========== ターン内カードプレイカウンターをリセット ==========
             turnCardPlayCount = 0;
             Debug.Log("[GameManager] Card play counter reset for new turn");
+            // UI更新
+            FindObjectOfType<UI.UIManager>()?.UpdateCardPlayLimit(turnCardPlayCount, MAX_CARD_PLAYS_PER_TURN);
         }
 
         private void OnTurnEnd()
@@ -1136,6 +1138,8 @@ namespace ApprovalMonster.Core
                     else
                     {
                         Debug.Log($"[GameManager] Zombie Card B: No duplication ({resourceManager.infectionRate}% chance, roll failed)");
+                        // 不発演出
+                        FindObjectOfType<ApprovalMonster.UI.UIManager>()?.ShowZombieEffectFailure(false);
                     }
                 }
                 
@@ -1169,6 +1173,8 @@ namespace ApprovalMonster.Core
                     else
                     {
                         Debug.Log($"[GameManager] Zombie Card C: No transformation ({resourceManager.infectionRate}% chance)");
+                        // 不発演出
+                        FindObjectOfType<ApprovalMonster.UI.UIManager>()?.ShowZombieEffectFailure(true);
                     }
                 }
                 
@@ -1450,6 +1456,9 @@ namespace ApprovalMonster.Core
             totalCardsPlayed++;
             
             Debug.Log($"[GameManager] Card played: {card.cardName}. This turn: {turnCardPlayCount}, Total: {totalCardsPlayed}");
+            
+            // Update UI Limit
+            FindObjectOfType<UI.UIManager>()?.UpdateCardPlayLimit(turnCardPlayCount, MAX_CARD_PLAYS_PER_TURN);
             
             // Player must click End Turn button to proceed (no automatic turn end)
 
