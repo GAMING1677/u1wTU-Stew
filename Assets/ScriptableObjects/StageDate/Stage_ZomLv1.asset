@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b32c8f3617824a64bb41f5a00b165acf, type: 3}
-  m_Name: Stage_ZomScore
+  m_Name: Stage_ZomLv1
   m_EditorClassIdentifier: Mygame::ApprovalMonster.Data.StageData
   clearCondition:
-    hasScoreGoal: 0
-    targetScore: 0
+    hasScoreGoal: 1
+    targetScore: 1000000
   requiredStages:
-  - {fileID: 11400000, guid: 4cd4dcd21b74518459ad0fcd77c531b6, type: 2}
-  stageName: "\u30BE\u30F3\u30D3_\u30B9\u30B3\u30A2"
-  stageStartPreset: {fileID: 11400000, guid: 409fd9526b5669f4281c45e492e86eaa, type: 2}
+  - {fileID: 11400000, guid: 6600d5104e2b5d146b9411558d97ff0e, type: 2}
+  stageName: "\u30BE\u30F3\u30D3_Lv1"
+  stageStartPreset: {fileID: 11400000, guid: 758285aff1f19ab47bafc141d93ae994, type: 2}
   motivationLowPreset: {fileID: 0}
   quotaScore: 100
-  maxTurnCount: 30
+  maxTurnCount: 20
   initialDeck:
   - {fileID: 11400000, guid: c0184c943d124dc46a639045151474a6, type: 2}
   - {fileID: 11400000, guid: 0e895dd8d051ef441a83d37ce5dc778c, type: 2}
