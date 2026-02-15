@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using ApprovalMonster.Data;
+using NaughtyAttributes;
 
 namespace ApprovalMonster.Core
 {
@@ -11,7 +12,33 @@ namespace ApprovalMonster.Core
         private const string KEY_HIGHSCORE = "HighScore";
         private const string KEY_CLEARED_STAGES = "ClearedStages";
         
+        [Header("Save Settings")]
         [SerializeField] private bool autoSaveOnExit = true;
+
+        [Button("クリア状況をコンソールに出力")]
+        private void DebugLogClearedStages()
+        {
+            List<string> cleared = GetClearedStageNames();
+            long totalScore = GetTotalScoreAttackHighScore();
+            int validCount = GetClearedStageCount();
+
+            Debug.Log("========== [SaveDataManager Debug] ==========");
+            Debug.Log($"合計クリアステージ数: {validCount}");
+            Debug.Log($"スコアアタック合計値: {totalScore:N0}");
+            Debug.Log("--- クリア済みステージ一覧 ---");
+            if (cleared.Count == 0)
+            {
+                Debug.Log("(なし)");
+            }
+            else
+            {
+                foreach (string stage in cleared)
+                {
+                    Debug.Log($"- {stage}");
+                }
+            }
+            Debug.Log("==============================================");
+        }
 
         private void Awake()
         {
@@ -280,7 +307,7 @@ namespace ApprovalMonster.Core
         /// </summary>
         public List<string> GetClearedStageNames()
         {
-            return ES3.Load(KEY_CLEARED_STAGES, new List<string>());
+            return ES3.Load(KEY_CLEARED_STAGES, new List<string>(), GetSaveSettings());
         }
 
         private void OnApplicationQuit()

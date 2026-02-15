@@ -51,14 +51,20 @@
 *   **CardData** (`CardData.cs`)
     *   カード1枚ごとの定義。
     *   `CardName`, `Description`: 表示用テキスト。
-    *   `Cost`: 消費メンタル。
-    *   `EffectType`, `EffectValue`: カードの効果定義。
-    *   `Rarity`: レアリティ。
+    *   `Cost`: 消費メンタル/モチベーション。
+    *   `Effects`: インプレッション獲得倍率、フォロワー増加、特殊効果（ゾンビ化等）。
+    *   `PlayCondition`: 特定モード限定などのプレイ条件。
+    *   `Rarity`: Basic, Common, Rare, Epic。
 *   **StageData** (`StageData.cs`)
     *   ステージごとの設定。
-    *   `Quota`: 目標インプレッション。
-    *   `TurnLimit`: 制限ターン数。
-    *   `EnemyData`: (もしあれば) 対戦相手や妨害要素のデータ。
+    *   `QuotaScore`: ターン毎の目標スコア。
+    *   `MaxTurnCount`: 制限ターン数。
+    *   `ClearCondition`: クリア条件定義。
+    *   `MonsterModePreset`: モンスターモード用演出データ。
+*   **GameSettings** (`GameSettings.cs`)
+    *   ゲーム全体の定数（初期設定、モンスターモード閾値、確率設定など）を管理。
+*   **CutInPreset** (`CutInPreset.cs`)
+    *   カットイン演出用データ（テキスト、画像、サウンドのセット）。
 *   **TutorialData** (`TutorialData.cs`)
     *   チュートリアルのステップごとの表示内容（テキスト、画像、ハイライト位置）。
 

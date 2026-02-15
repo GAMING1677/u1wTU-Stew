@@ -11525,6 +11525,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4be1040f06be0a742a509516815e673d, type: 2}
   - {fileID: 11400000, guid: 19248af1b8f7f9b49b9f9f243423090f, type: 2}
   - {fileID: 11400000, guid: a13770deaf62c1043ab09e2829bba579, type: 2}
+  - {fileID: 11400000, guid: 4cd4dcd21b74518459ad0fcd77c531b6, type: 2}
   - {fileID: 11400000, guid: 3676c5d1c02f7b24fabcdfad3b4d7c40, type: 2}
   selectedStage: {fileID: 0}
   selectedStageIndex: -1
@@ -21338,7 +21339,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ver2.0.0
+  m_text: ver2.0.1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
   m_sharedMaterial: {fileID: 6904993892817679551, guid: 32ce62377d4a52c478619891b609a5bf, type: 2}
